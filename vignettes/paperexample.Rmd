@@ -1,0 +1,83 @@
+---
+title: "paperexample"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(warn=-1)
+```
+
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(FPEMcountry)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+```
+
+This package is the one country implementation of FPEM. It uses higher level parameters estimated in FPEMglobal.
+
+
+Let's start by running the model for XXXXX. The union status and the years range for estimates must be provided. The model will use all available data regardless of the year range. The year range only determines the range of results returned. For union status, "Y" represents married and "N" represents unmarried. Here we run the model for both married and unmarried separately. The output of each run is a list containing posterior samples and core data. Core data is a list itself, containing vital information about the run and the observed data as processed for the model. 
+```{r}
+run_y <- do_1country_run(
+  is_in_union = "Y",
+  division_numeric_code = 64,
+  first_year = 1975,
+  last_year = 2030
+)
+
+run_n <- fpemmodeling::do_1country_run(
+  is_in_union = "N",
+  division_numeric_code = 64,
+  first_year = 1975,
+  last_year = 2030
+)
+```
+
+Posterior samples for all women can be calculated using the function `posterior_samples_all_women`. This function uses the posterior samples of the married and unmarried run, as well as population count data within the package. Core data from one of the runs is required for run information such as the range of years, and the country code. This run specific information is used to filter the population counts prior to using them in calculation. 
+```{r}
+samples_all <- posterior_samples_all_women(in_union_posterior_samples = run_y$posterior_samples, 
+                                                         not_in_union_posterior_samples = run_n$posterior_samples, 
+                                                         core_data = run_y$core_data)
+```
+
+To obtain results for our run we use the function `fpem_calculate_results`. Respective population counts and the first_year of results must be provided. Population counts are available within our package. See `??population_counts`. This function returns data in long format.
+```{r}
+population_counts <- population_counts %>%
+  dplyr::filter(division_numeric_code == run_y$core_data$units$division_numeric_code)
+results_all <- fpemreporting::fpem_calculate_results(
+  posterior_samples = run_y$posterior_samples,
+  country_population_counts = population_counts,
+  first_year = run_y$core_data$year_sequence_list$result_seq_years %>% min()
+)
+```
+
+Results can be plotted against processed data using the function `fpem_plot_country_results`. The processed observations from both runs, the range of years, and the indicators of interest must be provided. Any indicators available in both the results and the observed data can be plotted using this function.
+```{r}
+
+indicators <- c(
+    "unmet_need_any",
+    "contraceptive_use_modern",
+    "contraceptive_use_traditional",
+    "contraceptive_use_any"
+    )
+
+plots <- fpem_plot_country_results(
+  country_results = results_all,
+  observations = rbind(run_y$core_data$observations, run_y$core_data$observations),
+  first_year = 1970,
+  last_year = 2030,
+  indicators = indicators
+  )
+```
+
+Grid extra is recomended to display all plots for a particular set of results on a single page. 
+```{r}
+gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
+                 ncol=2,
+                 top="All women")
+```

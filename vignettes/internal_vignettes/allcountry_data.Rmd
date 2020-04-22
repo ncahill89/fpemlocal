@@ -1,0 +1,86 @@
+---
+title: "all country results in a single data file"
+author: "Gregory Guranich"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{all country}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(fpemdata)
+library(fpemreporting)
+library(fpemmodeling)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+```
+
+# Set output directory and divs for the set of results
+```{r}
+outputdir <- "output_upto2013"
+filenamecreated <- "results_upto2013.csv"
+divs <- read.csv("Track20Database121819_Pre2013.csv") 
+divs <- divs %>% dplyr::select(division_numeric_code) %>% unique()
+popcountdiv <- fpemdata::population_counts
+divs <- divs %>% dplyr::filter(division_numeric_code %in% popcountdiv$division_numeric_code)
+divnames <- divs %>% 
+  dplyr::left_join(fpemdata::divisions) %>%
+  dplyr::select(name_country) %>%
+  dplyr::pull()
+divs <- divs %>% dplyr::pull()
+# outputdir <- "output"
+# filenamecreated <- results_unpd2020.csv"
+# # vector of countries where we have data
+# global_divs <- fpemdata:::index_m$index_area_df$division_numeric_code
+# divs <- dplyr::tibble(division_numeric_code = as.numeric(as.character(global_divs[global_divs %in% fpemdata::divisions$division_numeric_code])))
+# divs <- divs %>% dplyr::filter(division_numeric_code %in% fpemdata::population_counts$division_numeric_code)
+#  # dplyr::pull()
+# divnames <- divs %>% 
+#   dplyr::left_join(fpemdata::divisions) %>%
+#   dplyr::select(name_country) %>%
+#   dplyr::pull()
+# divs <- divs %>% dplyr::pull()
+```
+
+```{r}
+results <- c("results_y", "results_n", "results_all")
+unions <- c("Y", "N", "ALL")
+
+allreslist <- list()
+for (div in divs) {
+  reslist <- readRDS(file.path(outputdir, paste0("reslist", div, ".rds")))
+  newreslist <- list()
+  for (i in 1:3) {
+    result <- results[i]
+    is_in_union <- unions[i]
+    res <- reslist[[result]]
+    newreslist[[i]] <- data.frame(
+              name_country = reslist$core_data$units$name_country,
+              division_numeric_code = reslist$core_data$units$division_numeric_code,
+              is_in_union = is_in_union,
+              year = res$contraceptive_use_any$year ,
+              percentile = res$contraceptive_use_any$percentile,
+              contraceptive_use_any = res$contraceptive_use_any$value,
+              contraceptive_use_modern = res$contraceptive_use_modern$value,
+              contraceptive_use_traditional = res$contraceptive_use_traditional$value,
+              unmet_need_any = res$unmet_need_any$value,
+              unmet_need_modern = res$unmet_need_modern$value,
+              demand_satisfied_modern = res$demand_satisfied_modern$value
+        )
+  }
+  # rbind across the list
+  allreslist[[div]] <- do.call(rbind, newreslist)
+}
+df <- do.call(rbind, allreslist)
+write.csv(df, filenamecreated)
+```
+
+
+

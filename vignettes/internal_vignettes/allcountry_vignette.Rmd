@@ -1,0 +1,196 @@
+---
+title: "all country"
+author: "Gregory Guranich"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{all country}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(fpemdata)
+library(fpemreporting)
+library(fpemmodeling)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+```
+
+## Table of Contents
+1. [Introduction](#intro)
+2. [Run models](#run)
+3. [Plot model results](#plot)
+  
+## <a name="intro"></a>
+## Introduction
+In this vignette we will run two models for each country available, one for women in union and another for women not in union. We will use the package default data `fpemdata::contraceptive_use` for this example.
+## Make directories for model files, import observed data and global model results
+```{r}
+# years we will run one country model
+first_year = 1970
+last_year = 2030
+
+# vector of countries where we have data
+divs <- read.csv("Track20Database121819_Pre2013.csv") %>% 
+  dplyr::rename(
+  "contraceptive_use_any" = "contraceptive_use_all",                           
+  "unmet_need_modern" = "unmet_need_for_modern_methods",                        
+  "unmet_need_any" ="unmet_need_for_any_method"      
+)
+write.csv(divs, "Track20_rename.csv")
+
+divs <- divs %>% dplyr::select(division_numeric_code) %>% unique()
+popcountdiv <- fpemdata::population_counts
+divs <- divs %>% dplyr::filter(division_numeric_code %in% popcountdiv$division_numeric_code)
+divnames <- divs %>% 
+  dplyr::left_join(fpemdata::divisions) %>%
+  dplyr::select(name_country) %>%
+  dplyr::pull()
+divs <- divs %>% dplyr::pull()
+
+
+if(!dir.exists("output")) dir.create("output")
+# inconsinstent indicator names, FPEM vs UNPD
+indicators <- c(
+    "unmet_need_any",
+    "contraceptive_use_modern",
+    "contraceptive_use_traditional",
+    "contraceptive_use_any"
+    )
+indicators_un <- c(
+  "unmet",
+  "modern",
+  "traditional"
+)
+```
+
+## <a name="run"></a>
+## run models
+```{r}
+# > div
+# [1] 580
+
+for(div in divs) {
+  run_y <- fpemmodeling::do_1country_run(
+    is_in_union = "Y",
+    surveydata_filepath = "Track20_rename.csv",
+    service_stats = FALSE,
+    division_numeric_code = div,
+    first_year = first_year,
+    last_year = last_year
+  )
+  run_n <- fpemmodeling::do_1country_run(
+    is_in_union = "N",
+    surveydata_filepath = "Track20_rename.csv",
+    service_stats = FALSE,
+    division_numeric_code = div,
+    first_year = first_year,
+    last_year = last_year
+  )
+  core_data <- run_y$core_data
+  core_data$observations <-
+    rbind(run_y$core_data$observations, run_n$core_data$observations)
+  samples_all <-
+    fpemmodeling::posterior_samples_all_women(
+      in_union_posterior_samples = run_y$posterior_samples,
+      not_in_union_posterior_samples = run_n$posterior_samples,
+      core_data = core_data
+    )
+  population_counts <- fpemdata::population_counts %>%
+    dplyr::filter(division_numeric_code == div)
+  results_y <- fpemreporting::fpem_calculate_results(
+    posterior_samples = run_y$posterior_samples,
+    country_population_counts = population_counts %>%
+      dplyr::filter(is_in_union == "Y"),
+    first_year = first_year
+    )
+  results_n <- fpemreporting::fpem_calculate_results(
+    posterior_samples = run_n$posterior_samples,
+    country_population_counts = population_counts %>%
+      dplyr::filter(is_in_union == "N"),
+    first_year = first_year
+    )
+  results_all <- fpemreporting::fpem_calculate_results(
+    posterior_samples = samples_all,
+    country_population_counts = population_counts,
+    first_year = first_year
+    )
+  reslist <- list(results_y = results_y, 
+                  results_n = results_n, 
+                  results_all = results_all, 
+                  core_data = core_data)
+  saveRDS(reslist, file.path("output", paste0("reslist", div, ".rds")))
+  print(div)
+}
+
+```
+
+## <a name="plot"></a>
+## Plot married
+```{r}
+divnamesordered <- divnames %>% sort()
+divsordered <- divs[match(divnamesordered, divnames)]
+divs <- divsordered
+divnames <- divnamesordered
+
+
+pl <- list()
+i <- 0
+for(div in divs){
+  i <- i + 1
+  reslist <- readRDS(file.path("output", paste0("reslist", div, ".rds")))
+  templs <- list()
+  pl[[i]] <- fpem_plot_country_results(
+    country_results = reslist$results_y,
+    observations = reslist$core_data$observations,
+    first_year = first_year,
+    last_year = last_year,
+    is_in_union = "Y",
+    indicators = indicators) 
+}
+
+pdf("married_track19.pdf", 10,10)
+i <- 0
+for(divname in divnames) {
+  i <- i + 1
+  grid.arrange(grobs=pl[[i]], top = textGrob(paste("In-union women",divname)) ,ncol=2)
+}
+dev.off()
+```
+
+
+# Plot unmarried
+```{r}
+pl <- list()
+i <- 0
+for(div in divs){
+  i <- i + 1
+  reslist <- readRDS(file.path("output", paste0("reslist", div, ".rds")))
+  templs <- list()
+  pl[[i]] <- fpem_plot_country_results(
+    country_results = reslist$results_n,
+    observations = reslist$core_data$observation,
+    first_year = first_year,
+    last_year = last_year,
+    is_in_union = "N",
+    indicators = indicators) 
+}
+
+pdf("unmarried_track19.pdf", 10,10)
+i <- 0
+for(divname in divnames) {
+  i <- i + 1
+  grid.arrange(grobs=pl[[i]], top = textGrob(paste("Not-in-union women",divname)) ,ncol=2)
+}
+dev.off()
+```
+
+
+
+

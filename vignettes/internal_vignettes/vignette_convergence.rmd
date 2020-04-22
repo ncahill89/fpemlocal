@@ -1,0 +1,78 @@
+---
+title: "convergence"
+author: "Greg Guranich"
+date: "April 26, 2019"
+output: html_document
+---
+
+
+
+```{r}
+ptm <- proc.time()
+#### to be replaced with current run
+proc.time() - ptm
+res$mod$BUGSoutput$summary
+bugs_15000 <- res$mod$BUGSoutput
+mcmc.array <- bugs_15000$sims.array
+library(coda)
+invlogit <- function(x){
+  exp(x)/(1+exp(x))
+}
+# "mod.ct", 
+# "unmet.ct", 
+# "trad.ct", 
+# " mu.jn", 
+# "logitratio.yunmet.hat.j",
+# "logitRmax.c",
+# "logitomega.c",
+# "logitpmax.c",
+# "logitRomega.c",
+# "setlevel.c",
+# "RT.c",
+# "unmet.intercept.c"
+par <- res$mod$BUGSoutput$sims.list$unmet.ct %>% invlogit()
+unmet <- c()
+for (i in 1:dim(par)[3]) {
+unmet[i] <- effectiveSize(par[,,i]) %>% round()
+}
+par <- res$mod$BUGSoutput$sims.list$mod.ct %>% invlogit()
+mod <- c()
+for (i in 1:dim(par)[3]) {
+mod[i] <- effectiveSize(par[,,i]) %>% round()
+}
+par <- res$mod$BUGSoutput$sims.list$trad.ct %>% invlogit()
+trad <- c()
+for (i in 1:dim(par)[3]) {
+trad[i] <- effectiveSize(par[,,i]) %>% round
+}
+temp <- data.frame(unmet = unmet, mod = mod, trad = trad)
+write.table(temp, "neff_logit.txt")
+
+
+
+# checking some parameters
+PlotTrace <- function(#Traceplot for one parameter
+  ### Trace plot for one parameter and add loess smoother for each chain
+  parname, mcmc.array,##<< needs to be 3-dimensional array!
+  n.chains= NULL, n.sim= NULL, main = NULL){
+  if (is.null(main)) main <- parname
+  if (is.null(n.sim)) n.sim <- dim(mcmc.array)[1]
+  if (is.null(n.chains)) n.chains <- dim(mcmc.array)[2]
+  plot(c(mcmc.array[,1,parname]), type = "l", ylab = parname,  main = main,
+       ylim = c(min(mcmc.array[,,parname]),max(mcmc.array[,,parname])))
+  for (chain in 1:n.chains){
+    lines(c(mcmc.array[,chain,parname]), type = "l", col = chain)
+  }
+  for (chain in 1:n.chains){
+    curve(predict(loess(c(mcmc.array[,chain,parname])~seq(1,n.sim)),x), lty = 2, lwd = 3, add = TRUE, type = "l", col = chain)
+  }
+}
+
+pdf("traceplots_lowneffpars.pdf")
+PlotTrace("logitRomega.c", mcmc.array)
+PlotTrace("mu.jn[4,1]", mcmc.array)
+for (t in 1:length(first_year:last_year)) PlotTrace(paste0("trad.ct[1,",t,"]"), mcmc.array)
+for (j in 1:6) PlotTrace(paste0("logitratio.yunmet.hat.j[",j,"]"), mcmc.array)
+for (t in 1:length(first_year:last_year)) PlotTrace(paste0("unmet.ct[1,",t,"]"), mcmc.array)
+dev.off()
+```

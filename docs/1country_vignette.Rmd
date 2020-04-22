@@ -1,0 +1,137 @@
+---
+title: "one country vignette"
+author: "Gregory Guranich"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+keep_md: yes
+fig_width: 10
+vignette: >
+  %\VignetteIndexEntry{one country vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+## Table of Contents
+1. [Introduction](#intro)
+2. [Run models](#run)
+3. [Post-process](#post-process)
+4. [Plot model results](#plot)
+  
+## <a name="intro"></a>
+## Introduction
+In this vignette we will run two models, one for women in union and another for women not in union. We will use the package default data `fpemdata::contraceptive_use` for this example. Alternatively, you can supply a survey file path to `fpemmodeling::do_1country_run` and run your own data. The resulting samples can be combined to obtain results for all women. After obtaining all results we will plot some of the results.
+
+```{r, echo=FALSE}
+options(warn=-1)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=10, fig.height=7) 
+  library(fpemdata)
+  library(fpemdata)
+  library(fpemmodeling)
+  library(ggplot2)
+  library(grid)
+  library(gridExtra)
+```
+
+## <a name="run"></a>
+## Run models
+`fpemmodeling::do_1country_run` is a wrapper function to run the family planning estimation model for a coutnry of interest for either married or unmarried women. If the user provides data with missing values, the values will be imputed. If the user does not supply the first year arguement the function will choose a suitable year based on available data. The function takes in additional inputs such as services statistics if desired. See `??fpemmodeling::do_1country_run` for all possible inputs. `fpemmodeling::posterior_samples_all_women` is used to combine samples to be used in the next step to obtain results for all women.
+```{r}
+run_y <- fpemmodeling::do_1country_run(
+  is_in_union = "Y",
+  surveydata_filepath = NULL,
+  service_stats = FALSE,
+  division_numeric_code = 400,
+  first_year = 1989,
+  last_year = 2030
+)
+run_n <- fpemmodeling::do_1country_run(
+  is_in_union = "N",
+  surveydata_filepath = NULL,
+  service_stats = FALSE,
+  division_numeric_code = 400,
+  first_year = 1989,
+  last_year = 2030
+)
+core_data <- run_y$core_data
+observations_y <- run_y$core_data$observations
+observations_n <- run_n$core_data$observations
+samples_all <- fpemmodeling::posterior_samples_all_women(in_union_posterior_samples = run_y$posterior_samples, 
+                                                         not_in_union_posterior_samples = run_n$posterior_samples, 
+                                                         core_data = core_data)
+```
+
+## <a name="post-process"></a>
+## Process the samples
+`fpemreporting::fpem_calculate_results` returns point-estimates for several indicators in long-format.
+```{r}
+ population_counts <- fpemdata::population_counts %>%
+      dplyr::filter(division_numeric_code == core_data$units$division_numeric_code)
+  results_y <- fpemreporting::fpem_calculate_results(
+    posterior_samples = run_y$posterior_samples,
+    country_population_counts = population_counts %>%
+      dplyr::filter(is_in_union == "Y"),
+    first_year = min(core_data$time_frame$limits())
+  )
+  results_n <- fpemreporting::fpem_calculate_results(
+    posterior_samples = run_n$posterior_samples,
+    country_population_counts = population_counts %>%
+      dplyr::filter(is_in_union == "N"),
+    first_year = min(core_data$time_frame$limits())
+  )
+  results_all <- fpemreporting::fpem_calculate_results(
+    posterior_samples = samples_all,
+    country_population_counts = population_counts,
+    first_year = min(core_data$time_frame$limits())
+  )
+```
+## <a name="plot"></a>
+## Plot results for in-union, not-in-union, and all women
+`fpemreporting::fpem_plot_country_results` plots the results of the model againts the observations. Choose any indicators returned from `fpemreporting::fpem_calculate_results`
+```{r}
+indicators <- c(
+    "unmet_need_any",
+    "contraceptive_use_modern",
+    "contraceptive_use_traditional",
+    "contraceptive_use_any"
+    )
+plots <- fpemreporting::fpem_plot_country_results(
+  country_results = results_y,
+  observations = observations_y,
+  first_year = core_data$time_frame$`.->.sequence` %>% min,
+  last_year = core_data$time_frame$`.->.sequence` %>% max,
+  is_in_union = "Y",
+  indicators = indicators
+  )
+gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
+                 ncol=2,
+                 top=textGrob("In-union women"))  
+
+plots <- fpemreporting::fpem_plot_country_results(
+  country_results = results_n,
+  observations = observations_n,
+  first_year = core_data$time_frame$`.->.sequence` %>% min,
+  last_year = core_data$time_frame$`.->.sequence` %>% max,
+  is_in_union = "N",
+  indicators = indicators
+  )
+gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
+                 ncol=2,
+                 top=textGrob("Not-in-union women"))  
+
+plots <- fpemreporting::fpem_plot_country_results(
+  country_results = results_all,
+  observations = rbind(observations_n, observations_y),
+  first_year = core_data$time_frame$`.->.sequence` %>% min,
+  last_year = core_data$time_frame$`.->.sequence` %>% max,
+  indicators = indicators
+  )
+gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
+                 ncol=2,
+                 top=textGrob("All women"))       
+```
