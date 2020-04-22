@@ -16,10 +16,10 @@ This package is the one country implementation of FPEM. It uses higher
 level parameters estimated in FPEMglobal. The package can be installed
 by cloning and using `devtools::install()`. The source code for
 vignettes can be found in
-[/vignettes](https://github.com/FPRgroup/FPEMcountry/tree/master/vignettes).
+[/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes).
 Knitted versions of vignettes can be found in
-[/docs](https://github.com/FPRgroup/FPEMcountry/tree/master/docs). The
-directory [/design](https://github.com/FPRgroup/FPEM/tree/master/design)
+[/docs](https://github.com/FPcounts/FPEMcountry/tree/master/docs). The
+directory [/design](https://github.com/FPcounts/FPEM/tree/master/design)
 contains technical details about the design of this project for package
 maintainers and contributors. Below is a brief introduction.
 
@@ -36,7 +36,7 @@ required service statistic data format. See `??do_1country_run` for all
 possible inputs to this wrapper function. If you wish to obtain results
 for all women `posterior_samples_all_women` can be used after completing
 a run for married women and a run for unmarried women. See
-[FPEM/vignettes](https://github.com/FPRgroup/FPEMcountry/vignettes) for
+[FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for
 more details
 
 ``` r
