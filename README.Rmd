@@ -31,6 +31,7 @@ devtools::load_all()
 ## Run models
 `do_1country_run` is a wrapper function to run the family planning estimation model for a country of interest for either married or unmarried women. When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
+# debug(do_1country_run)
 div <- 68 #64 bhutan #728 sudan
 run_y <- do_1country_run(
   is_in_union = "Y",
@@ -40,6 +41,7 @@ run_y <- do_1country_run(
   first_year = 1975,
   last_year = 2030
 )
+
 ```
 
 ## <a name="post-process"></a>

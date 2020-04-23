@@ -64,11 +64,12 @@ do_1country_run <- function(
     #is_in_union = is_in_union,
     include_ss_data = !is.null(list_service_stats),
     nulldata = nrow(core_data$observations) == 0,
-    is_in_union = is_in_union
+    is_in_union = is_in_union,
+    n_ptot = list_auxiliary$n_ptot
   )
   mod <- jags.parallel(
     data = c(list_auxiliary, list_global, list_bias, list_service_stats, Y = 1),
-    parameters.to.save = c("mod.ct", "unmet.ct", "trad.ct", "mu.jn", "logitratio.yunmet.hat.j"),
+    parameters.to.save = c("mod.ct", "unmet.ct", "trad.ct", "mu.in", "logitratio.yunmet.hat.i"),
     model.file = "model.txt",
     n.chains = 3,
     n.iter = 2000,

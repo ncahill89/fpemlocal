@@ -87,28 +87,28 @@ list_global_data = function(is_in_union, core_data) {
       "cor.trad.modern.s"
     )
     se <- extract_se(names, globaldata, index_datatype)
-    nonsample.se.modern.s <- se$nonsample.se.modern.s
-    nonsample.se.trad.s <- se$nonsample.se.trad.s
-    cor.trad.modern.s <- se$cor.trad.modern.s
+    nonsample.se.modern.i <- se$nonsample.se.modern.s
+    nonsample.se.trad.i <- se$nonsample.se.trad.s
+    cor.trad.modern.i <- se$cor.trad.modern.s
 
     names <- c("nonsample.se.unmet.s")
     se2 <- extract_se(names, globaldata, index_datatype_unmet)
-    nonsample.se.unmet.s <- se2$nonsample.se.unmet.s
+    nonsample.se.unmet.i <- se2$nonsample.se.unmet.s
   } else {
-    nonsample.se.modern.s <- 0
-    nonsample.se.trad.s <- 0
-    cor.trad.modern.s <- 0
-    nonsample.se.unmet.s <- 0
+    nonsample.se.modern.i <- 0
+    nonsample.se.trad.i <- 0
+    cor.trad.modern.i <- 0
+    nonsample.se.unmet.i <- 0
   }
 
   return(list(
     # pars which change in model depending on sun-national
     tau.sourcemodonly = tau.sourcemodonly,
     pmax_lower_bound = pmax_lower_bound,
-    nonsample.se.modern.s = nonsample.se.modern.s,
-    nonsample.se.trad.s = nonsample.se.trad.s,
-    cor.trad.modern.s = cor.trad.modern.s,
-    nonsample.se.unmet.s = nonsample.se.unmet.s,
+    nonsample.se.modern.i = nonsample.se.modern.i,
+    nonsample.se.trad.i = nonsample.se.trad.i,
+    cor.trad.modern.i = cor.trad.modern.i,
+    nonsample.se.unmet.i = nonsample.se.unmet.i,
     var_setlevel = var_setlevel,
     # pars which are based on a hierarchical model in the global model
     lp.world = lp.world,

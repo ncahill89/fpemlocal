@@ -102,75 +102,77 @@ model{
 
 ####
 # dms
-  for (j in 1:n_mod){
+  for (i in 1:n_mod){
 # get_mod_i refers to indices with modern+trad use
-   ratios.trad.modern.jn[get_mod_i[j],1:2] ~ dmnorm(mu.jn[get_mod_i[j], ],InvSigma[j,,]) #T.j[j,,])
-   InvSigma[j,1:2,1:2] <- inverse(Sigma[j,1:2,1:2])
-   Sigma[j,1,2] <- cor.trad.modern.s[get_mod_i[j]]*sqrt(Sigma[j,1,1]*Sigma[j,2,2])
-   Sigma[j,2,1] <- cor.trad.modern.s[get_mod_i[j]]*sqrt(Sigma[j,1,1]*Sigma[j,2,2])
-   Sigma[j,1,1] <- pow(se_log_r_traditional_no_use[get_mod_i[j]], 2) + pow(nonsample.se.trad.s[get_mod_i[j]],2)
-   Sigma[j,2,2] <- pow(se_log_r_modern_no_use[get_mod_i[j]], 2) + pow(nonsample.se.modern.s[get_mod_i[j]],2)
+   ratios.trad.modern.in[get_mod_i[i],1:2] ~ dmnorm(mu.in[get_mod_i[i], ],InvSigma[i,,]) #T.i[i,,])
+   InvSigma[i,1:2,1:2] <- inverse(Sigma[i,1:2,1:2])
+   Sigma[i,1,2] <- cor.trad.modern.i[get_mod_i[i]]*sqrt(Sigma[i,1,1]*Sigma[i,2,2])
+   Sigma[i,2,1] <- cor.trad.modern.i[get_mod_i[i]]*sqrt(Sigma[i,1,1]*Sigma[i,2,2])
+   Sigma[i,1,1] <- pow(se_log_r_traditional_no_use[get_mod_i[i]], 2) + pow(nonsample.se.trad.i[get_mod_i[i]],2)
+   Sigma[i,2,2] <- pow(se_log_r_modern_no_use[get_mod_i[i]], 2) + pow(nonsample.se.modern.i[get_mod_i[i]],2)
   }
 for (i in 1:n_unmet){
 # get_unmet_i refers to indices with unmet
- logitratio.yunmet.j[get_unmet_i[i]] ~ dnorm(
-   logitratio.yunmet.hat.j[get_unmet_i[i]], 1/(pow(nonsample.se.unmet.s[get_unmet_i[i]],2)+ pow(se_log_r_unmet_no_need[get_unmet_i[i]],2)) )
+ logitratio.yunmet.i[get_unmet_i[i]] ~ dnorm(
+   logitratio.yunmet.hat.i[get_unmet_i[i]], 1/(pow(nonsample.se.unmet.i[get_unmet_i[i]],2)+ pow(se_log_r_unmet_no_need[get_unmet_i[i]],2)) )
 }
-for (k in 1:n_ptot){
-    logit.ptot[get_ptot_i[k]] ~ dnorm(logit.ptothat.j[get_ptot_i[k]], tau.sourcetot)
-}
+
+  
+
 tau.sourcetot <- pow(sigma.sourcetot,-2)
 # end dms for unmet and trad+modern
 # this part refer to union of indices in unmet and modern
 
-  for (j in 1:N){
- modern.j[j] <- mod.ct[get_c_i[j], get_t_i[j]]
- trad.j[j] <- trad.ct[get_c_i[j], get_t_i[j]]
- unmet.j[j] <- unmet.ct[get_c_i[j], get_t_i[j]]
- mu.jn[j,1] <- log(max(0.0000001, q.ij[1,j])/none.adj.j[j])
- mu.jn[j,2] <- log(max(0.0000001, q.ij[2,j])/none.adj.j[j])
- logitratio.yunmet.hat.j[j] <- logit(max(0.0000001,q.ij[3,j])/none.adj.j[j])
- logit.ptothat.j[j] <- logit(max(0.0000001, 1-none.adj.j[j]))
-    sump.j[j] <- (trad.j[j]*Vtrad.j[j] + modern.j[j]* Vmodern.j[j]
-                        + (1- trad.j[j] - modern.j[j]))
+  for (i in 1:N){
+ modern.i[i] <- mod.ct[get_c_i[i], get_t_i[i]]
+ trad.i[i] <- trad.ct[get_c_i[i], get_t_i[i]]
+ unmet.i[i] <- unmet.ct[get_c_i[i], get_t_i[i]]
+ mu.in[i,1] <- log(max(0.0000001, q.ii[1,i])/none.adj.i[i])
+ mu.in[i,2] <- log(max(0.0000001, q.ii[2,i])/none.adj.i[i])
+ logitratio.yunmet.hat.i[i] <- logit(max(0.0000001,q.ii[3,i])/none.adj.i[i])
+    
+
+ 
+    sump.i[i] <- (trad.i[i]*Vtrad.i[i] + modern.i[i]* Vmodern.i[i]
+                        + (1- trad.i[i] - modern.i[i]))
       # old order, 1 is trad!!!
-    p.perturb.ij[1,j] <-  trad.j[j]*Vtrad.j[j]/sump.j[j]
-      p.perturb.ij[2,j] <-  modern.j[j]* Vmodern.j[j]/sump.j[j]
-      p.perturb.ij[3,j] <- unmet.j[j]/sump.j[j]
-      p.perturb.ij[4,j] <- (1- trad.j[j] - modern.j[j] - unmet.j[j])/sump.j[j]
+    p.perturb.ii[1,i] <-  trad.i[i]*Vtrad.i[i]/sump.i[i]
+      p.perturb.ii[2,i] <-  modern.i[i]* Vmodern.i[i]/sump.i[i]
+      p.perturb.ii[3,i] <- unmet.i[i]/sump.i[i]
+      p.perturb.ii[4,i] <- (1- trad.i[i] - modern.i[i] - unmet.i[i])/sump.i[i]
       ###Biases
       ##Inclusion of folk methods
-      folkbias.j[j] <- step(folk.ind[j]-0.5)*v.folk* p.perturb.ij[3,j]
+      folkbias.i[i] <- step(folk.ind[i]-0.5)*v.folk* p.perturb.ii[3,i]
       ##Absence of probing
-      micsbias.j[j] <- step(source.MICS.ind[j]-0.5)* v.mics * p.perturb.ij[1,j]
+      micsbias.i[i] <- step(source.MICS.ind[i]-0.5)* v.mics * p.perturb.ii[1,i]
       ##Sterilization
-      modposbias.j[j] <- step(mpos.ind[j]-0.5)*v.mpos* p.perturb.ij[4,j]
-      modnegbias.j[j] <- step(mneg.ind[j]-0.5)*v.mneg * p.perturb.ij[2,j]
+      modposbias.i[i] <- step(mpos.ind[i]-0.5)*v.mpos* p.perturb.ii[4,i]
+      modnegbias.i[i] <- step(mneg.ind[i]-0.5)*v.mneg * p.perturb.ii[2,i]
       ####Perturbed proportions adjusted for biases (1-4)
-      q.ij[1,j] <- p.perturb.ij[1,j] - micsbias.j[j] + folkbias.j[j]
-      q.ij[2,j] <- p.perturb.ij[2,j] + modposbias.j[j] - modnegbias.j[j]
-      q.ij[3,j] <- p.perturb.ij[3,j] + micsbias.j[j] - folkbias.j[j]
-      q.ij[4,j] <- p.perturb.ij[4,j] - modposbias.j[j] + modnegbias.j[j]
-      none.adj.j[j] <- max(0.0000001, q.ij[3,j] + q.ij[4,j]) #la 2019/3/13
-      Vtrad.j[j] <-  (
-      V.geo.12i[1,geo.ind[j]]
-      * V.age.12i[1,age.ind[j]]
-      * V.hw.12i[1,hw.ind[j]]
-      * V.emal.12i[1,emal.ind[j]]
-      * V.sa.12i[1,sa.ind[j]]
-      * V.posbias.12i[1,posbias.ind[j]]
-      * V.posage.12i[1, posage.ind[j]]
-      * V.negage.12i[1, negage.ind[j]]
+      q.ii[1,i] <- p.perturb.ii[1,i] - micsbias.i[i] + folkbias.i[i]
+      q.ii[2,i] <- p.perturb.ii[2,i] + modposbias.i[i] - modnegbias.i[i]
+      q.ii[3,i] <- p.perturb.ii[3,i] + micsbias.i[i] - folkbias.i[i]
+      q.ii[4,i] <- p.perturb.ii[4,i] - modposbias.i[i] + modnegbias.i[i]
+      none.adj.i[i] <- max(0.0000001, q.ii[3,i] + q.ii[4,i]) #la 2019/3/13
+      Vtrad.i[i] <-  (
+      V.geo.12i[1,geo.ind[i]]
+      * V.age.12i[1,age.ind[i]]
+      * V.hw.12i[1,hw.ind[i]]
+      * V.emal.12i[1,emal.ind[i]]
+      * V.sa.12i[1,sa.ind[i]]
+      * V.posbias.12i[1,posbias.ind[i]]
+      * V.posage.12i[1, posage.ind[i]]
+      * V.negage.12i[1, negage.ind[i]]
       )
-      Vmodern.j[j] <- (
-      V.geo.12i[2,geo.ind[j]]  ##geographical region
-      * V.age.12i[2,age.ind[j]] #Age group different from base (bias unknown)
-      * V.hw.12i[2,hw.ind[j]] ##Husband and wives or both
-      * V.emal.12i[2,emal.ind[j]] ##Ever married, all women
-      * V.sa.12i[2,sa.ind[j]] ##All sexually active
-      * V.posbias.12i[2,posbias.ind[j]] ## Non-pregnant/fertile/married SA women
-      * V.posage.12i[2, posage.ind[j]] ##Age group with positive bias
-      * V.negage.12i[2, negage.ind[j]] ##Age group with negative bias
+      Vmodern.i[i] <- (
+      V.geo.12i[2,geo.ind[i]]  ##geographical region
+      * V.age.12i[2,age.ind[i]] #Age group different from base (bias unknown)
+      * V.hw.12i[2,hw.ind[i]] ##Husband and wives or both
+      * V.emal.12i[2,emal.ind[i]] ##Ever married, all women
+      * V.sa.12i[2,sa.ind[i]] ##All sexually active
+      * V.posbias.12i[2,posbias.ind[i]] ## Non-pregnant/fertile/married SA women
+      * V.posage.12i[2, posage.ind[i]] ##Age group with positive bias
+      * V.negage.12i[2, negage.ind[i]] ##Age group with negative bias
       )
   }
 # add dummy column in case ncol(V) = 1 => V becomes vector!
@@ -253,7 +255,7 @@ for (m in 1:2){
   
 
         for(k in 1:n.training.modonly) {
-            logit.ymodonly.j[getj.training.modonly.k[k]] ~ dnorm(logit(q.ij[2,getj.training.modonly.k[k]]), tau.sourcemodonly)
+            logit.ymodonly.i[geti.training.modonly.k[k]] ~ dnorm(logit(q.ii[2,geti.training.modonly.k[k]]), tau.sourcemodonly)
         }
         
 

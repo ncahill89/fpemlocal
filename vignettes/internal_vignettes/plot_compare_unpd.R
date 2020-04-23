@@ -30,8 +30,8 @@ for(k in 1:length(indicators_un)) {
     ggplot2::geom_line(aes(x = year, y = `0.025`), data = df, linetype = 'dashed') +
     ggplot2::geom_line(aes(x = year, y = `0.975`), data = df, linetype = 'dashed')
 }
-pdf("bolivia.pdf", 18, 10)
+# pdf("bolivia.pdf", 18, 10)
 gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
                         ncol=2,
                         top="In-union women")
-dev.off()
+# dev.off()
