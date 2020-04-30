@@ -4,4 +4,4 @@ devtools::build(vignettes = FALSE)
 # devtools::install(build_vignettes = TRUE)
 devtools::install()
 .rs.restartR()
-??do_1country_run
+

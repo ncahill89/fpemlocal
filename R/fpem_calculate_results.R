@@ -11,8 +11,15 @@
 #' @export
 fpem_calculate_results <-
   function(posterior_samples,
-           country_population_counts,
-           first_year) {
+           core_data,
+           country_population_counts = NULL) {
+    
+    if(is.null(country_population_counts)) {
+      country_population_counts <- population_counts %>%
+        dplyr::filter(division_numeric_code == core_data$units$division_numeric_code) %>%
+        dplyr::filter(is_in_union == core_data$is_in_union)
+    }
+    first_year <- core_data$year_sequence_list$result_seq_years %>% min()
     contraceptive_use_any <-
       get_contraceptive_use_any(posterior_samples = posterior_samples, first_year = first_year)
     contraceptive_use_modern <-
@@ -35,7 +42,7 @@ fpem_calculate_results <-
       get_demand_satisfied_modern(posterior_samples = posterior_samples, first_year = first_year)
     no_need <-
       get_no_need(posterior_samples = posterior_samples, first_year = first_year)
-
+    
     contraceptive_use_any_population_counts <-
       get_estimated_counts(proportions = contraceptive_use_any,
                            annual_country_population_counts = country_population_counts)
@@ -69,7 +76,7 @@ fpem_calculate_results <-
     no_need_population_counts <-
       get_estimated_counts(proportions = no_need,
                            annual_country_population_counts = country_population_counts)
-
+    
     list(
       contraceptive_use_any = contraceptive_use_any,
       contraceptive_use_modern = contraceptive_use_modern,
@@ -95,44 +102,3 @@ fpem_calculate_results <-
       no_need_population_counts = no_need_population_counts
     )
   }
-
-fpem_get_subpopulation_labels <- function(contraceptive_use) {
-  ifelse(
-    contraceptive_use$age_group_bias == "+",
-    "+",
-    ifelse(
-      contraceptive_use$age_group_bias == "-",
-      "-",
-      ifelse(
-        contraceptive_use$age_group_bias == "?",
-        "A",
-        ifelse(
-          contraceptive_use$has_traditional_method_bias == "Y",
-          "F",
-          ifelse(
-            contraceptive_use$modern_method_bias == "-",
-            "S-",
-            ifelse(contraceptive_use$modern_method_bias == "+",
-                   "S+",
-                   "")
-          )
-        )
-      )
-    )
-  )
-}
-
-
-
-#' Convert data frame to JSON string
-#'
-#' @param df `data.frame` Data frame to be converted
-#' @return `character` JSON string
-#' @export
-to_json <- function(df) {
-  df %>%
-    setNames(snakecase::to_lower_camel_case(names(.))) %>%
-    jsonlite::toJSON(null = "null",
-                     na = "null",
-                     pretty = TRUE)
-}

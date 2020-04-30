@@ -4,24 +4,14 @@
 \alias{fpem_plot_country_results}
 \title{plot country results}
 \usage{
-fpem_plot_country_results(
-  country_results,
-  observations = NULL,
-  first_year,
-  last_year,
-  indicators
-)
+fpem_plot_country_results(country_results, core_data, indicators)
 }
 \arguments{
 \item{country_results}{\emph{'Data.frame'} Results data from \code{\link{fpem_calculate_results}}}
 
-\item{first_year}{\emph{\sQuote{Numeric}} The first year of model estimates in output. The model will be fit to all data, including dates before this date if available.}
-
-\item{last_year}{\emph{\sQuote{Numeric}} The last year of model estimates in output. The model will be fit to all data, including dates after this date if available.}
+\item{core_data}{data list from \code{\link{core_data}}}
 
 \item{indicators}{name of indicators from results to be plotted}
-
-\item{core_data}{data list from \code{\link{core_data}}}
 }
 \value{
 list of plots

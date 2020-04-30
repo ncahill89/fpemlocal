@@ -31,30 +31,23 @@ devtools::load_all()
 ## Run models
 `do_1country_run` is a wrapper function to run the family planning estimation model for a country of interest for either married or unmarried women. When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
-# debug(do_1country_run)
-div <- 68 #64 bhutan #728 sudan
-run_y <- do_1country_run(
-  is_in_union = "Y",
-  surveydata_filepath = NULL,
+div <- 68 
+runlist <- fpem_one_country(
+  is_in_union = "ALL",
   service_stats = FALSE,
   division_numeric_code = div,
   first_year = 1975,
   last_year = 2030
 )
-
 ```
 
 ## <a name="post-process"></a>
 ## Process the samples
 `fpem_calculate_results` returns point-estimates for several indicators in long-format.
 ```{r}
-population_counts <- population_counts %>%
-  dplyr::filter(division_numeric_code == run_y$core_data$units$division_numeric_code) %>%
-  dplyr::filter(is_in_union == "Y")
-results_y <- fpemreporting::fpem_calculate_results(
-  posterior_samples = run_y$posterior_samples,
-  country_population_counts = population_counts,
-  first_year = run_y$core_data$year_sequence_list$result_seq_years %>% min()
+results <- fpem_calculate_results(
+  posterior_samples = runlist$posterior_samples,
+  core_data = runlist$core_data
 )
 ```
 ## <a name="plot"></a>
@@ -69,11 +62,10 @@ indicators <- c(
     "contraceptive_use_any"
     )
 
-plots <- fpemreporting::fpem_plot_country_results(
-  country_results = results_y,
-  observations = run_y$core_data$observations,
-  first_year = 1970,
-  last_year = 2030,
+
+plots <- fpem_plot_country_results(
+  country_results = results,
+  core_data = runlist$core_data,
   indicators = indicators
   )
 

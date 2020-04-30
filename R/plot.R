@@ -11,17 +11,12 @@
 #' @export
 fpem_plot_country_results <- function(
   country_results,
-  observations = NULL,
-  first_year,
-  last_year,
-  # is_in_union = NULL,
+  core_data,
   indicators
 ) {
-  # if (!is.null(observations)) {
-  #   if (!is.null(is_in_union)) {
-  #     observations <- observations %>% dplyr::filter(is_in_union == !!is_in_union)
-  #   }
-  # }
+  observations <- core_data$observations
+  first_year <- core_data$year_sequence_list$result_seq_years %>% min()
+  last_year <- core_data$year_sequence_list$result_seq_years %>% max()
   y_label = "Proportion"
   breaks = seq(
     first_year,
@@ -48,8 +43,10 @@ fpem_plot_country_results <- function(
       ggplot2::geom_ribbon(ggplot2::aes(ymin = `2.5%`, ymax = `97.5%`), fill = "plum1") +
       ggplot2::geom_ribbon(ggplot2::aes(ymin = `10%`, ymax = `90%`), fill = "plum") +
       ggplot2::geom_line(ggplot2::aes(y = `50%`), color = "black")
-    if(!is.null(observations)) {
-    if(nrow(observations) > 0) {
+    if(!is.null(observations) &
+       nrow(observations) > 0 &
+       indicator %in% names(observations)
+       ) {
       observations$subpopulation_labels <- fpem_get_subpopulation_labels(observations)
       pl[[indicator]] <- pl[[indicator]] + ggplot2::geom_point(
         data = observations,
@@ -72,7 +69,6 @@ fpem_plot_country_results <- function(
           vjust = -0.3
         ) +
         ggplot2::labs(color = "Data series/type", shape = "Group")
-    }
     }
   }
   return(list(pl[[1]], pl[[2]], pl[[3]], pl[[4]]))

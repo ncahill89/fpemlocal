@@ -1,8 +1,7 @@
 write_jags_model <- function(old_dm = FALSE,
                              include_ss_data = FALSE,
                              nulldata,
-                             is_in_union,
-                             n_ptot) {
+                             is_in_union) {
   
   # model taken from https://github.com/FPcounts/ContraceptiveUse_MWRA_Update
   # deleting all global-only stuff
@@ -164,22 +163,10 @@ for (i in 1:n_unmet){
    logitratio.yunmet.hat.i[get_unmet_i[i]], 1/(pow(nonsample.se.unmet.i[get_unmet_i[i]],2)+ pow(se_log_r_unmet_no_need[get_unmet_i[i]],2)) )
 }
 
-  ", sep = "", append = TRUE, file = "model.txt", fill = TRUE)
-    
-    
-    if (n_ptot > 0) {
-      cat(
-        "
 for (k in 1:n_ptot){
     logit.ptot[get_ptot_i[k]] ~ dnorm(logit.ptothat.i[get_ptot_i[k]], tau.sourcetot)
 }
 
-", sep = "", append = TRUE, file = "model.txt", fill = TRUE)
-    }
-
-
-cat(
-  "
 tau.sourcetot <- pow(sigma.sourcetot,-2)
 # end dms for unmet and trad+modern
 # this part refer to union of indices in unmet and modern
@@ -191,19 +178,10 @@ tau.sourcetot <- pow(sigma.sourcetot,-2)
  mu.in[i,1] <- log(max(0.0000001, q.ii[1,i])/none.adj.i[i])
  mu.in[i,2] <- log(max(0.0000001, q.ii[2,i])/none.adj.i[i])
  logitratio.yunmet.hat.i[i] <- logit(max(0.0000001,q.ii[3,i])/none.adj.i[i])
-    ", sep = "", append = TRUE, file = "model.txt", fill = TRUE)
 
 
-if (n_ptot > 0) {
-  cat(
-    "
  logit.ptothat.i[i] <- logit(max(0.0000001, 1-none.adj.i[i]))
- ", sep = "", append = TRUE, file = "model.txt", fill = TRUE)
-}
 
-
-cat(
-  "
  
     sump.i[i] <- (trad.i[i]*Vtrad.i[i] + modern.i[i]* Vmodern.i[i]
                         + (1- trad.i[i] - modern.i[i]))
@@ -326,7 +304,7 @@ for (m in 1:2){
         }
   ",sep="",append=TRUE, file = "model.txt", fill = TRUE)
   }
-if (is_in_union == "Y" & !nulldata) {
+if (is_in_union == "Y" & !nulldata ) {
   cat("
         for(k in 1:n.training.modonly) {
             logit.ymodonly.i[geti.training.modonly.k[k]] ~ dnorm(logit(q.ii[2,geti.training.modonly.k[k]]), tau.sourcemodonly)

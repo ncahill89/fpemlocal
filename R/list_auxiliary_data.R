@@ -39,7 +39,7 @@ list_auxiliary_data <- function(core_data) {
       logit.ymodonly.i = logit(modern),
       geti.training.modonly.k = geti.training.modonly.k,
       n.training.modonly = length(geti.training.modonly.k),
-      logit.ptot = qlogis(core_data$observations$contraceptive_use_any),
+      logit.ptot = ifelse(is.na(modern), qlogis(core_data$observations$contraceptive_use_any), NA),
       prec = 1/0.0125^2,
       se_log_r_unmet_no_need = core_data$observations$se_log_r_unmet_no_need,
       se_log_r_modern_no_use = core_data$observations$se_log_r_modern_no_use,

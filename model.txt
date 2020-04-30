@@ -117,7 +117,9 @@ for (i in 1:n_unmet){
    logitratio.yunmet.hat.i[get_unmet_i[i]], 1/(pow(nonsample.se.unmet.i[get_unmet_i[i]],2)+ pow(se_log_r_unmet_no_need[get_unmet_i[i]],2)) )
 }
 
-  
+for (k in 1:n_ptot){
+    logit.ptot[get_ptot_i[k]] ~ dnorm(logit.ptothat.i[get_ptot_i[k]], tau.sourcetot)
+}
 
 tau.sourcetot <- pow(sigma.sourcetot,-2)
 # end dms for unmet and trad+modern
@@ -130,7 +132,9 @@ tau.sourcetot <- pow(sigma.sourcetot,-2)
  mu.in[i,1] <- log(max(0.0000001, q.ii[1,i])/none.adj.i[i])
  mu.in[i,2] <- log(max(0.0000001, q.ii[2,i])/none.adj.i[i])
  logitratio.yunmet.hat.i[i] <- logit(max(0.0000001,q.ii[3,i])/none.adj.i[i])
-    
+
+
+ logit.ptothat.i[i] <- logit(max(0.0000001, 1-none.adj.i[i]))
 
  
     sump.i[i] <- (trad.i[i]*Vtrad.i[i] + modern.i[i]* Vmodern.i[i]
@@ -254,20 +258,26 @@ for (m in 1:2){
         }
   
 
-        for(k in 1:n.training.modonly) {
-            logit.ymodonly.i[geti.training.modonly.k[k]] ~ dnorm(logit(q.ii[2,geti.training.modonly.k[k]]), tau.sourcemodonly)
-        }
-        
-
-        for (m in 1:2){
-        for (i in 2:ncat.emal){
-        V.emal.12i[m,i] ~ dlnorm(0, tau.geo.m[m])
-        }
-        for (i in 2:ncat.hw){
-        V.hw.12i[m,i] ~ dlnorm(0, tau.geo.m[m])
-        }
-        }
+  ## m = 1
+  for (i in 2:ncat.emal){
+    V.emal.12i[1,i] <- 1/(1+exp(mu.pos.m[1]))
+  }
   
+  ## m = 2
+  for (i in 2:ncat.emal){
+    W.emal.12i[2,i] ~ dlnorm(mu.pos.m[2], tau.pos)
+    V.emal.12i[2,i] <- 1/(1+W.emal.12i[2,i])
+  }
   
+  ## m = 1
+  for (i in 2:ncat.hw){
+    V.hw.12i[1,i] <- 1+exp(mu.pos.m[1])
+  }
+  
+  ## m = 2
+  for (i in 2:ncat.hw){
+    W.hw.12i[2,i] ~ dlnorm(mu.pos.m[2], tau.pos)
+    V.hw.12i[2,i] <- 1+W.hw.12i[2,i]
+  }
   
 } # end model

@@ -12,7 +12,7 @@ core_data <- function(is_in_union,
                       last_year,
                       subnational) {
   # a single row of data which describes the country
-  unit_data <- unit_data(division_numeric_code)
+  unit_data <- unit_data(division_numeric_code = division_numeric_code)
   # import user data and impute or import package data which is pre imputed
   contraceptive_use <- contraceptive_use_import(
     is_in_union = is_in_union,

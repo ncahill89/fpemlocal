@@ -10,16 +10,15 @@ indicators <- c(
   "contraceptive_use_any"
 )
 
-plots <- fpemreporting::fpem_plot_country_results(
+plots <- fpem_plot_country_results(
   country_results = results_y,
   observations = run_y$core_data$observations,
   first_year = 1970,
   last_year = 2030,
-  is_in_union = "Y",
   indicators = indicators
 )
 
-global <- fpemdata::global_estimates_married %>%
+global <- global_estimates_married %>%
   dplyr::rename(division_numeric_code = Iso)
 for(k in 1:length(indicators_un)) {
   df <- global %>% 

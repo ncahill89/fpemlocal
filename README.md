@@ -40,10 +40,9 @@ a run for married women and a run for unmarried women. See
 more details
 
 ``` r
-div <- 68 #64 bhutan #728 sudan
-run_y <- do_1country_run(
-  is_in_union = "Y",
-  surveydata_filepath = NULL,
+div <- 68 
+runlist <- fpem_one_country(
+  is_in_union = "ALL",
   service_stats = FALSE,
   division_numeric_code = div,
   first_year = 1975,
@@ -59,13 +58,9 @@ run_y <- do_1country_run(
 in long-format.
 
 ``` r
-population_counts <- population_counts %>%
-  dplyr::filter(division_numeric_code == run_y$core_data$units$division_numeric_code) %>%
-  dplyr::filter(is_in_union == "Y")
-results_y <- fpemreporting::fpem_calculate_results(
-  posterior_samples = run_y$posterior_samples,
-  country_population_counts = population_counts,
-  first_year = run_y$core_data$year_sequence_list$result_seq_years %>% min()
+results <- fpem_calculate_results(
+  posterior_samples = runlist$posterior_samples,
+  core_data = runlist$core_data
 )
 ```
 
@@ -85,11 +80,10 @@ indicators <- c(
     "contraceptive_use_any"
     )
 
-plots <- fpemreporting::fpem_plot_country_results(
-  country_results = results_y,
-  observations = run_y$core_data$observations,
-  first_year = 1970,
-  last_year = 2030,
+
+plots <- fpem_plot_country_results(
+  country_results = results,
+  core_data = runlist$core_data,
   indicators = indicators
   )
 

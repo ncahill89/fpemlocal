@@ -36,7 +36,7 @@ To obtain results for our run we have the function `fpem_calculate_results`. Res
 population_counts <- population_counts %>%
   dplyr::filter(division_numeric_code == run_y$core_data$units$division_numeric_code) %>%
   dplyr::filter(is_in_union == "Y")
-results_y <- fpemreporting::fpem_calculate_results(
+results_y <- fpem_calculate_results(
   posterior_samples = run_y$posterior_samples,
   country_population_counts = population_counts,
   first_year = run_y$core_data$year_sequence_list$result_seq_years %>% min()

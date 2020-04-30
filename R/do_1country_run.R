@@ -54,7 +54,7 @@ do_1country_run <- function(
     list_service_stats(
       service_stats = service_stats,
       service_stats_filepath = service_stats_filepath,
-      model_seq_years = core_data$year_sequence_list$model_seq_years,
+      model_seq_years = core_data$year_sequence_list$model_seq_y,
       division_numeric_code,
       first_year
     )
@@ -64,8 +64,7 @@ do_1country_run <- function(
     #is_in_union = is_in_union,
     include_ss_data = !is.null(list_service_stats),
     nulldata = nrow(core_data$observations) == 0,
-    is_in_union = is_in_union,
-    n_ptot = list_auxiliary$n_ptot
+    is_in_union = is_in_union
   )
   mod <- jags.parallel(
     data = c(list_auxiliary, list_global, list_bias, list_service_stats, Y = 1),
