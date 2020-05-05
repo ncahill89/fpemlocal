@@ -46,6 +46,7 @@ core_data <- function(is_in_union,
 
   # the core_data list
   core_data = list(
+    is_in_union = is_in_union,
     units = unit_data,
     start_year = 1990, # reference year for rate model (1990 in current version),
     observations = contraceptive_use,

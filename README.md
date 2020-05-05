@@ -41,7 +41,8 @@ more details
 
 ``` r
 div <- 68 
-runlist <- fpem_one_country(
+fpem_one_country_autosave(
+  runname = paste0(div),
   is_in_union = "ALL",
   service_stats = FALSE,
   division_numeric_code = div,
@@ -58,9 +59,8 @@ runlist <- fpem_one_country(
 in long-format.
 
 ``` r
-results <- fpem_calculate_results(
-  posterior_samples = runlist$posterior_samples,
-  core_data = runlist$core_data
+fpem_get_results_autosave(
+  runname = paste0(div)
 )
 ```
 
@@ -80,17 +80,17 @@ indicators <- c(
     "contraceptive_use_any"
     )
 
-
-plots <- fpem_plot_country_results(
-  country_results = results,
-  core_data = runlist$core_data,
+fpem_get_plots_autosave(
+  runname = paste0(div),
   indicators = indicators
   )
-
-
-gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
-                 ncol=2,
-                 top="In-union women")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+    ## png 
+    ##   2
+
+``` r
+# gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
+#                  ncol=2,
+#                  top="In-union women")
+```

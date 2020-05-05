@@ -15,8 +15,6 @@ get_progress(
 )
 }
 \arguments{
-\item{posterior_samples}{\emph{'Numeric array'} An array of samples of dimension chains x samples x years x proportions}
-
 \item{from_year_population_count}{`integer`
 Number of individuals in the sample population for "from" year (1 to calculate proportion)}
 

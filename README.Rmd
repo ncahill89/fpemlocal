@@ -25,14 +25,15 @@ library(FPEMcountry)
 library(ggplot2)
 library(grid)
 library(gridExtra)
-devtools::load_all()
+# devtools::load_all()
 ```
 ## <a name="run"></a>
 ## Run models
 `do_1country_run` is a wrapper function to run the family planning estimation model for a country of interest for either married or unmarried women. When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
 div <- 68 
-runlist <- fpem_one_country(
+fpem_one_country_autosave(
+  runname = paste0(div),
   is_in_union = "ALL",
   service_stats = FALSE,
   division_numeric_code = div,
@@ -45,9 +46,8 @@ runlist <- fpem_one_country(
 ## Process the samples
 `fpem_calculate_results` returns point-estimates for several indicators in long-format.
 ```{r}
-results <- fpem_calculate_results(
-  posterior_samples = runlist$posterior_samples,
-  core_data = runlist$core_data
+fpem_get_results_autosave(
+  runname = paste0(div)
 )
 ```
 ## <a name="plot"></a>
@@ -62,15 +62,13 @@ indicators <- c(
     "contraceptive_use_any"
     )
 
-
-plots <- fpem_plot_country_results(
-  country_results = results,
-  core_data = runlist$core_data,
+fpem_get_plots_autosave(
+  runname = paste0(div),
   indicators = indicators
   )
 
 
-gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
-                 ncol=2,
-                 top="In-union women")
+# gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
+#                  ncol=2,
+#                  top="In-union women")
 ```

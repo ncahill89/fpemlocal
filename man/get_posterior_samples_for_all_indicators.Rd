@@ -7,8 +7,6 @@
 get_posterior_samples_for_all_indicators(posterior_samples, years)
 }
 \arguments{
-\item{posterior_samples}{\emph{'Numeric array'} An array of samples of dimension chains x samples x years x proportions}
-
 \item{first_year}{`integer` Earliest year represented in the data}
 }
 \value{

@@ -2,24 +2,28 @@
 #'
 #' Returns point estimates from posterior samples in long format.
 #'
-#' @param posterior_samples \emph{'Numeric array'} An array of samples of dimension chains x samples x years x proportions
+#' @param runlist \emph{'list'} a list with core_dat and posteior samples
 #' @param country_population_counts \emph{'Numeric Vector'} A vector of population counts selected from \code{\link[get_population_counts]{get_population_counts}}
-#' @param first_year \emph{'Numeric'} A year format XXXX denoting the first year of projection
 #'
 #' @return \emph{'Data.frame'} A data.frame of point estimates in long format.
 #'
 #' @export
 fpem_calculate_results <-
-  function(posterior_samples,
-           core_data,
+  function(runname = NULL,
+           runlist,
            country_population_counts = NULL) {
     
     if(is.null(country_population_counts)) {
-      country_population_counts <- population_counts %>%
-        dplyr::filter(division_numeric_code == core_data$units$division_numeric_code) %>%
-        dplyr::filter(is_in_union == core_data$is_in_union)
+      country_population_counts <- population_counts
     }
-    first_year <- core_data$year_sequence_list$result_seq_years %>% min()
+    country_population_counts <- country_population_counts %>%
+        dplyr::filter(division_numeric_code == runlist$core_data$units$division_numeric_code) %>%
+        dplyr::filter(is_in_union == runlist$core_data$is_in_union)
+
+    
+    posterior_samples <- runlist$posterior_samples
+    first_year <- runlist$core_data$year_sequence_list$result_seq_years %>% min()
+    
     contraceptive_use_any <-
       get_contraceptive_use_any(posterior_samples = posterior_samples, first_year = first_year)
     contraceptive_use_modern <-
@@ -77,7 +81,7 @@ fpem_calculate_results <-
       get_estimated_counts(proportions = no_need,
                            annual_country_population_counts = country_population_counts)
     
-    list(
+    results <- list(
       contraceptive_use_any = contraceptive_use_any,
       contraceptive_use_modern = contraceptive_use_modern,
       contraceptive_use_traditional = contraceptive_use_traditional,
@@ -101,4 +105,5 @@ fpem_calculate_results <-
       demand_satisfied_modern_population_counts = demand_satisfied_modern_population_counts,
       no_need_population_counts = no_need_population_counts
     )
+
   }

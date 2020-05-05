@@ -16,8 +16,6 @@ get_target_from_posterior_probability(
 )
 }
 \arguments{
-\item{posterior_samples}{\emph{'Numeric array'} An array of samples of dimension chains x samples x years x proportions}
-
 \item{indicator}{`integer` Indicator index (1 = modern, 2 = traditional, 3 = unmet)}
 
 \item{year}{`integer` Year index}

@@ -5,17 +5,15 @@
 \title{Calculate results from samples}
 \usage{
 fpem_calculate_results(
-  posterior_samples,
-  core_data,
+  runname = NULL,
+  runlist,
   country_population_counts = NULL
 )
 }
 \arguments{
-\item{posterior_samples}{\emph{'Numeric array'} An array of samples of dimension chains x samples x years x proportions}
+\item{runlist}{\emph{'list'} a list with core_dat and posteior samples}
 
 \item{country_population_counts}{\emph{'Numeric Vector'} A vector of population counts selected from \code{\link[get_population_counts]{get_population_counts}}}
-
-\item{first_year}{\emph{'Numeric'} A year format XXXX denoting the first year of projection}
 }
 \value{
 \emph{'Data.frame'} A data.frame of point estimates in long format.
