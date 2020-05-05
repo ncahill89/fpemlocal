@@ -9,17 +9,16 @@
 #'
 #' @export
 fpem_calculate_results <-
-  function(runname = NULL,
-           runlist,
+  function(runlist,
            country_population_counts = NULL) {
     
     if(is.null(country_population_counts)) {
       country_population_counts <- population_counts
     }
     country_population_counts <- country_population_counts %>%
-        dplyr::filter(division_numeric_code == runlist$core_data$units$division_numeric_code) %>%
-        dplyr::filter(is_in_union == runlist$core_data$is_in_union)
-
+      dplyr::filter(division_numeric_code == runlist$core_data$units$division_numeric_code) %>%
+      dplyr::filter(is_in_union == runlist$core_data$is_in_union)
+    
     
     posterior_samples <- runlist$posterior_samples
     first_year <- runlist$core_data$year_sequence_list$result_seq_years %>% min()
@@ -105,5 +104,5 @@ fpem_calculate_results <-
       demand_satisfied_modern_population_counts = demand_satisfied_modern_population_counts,
       no_need_population_counts = no_need_population_counts
     )
-
+    
   }
