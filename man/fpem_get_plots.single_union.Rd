@@ -4,12 +4,14 @@
 \alias{fpem_get_plots.single_union}
 \title{plot country results}
 \usage{
-\method{fpem_get_plots}{single_union}(runlist, results, indicators)
+\method{fpem_get_plots}{single_union}(runlist, results, indicators, compare_to_global)
 }
 \arguments{
 \item{results}{\emph{'Data.frame'} Results data from \code{\link{fpem_calculate_results}}}
 
 \item{indicators}{name of indicators from results to be plotted}
+
+\item{compare_to_global}{logical, if TRUE plots estimates from global model with dotted lines}
 }
 \value{
 list of plots

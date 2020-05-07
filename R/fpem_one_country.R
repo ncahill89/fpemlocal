@@ -11,7 +11,8 @@ fpem_one_country_autosave <- function(
   division_numeric_code,
   first_year = NULL,
   last_year,
-  subnational = FALSE
+  subnational = FALSE,
+  ...
 ) {
   runlist <- fpem_one_country(
     is_in_union = is_in_union,
@@ -21,7 +22,8 @@ fpem_one_country_autosave <- function(
     division_numeric_code = division_numeric_code,
     first_year = first_year,
     last_year = last_year,
-    subnational = subnational
+    subnational = subnational,
+    ...
   )
   if (!dir.exists("runs")) dir.create("runs")
   saveRDS(runlist, file.path("runs", paste0(runname, ".rds")))
@@ -33,14 +35,15 @@ fpem_one_country_autosave <- function(
 #' @inherit do_1country_run
 #' @export
 fpem_one_country <- function(
-  is_in_union = "Y",
+  is_in_union,
   surveydata_filepath = NULL,
   service_stats = FALSE,
   service_stats_filepath = NULL,
   division_numeric_code,
   first_year = NULL,
   last_year,
-  subnational = FALSE
+  subnational = FALSE,
+  
 ) {
   if(is_in_union == "ALL") {
     runy <- do_1country_run(

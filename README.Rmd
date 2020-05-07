@@ -25,7 +25,7 @@ library(FPEMcountry)
 library(ggplot2)
 library(grid)
 library(gridExtra)
-# devtools::load_all()
+devtools::load_all()
 ```
 ## <a name="run"></a>
 ## Run models
@@ -64,7 +64,8 @@ indicators <- c(
 
 fpem_get_plots_autosave(
   runname = paste0(div),
-  indicators = indicators
+  indicators = indicators,
+  compare_to_global = TRUE
   )
 
 

@@ -5,13 +5,14 @@
 #' @param results \emph{'Data.frame'} Results data from \code{\link{fpem_calculate_results}}
 #' @param core_data data list from \code{\link{core_data}}
 #' @param indicators name of indicators from results to be plotted
-#'
+#' @param compare_to_global logical, if TRUE plots estimates from global model with dotted lines
 #' @return list of plots
 #' @export
 fpem_plots <- function(
   runlist,
   results,
-  indicators
+  indicators,
+  compare_to_global = FALSE
 ) {
   observations <- runlist$core_data$observations
   first_year <- runlist$core_data$year_sequence_list$result_seq_years %>% min()
@@ -42,6 +43,8 @@ fpem_plots <- function(
       ggplot2::geom_ribbon(ggplot2::aes(ymin = `2.5%`, ymax = `97.5%`), fill = "plum1") +
       ggplot2::geom_ribbon(ggplot2::aes(ymin = `10%`, ymax = `90%`), fill = "plum") +
       ggplot2::geom_line(ggplot2::aes(y = `50%`), color = "black")
+  
+    # plot observations if they exist
     if(!is.null(observations) &
        nrow(observations) > 0 &
        indicator %in% names(observations)
@@ -70,26 +73,23 @@ fpem_plots <- function(
         ggplot2::labs(color = "Data series/type", shape = "Group")
     }
   }
+  if (runlist$core_data$units$division_numeric_code %in% global_estimates$division_numeric_code &
+      compare_to_global) {
+    global_estimates <- global_estimates %>%
+      dplyr::filter(division_numeric_code == runlist$core_data$units$division_numeric_code,
+                    is_in_union == runlist$core_data$is_in_union)
+    for(indicator in indicators[1:3]) { # hack since we only have the first three
+      global_estimates_filt <- global_estimates %>%
+        dplyr::filter(indicator == !!indicator)
+      pl[[indicator]] <- pl[[indicator]] +
+        ggplot2::geom_line(aes(x = year, y = `0.5`), data = global_estimates_filt, linetype = 'dashed') +
+        ggplot2::geom_line(aes(x = year, y = `0.025`), data = global_estimates_filt, linetype = 'dashed') +
+        ggplot2::geom_line(aes(x = year, y = `0.975`), data = global_estimates_filt, linetype = 'dashed')
+    }
+  }
+  
   return(list(pl[[1]], pl[[2]], pl[[3]], pl[[4]]))
 }
 
 
 
-#' Reformat UNPD global data to long format
-#'
-#'
-#' @param data emph{'Data.frame'} Estimates for modern/trad/unmet obtained from posterior of global model in wide format
-#' @param code emph{'Numeric'} A country code to filter on since we only run one country at a time on our end
-#' @export
-#'
-#' @return emph{'Data.frame} A long format data of specific country to be plotted
-#'
-#' @examples get_global_estimates_married() %>% filter(par =="unmet") %>% process_global(code)
-process_global <- function(data, code) {
-  data %>%
-    dplyr::filter(division_numeric_code == !! code) %>%
-    dplyr::select(division_numeric_code, Percentile,  "1975.5":"2020.5") %>%
-    tidyr::gather(year, value, "1975.5":"2020.5") %>%
-    dplyr::mutate(year = as.numeric(year)) %>%
-    tidyr::spread(Percentile, value)
-}

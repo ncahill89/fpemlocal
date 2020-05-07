@@ -4,7 +4,12 @@
 \alias{fpem_get_plots_autosave}
 \title{plot country results}
 \usage{
-fpem_get_plots_autosave(runname, ...)
+fpem_get_plots_autosave(runname, indicators, compare_to_global)
+}
+\arguments{
+\item{indicators}{name of indicators from results to be plotted}
+
+\item{compare_to_global}{logical, if TRUE plots estimates from global model with dotted lines}
 }
 \value{
 list of plots

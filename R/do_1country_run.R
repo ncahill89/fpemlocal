@@ -29,7 +29,13 @@ do_1country_run <- function(
                             division_numeric_code,
                             first_year = NULL,
                             last_year,
-                            subnational = FALSE
+                            subnational = FALSE,
+                            diagnostic = FALSE,
+                            params_to_save = c("mod.ct", "unmet.ct", "trad.ct", "mu.in", "logitratio.yunmet.hat.i"),
+                            nchains = 3,
+                            niter = 2500,
+                            nburnin = 500,
+                            nthin = max(1, floor((niter - nburnin) / 1000))
 ) {
   # check inputs to this wrapper
   check_inputs(
@@ -68,11 +74,12 @@ do_1country_run <- function(
   )
   mod <- jags.parallel(
     data = c(list_auxiliary, list_global, list_bias, list_service_stats, Y = 1),
-    parameters.to.save = c("mod.ct", "unmet.ct", "trad.ct", "mu.in", "logitratio.yunmet.hat.i"),
+    parameters.to.save = params_to_save,
     model.file = "model.txt",
-    n.chains = 3,
-    n.iter = 2000,
-    n.burnin = 500
+    n.chains = nchains,
+    n.iter = niter,
+    n.burnin = nburnin,
+    n.thin = nthin
     )
   # bias adjusted data added to core data based on model estimates of bias
   if (nrow(core_data$observations) > 0) {
@@ -84,9 +91,18 @@ do_1country_run <- function(
   }
   # reformat samples
   posterior_samples <- posterior_samples_array_format(mod, core_data)
-  return(list(
-    posterior_samples = posterior_samples,
-    core_data = core_data
+  if (diagnostic) {
+    return(list(
+      posterior_samples = posterior_samples,
+      bugsoutput = mod$BUGSoutput,
+      core_data = core_data
     )
-  )
+    )
+  } else {
+    return(list(
+      posterior_samples = posterior_samples,
+      core_data = core_data
+      )
+    )
+  }
 }

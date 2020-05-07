@@ -12,7 +12,11 @@ do_1country_run(
   division_numeric_code,
   first_year = NULL,
   last_year,
-  subnational = FALSE
+  subnational = FALSE,
+  nchains = 3,
+  niter = 2500,
+  nburnin = 500,
+  nthin = max(1, floor((niter - nburnin)/1000))
 )
 }
 \arguments{

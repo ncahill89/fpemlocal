@@ -8,12 +8,15 @@ output: html_document
 
 
 ```{r}
-ptm <- proc.time()
-#### to be replaced with current run
-proc.time() - ptm
-res$mod$BUGSoutput$summary
-bugs_15000 <- res$mod$BUGSoutput
-mcmc.array <- bugs_15000$sims.array
+bugs <- mod$BUGSoutput
+saveRDS(bugs, "bugs.rds")
+bugs <- readRDS("bugs.rds")
+# ptm <- proc.time()
+# #### to be replaced with current run
+# proc.time() - ptm
+# bugs$summary
+# bugs_15000 <- res$mod$BUGSoutput
+mcmc.array <- bugs$sims.array
 library(coda)
 invlogit <- function(x){
   exp(x)/(1+exp(x))
@@ -30,17 +33,17 @@ invlogit <- function(x){
 # "setlevel.c",
 # "RT.c",
 # "unmet.intercept.c"
-par <- res$mod$BUGSoutput$sims.list$unmet.ct %>% invlogit()
+par <- bugs$sims.list$unmet.ct %>% invlogit()
 unmet <- c()
 for (i in 1:dim(par)[3]) {
 unmet[i] <- effectiveSize(par[,,i]) %>% round()
 }
-par <- res$mod$BUGSoutput$sims.list$mod.ct %>% invlogit()
+par <- bugs$sims.list$mod.ct %>% invlogit()
 mod <- c()
 for (i in 1:dim(par)[3]) {
 mod[i] <- effectiveSize(par[,,i]) %>% round()
 }
-par <- res$mod$BUGSoutput$sims.list$trad.ct %>% invlogit()
+par <- bugs$sims.list$trad.ct %>% invlogit()
 trad <- c()
 for (i in 1:dim(par)[3]) {
 trad[i] <- effectiveSize(par[,,i]) %>% round
@@ -68,11 +71,25 @@ PlotTrace <- function(#Traceplot for one parameter
   }
 }
 
-pdf("traceplots_lowneffpars.pdf")
-PlotTrace("logitRomega.c", mcmc.array)
-PlotTrace("mu.jn[4,1]", mcmc.array)
+max(bugs$summary[,"Rhat"])
+bugs$summary[bugs$summary[,"Rhat"]>1.1,]
+write.table(bugs$summary[bugs$summary[,"Rhat"]>1.1,], "rhats.txt")
+
+
+
+
+
+first_year <- 1975
+last_year <- 2030
+I <- 8 #observations
+
+
+pdf("traceplots.pdf")
+# PlotTrace("logitRomega.c", mcmc.array)
+PlotTrace("mu.in[4,1]", mcmc.array)
+for (t in 1:length(first_year:last_year)) PlotTrace(paste0("mod.ct[1,",t,"]"), mcmc.array)
 for (t in 1:length(first_year:last_year)) PlotTrace(paste0("trad.ct[1,",t,"]"), mcmc.array)
-for (j in 1:6) PlotTrace(paste0("logitratio.yunmet.hat.j[",j,"]"), mcmc.array)
 for (t in 1:length(first_year:last_year)) PlotTrace(paste0("unmet.ct[1,",t,"]"), mcmc.array)
+for (i in 1:I) PlotTrace(paste0("logitratio.yunmet.hat.i[",i,"]"), mcmc.array)
 dev.off()
 ```

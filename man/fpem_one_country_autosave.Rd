@@ -4,34 +4,7 @@
 \alias{fpem_one_country_autosave}
 \title{Run one country model and automatically save output}
 \usage{
-fpem_one_country_autosave(
-  runname = NULL,
-  is_in_union = "Y",
-  surveydata_filepath = NULL,
-  service_stats = FALSE,
-  service_stats_filepath = NULL,
-  division_numeric_code,
-  first_year = NULL,
-  last_year,
-  subnational = FALSE
-)
-}
-\arguments{
-\item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
-
-\item{surveydata_filepath}{\emph{\sQuote{Character}} If NULL package data is used.}
-
-\item{service_stats}{\emph{\sQuote{Logical}} If FALSE service statistics are not used. Service stats are not public. Requires FPcounts/fpemservicestat package.}
-
-\item{service_stats_filepath}{\emph{\sQuote{Character}}If NULL private package data is used. Requires FPcounts/fpemservicestat package.}
-
-\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
-
-\item{first_year}{\emph{\sQuote{Numeric}} The first year of model estimates in output. The model will be fit to all data, including dates before this date if available.}
-
-\item{last_year}{\emph{\sQuote{Numeric}} The last year of model estimates in output. The model will be fit to all data, including dates after this date if available.}
-
-\item{subnational}{'\emph{\sQuote{Logical}} If FALSE runs the national model.}
+fpem_one_country_autosave(runname, ...)
 }
 \value{
 \emph{\sQuote{List}}

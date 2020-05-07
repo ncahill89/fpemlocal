@@ -4,11 +4,7 @@
 \alias{fpem_calculate_results}
 \title{Calculate results from samples}
 \usage{
-fpem_calculate_results(
-  runname = NULL,
-  runlist,
-  country_population_counts = NULL
-)
+fpem_calculate_results(runlist, country_population_counts = NULL)
 }
 \arguments{
 \item{runlist}{\emph{'list'} a list with core_dat and posteior samples}
