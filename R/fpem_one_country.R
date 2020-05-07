@@ -11,8 +11,7 @@ fpem_one_country_autosave <- function(
   division_numeric_code,
   first_year = NULL,
   last_year,
-  subnational = FALSE,
-  ...
+  subnational = FALSE
 ) {
   runlist <- fpem_one_country(
     is_in_union = is_in_union,
@@ -22,8 +21,7 @@ fpem_one_country_autosave <- function(
     division_numeric_code = division_numeric_code,
     first_year = first_year,
     last_year = last_year,
-    subnational = subnational,
-    ...
+    subnational = subnational
   )
   if (!dir.exists("runs")) dir.create("runs")
   saveRDS(runlist, file.path("runs", paste0(runname, ".rds")))
