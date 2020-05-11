@@ -82,9 +82,9 @@ fpem_plots <- function(
       global_estimates_filt <- global_estimates %>%
         dplyr::filter(indicator == !!indicator)
       pl[[indicator]] <- pl[[indicator]] +
-        ggplot2::geom_line(aes(x = year, y = `0.5`), data = global_estimates_filt, linetype = 'dashed') +
-        ggplot2::geom_line(aes(x = year, y = `0.025`), data = global_estimates_filt, linetype = 'dashed') +
-        ggplot2::geom_line(aes(x = year, y = `0.975`), data = global_estimates_filt, linetype = 'dashed')
+        ggplot2::geom_line(ggplot2::aes(x = year, y = `0.5`), data = global_estimates_filt, linetype = 'dashed') +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = `0.025`), data = global_estimates_filt, linetype = 'dashed') +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = `0.975`), data = global_estimates_filt, linetype = 'dashed')
     }
   }
   

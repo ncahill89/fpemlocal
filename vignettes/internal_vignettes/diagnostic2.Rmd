@@ -25,6 +25,9 @@ This package is the one country implementation of FPEM. It uses higher level par
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(FPEMcountry)
+library(ggplot2)
+library(grid)
+library(gridExtra)
 devtools::load_all()
 ```
 ## <a name="run"></a>
@@ -40,8 +43,35 @@ fpem_one_country_autosave(
   service_stats = FALSE,
   division_numeric_code = div,
   first_year = 1970,
-  last_year = 2030
+  last_year = 2030,
+  diagnostic = TRUE,
+  params_to_save = c(
+    "mod.ct",
+    "unmet.ct",
+    "trad.ct",
+    "mu.in",
+    "logitratio.yunmet.hat.i",
+    "pmax.c",
+    "logitpmax.c",
+    "logitRmax.c",
+    "Rmax.c",
+    "logitomega.c",
+    "omega.c",
+    "Romega.c",
+    "logitRomega.c",
+    "s.ct",
+    "setlevel.c",
+    "P.ct",
+    "RT.c",
+    "unmet.intercept.c"
+  ),
+  nchains = 6,
+  niter = 10000,
+  nburnin = 1000
 )
+
+
+     
 ```
 
 ## <a name="post-process"></a>
@@ -69,4 +99,9 @@ fpem_get_plots_autosave(
   indicators = indicators,
   compare_to_global = TRUE
   )
+
+
+# gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
+#                  ncol=2,
+#                  top="In-union women")
 ```
