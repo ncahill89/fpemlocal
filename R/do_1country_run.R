@@ -94,7 +94,7 @@ do_1country_run <- function(
   if (diagnostic) {
     return(list(
       posterior_samples = posterior_samples,
-      bugsoutput = mod$BUGSoutput,
+      jagsout = mod,
       core_data = core_data
     )
     )

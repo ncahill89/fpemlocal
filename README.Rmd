@@ -4,6 +4,9 @@ output: github_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# knitr::opts_knit$get("root.dir")  # alternative to the previous line
+# the default autosave location will depend on this being setup
 options(warn=-1)
 ```
 
@@ -31,15 +34,42 @@ devtools::load_all()
 ## Run models
 `do_1country_run` is a wrapper function to run the family planning estimation model for a country of interest for either married or unmarried women. When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
-div <- 68 
+div <- 68
 fpem_one_country_autosave(
   runname = paste0(div),
   is_in_union = "ALL",
   service_stats = FALSE,
   division_numeric_code = div,
-  first_year = 1975,
-  last_year = 2030
+  first_year = 1970,
+  last_year = 2030,
+  diagnostic = TRUE,
+  params_to_save = c(
+    "mod.ct",
+    "unmet.ct",
+    "trad.ct",
+    "mu.in",
+    "logitratio.yunmet.hat.i",
+    "pmax.c",
+    "logitpmax.c",
+    "logitRmax.c",
+    "Rmax.c",
+    "logitomega.c",
+    "omega.c",
+    "Romega.c",
+    "logitRomega.c",
+    "s.ct",
+    "setlevel.c",
+    "P.ct",
+    "RT.c",
+    "unmet.intercept.c"
+  ),
+  nchains = 6,
+  niter = 10000,
+  nburnin = 1000
 )
+
+
+     
 ```
 
 ## <a name="post-process"></a>

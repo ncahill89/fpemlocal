@@ -5,12 +5,18 @@ date: "April 26, 2019"
 output: html_document
 ---
 
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# knitr::opts_knit$get("root.dir")  # alternative to the previous line
+# the default autosave location will depend on this being setup
+options(warn=-1)
+```
 
 ```{r}
-bugs <- mod$BUGSoutput
-saveRDS(bugs, "bugs.rds")
-bugs <- readRDS("bugs.rds")
+#make more dynamic later
+jagsout <- readRDS("output/runs/68.rds")$runy$jagsout
+bugs <- jagsout$BUGSoutput
 # ptm <- proc.time()
 # #### to be replaced with current run
 # proc.time() - ptm
@@ -49,7 +55,7 @@ for (i in 1:dim(par)[3]) {
 trad[i] <- effectiveSize(par[,,i]) %>% round
 }
 temp <- data.frame(unmet = unmet, mod = mod, trad = trad)
-write.table(temp, "neff_logit.txt")
+write.table(temp, "output/neff_logit.txt")
 
 
 
@@ -77,19 +83,32 @@ write.table(bugs$summary[bugs$summary[,"Rhat"]>1.1,], "rhats.txt")
 
 
 
+temp <- MCMCvis::MCMCsummary(jagsout)
+temp$Rhat %>% max
+max(jagsout$BUGSoutput$summary[,"Rhat"])
+
+MCMCvis::MCMCtrace(jagsout,
+          params = "all",
+                 ISB = FALSE,
+                 pdf = TRUE,
+                 # prior = pr,
+                 post_zm = TRUE,
+          open_pdf = FALSE,
+          Rhat = TRUE,
+          filename = "output/mcmctrace.pdf")
+          #wd = getwd())
 
 
-first_year <- 1975
-last_year <- 2030
-I <- 8 #observations
 
-
-pdf("traceplots.pdf")
-# PlotTrace("logitRomega.c", mcmc.array)
-PlotTrace("mu.in[4,1]", mcmc.array)
-for (t in 1:length(first_year:last_year)) PlotTrace(paste0("mod.ct[1,",t,"]"), mcmc.array)
-for (t in 1:length(first_year:last_year)) PlotTrace(paste0("trad.ct[1,",t,"]"), mcmc.array)
-for (t in 1:length(first_year:last_year)) PlotTrace(paste0("unmet.ct[1,",t,"]"), mcmc.array)
-for (i in 1:I) PlotTrace(paste0("logitratio.yunmet.hat.i[",i,"]"), mcmc.array)
-dev.off()
+# first_year <- 1975
+# last_year <- 2030
+# I <- 8 #observations
+# pdf("traceplots.pdf")
+# # PlotTrace("logitRomega.c", mcmc.array)
+# PlotTrace("mu.in[4,1]", mcmc.array)
+# for (t in 1:length(first_year:last_year)) PlotTrace(paste0("mod.ct[1,",t,"]"), mcmc.array)
+# for (t in 1:length(first_year:last_year)) PlotTrace(paste0("trad.ct[1,",t,"]"), mcmc.array)
+# for (t in 1:length(first_year:last_year)) PlotTrace(paste0("unmet.ct[1,",t,"]"), mcmc.array)
+# for (i in 1:I) PlotTrace(paste0("logitratio.yunmet.hat.i[",i,"]"), mcmc.array)
+# dev.off()
 ```

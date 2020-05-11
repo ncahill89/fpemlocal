@@ -5,17 +5,17 @@
 fpem_get_plots_autosave <- function(runname,
                                     indicators,
                                     compare_to_global) { #can we replace this optional arguement with ...?
-  runlist <- readRDS(file.path("runs", paste0(runname, ".rds")))
-  results <- readRDS(file.path("results", paste0(runname, ".rds")))
+  runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
+  results <- readRDS(file.path("output/results", paste0(runname, ".rds")))
   plotlist <- fpem_get_plots(
     runlist = runlist,
     results = results,
     indicators = indicators,
     compare_to_global = compare_to_global # also here?
   )
-  if (!dir.exists("plots"))
-    dir.create("plots")
-  pdf(file.path("plots", paste0(runname, ".pdf")), 18, 10)
+  if (!dir.exists("output")) dir.create("output")
+  if (!dir.exists("output/plots")) dir.create("output/plots")
+  pdf(file.path("output/plots", paste0(runname, ".pdf")), 18, 10)
   for (i in 1:length(plotlist)) {
     plots <- plotlist[[i]]
     gridExtra::grid.arrange(

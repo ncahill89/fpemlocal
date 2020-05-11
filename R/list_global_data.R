@@ -112,25 +112,25 @@ list_global_data = function(is_in_union, core_data) {
     var_setlevel = var_setlevel,
     # pars which are based on a hierarchical model in the global model
     lp.world = lp.world,
-    sd_lp.world = sd_lp.world,
+    sd_lp.world = 0,#sd_lp.world,
 
     lr.world = lr.world,
-    sd_lr.world = sd_lr.world,
+    sd_lr.world = 0,#sd_lr.world,
 
     unmet.subreg = unmet.subreg,
-    sd_unmet.subreg = sd_unmet.subreg,
+    sd_unmet.subreg = 0,#sd_unmet.subreg,
 
     w.subreg = w.subreg,
-    sd_w.subreg = sd_w.subreg,
+    sd_w.subreg = 0,#sd_w.subreg,
 
     Rw.subreg = Rw.subreg,
-    sd_Rw.subreg = sd_Rw.subreg,
+    sd_Rw.subreg = 0,# sd_Rw.subreg,
 
     RT.subreg = RT.subreg,
-    sd_RT.subreg = sd_RT.subreg,
+    sd_RT.subreg = 0,#sd_RT.subreg,
 
     mean_setlevel = mean_setlevel,
-    sd_mean_setlevel = sd_mean_setlevel,
+    sd_mean_setlevel = 0,#sd_mean_setlevel,
 
     ####### end pars based on hier hier
     ###### end pars which change

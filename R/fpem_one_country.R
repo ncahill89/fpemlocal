@@ -4,27 +4,14 @@
 #' @export
 fpem_one_country_autosave <- function(
   runname = NULL,
-  is_in_union = "Y",
-  surveydata_filepath = NULL,
-  service_stats = FALSE,
-  service_stats_filepath = NULL,
-  division_numeric_code,
-  first_year = NULL,
-  last_year,
-  subnational = FALSE
+  ...
 ) {
   runlist <- fpem_one_country(
-    is_in_union = is_in_union,
-    surveydata_filepath = surveydata_filepath,
-    service_stats = service_stats,
-    service_stats_filepath = service_stats_filepath,
-    division_numeric_code = division_numeric_code,
-    first_year = first_year,
-    last_year = last_year,
-    subnational = subnational
+    ...
   )
-  if (!dir.exists("runs")) dir.create("runs")
-  saveRDS(runlist, file.path("runs", paste0(runname, ".rds")))
+  if (!dir.exists("output")) dir.create("output")
+  if (!dir.exists("output/runs")) dir.create("output/runs")
+  saveRDS(runlist, file.path("output/runs", paste0(runname, ".rds")))
 }
 
 
@@ -34,35 +21,17 @@ fpem_one_country_autosave <- function(
 #' @export
 fpem_one_country <- function(
   is_in_union,
-  surveydata_filepath = NULL,
-  service_stats = FALSE,
-  service_stats_filepath = NULL,
-  division_numeric_code,
-  first_year = NULL,
-  last_year,
-  subnational = FALSE,
+  ...
   
 ) {
   if(is_in_union == "ALL") {
     runy <- do_1country_run(
       is_in_union = "Y",
-      surveydata_filepath = surveydata_filepath,
-      service_stats = service_stats,
-      service_stats_filepath = service_stats_filepath,
-      division_numeric_code = division_numeric_code,
-      first_year = first_year,
-      last_year = last_year,
-      subnational = subnational
+      ...
     )
     runn <- do_1country_run(
       is_in_union = "N",
-      surveydata_filepath = surveydata_filepath,
-      service_stats = service_stats,
-      service_stats_filepath = service_stats_filepath,
-      division_numeric_code = division_numeric_code,
-      first_year = first_year,
-      last_year = last_year,
-      subnational = subnational
+      ...
     )
     samples_all <- posterior_samples_all_women(in_union_posterior_samples = runy$posterior_samples, 
                                                not_in_union_posterior_samples = runn$posterior_samples, 
@@ -80,13 +49,7 @@ fpem_one_country <- function(
   } else {
     runlist <-   do_1country_run(
       is_in_union = is_in_union,
-      surveydata_filepath = surveydata_filepath,
-      service_stats = service_stats,
-      service_stats_filepath = service_stats_filepath,
-      division_numeric_code = division_numeric_code,
-      first_year = first_year,
-      last_year = last_year,
-      subnational = subnational
+      ...
     )
     class(runlist) <- "single_union"
   }

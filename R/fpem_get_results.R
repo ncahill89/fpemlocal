@@ -7,12 +7,12 @@ fpem_get_results_autosave <-
   function(runname = NULL,
            country_population_counts = NULL) {
     
-    runlist <- readRDS(file.path("runs", paste0(runname, ".rds")))
+    runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
     results <- fpem_get_results(runlist = runlist,
                      country_population_counts = country_population_counts)
-    if (!dir.exists("results"))
-      dir.create("results")
-    saveRDS(results, file.path("results", paste0(runname, ".rds")))
+    if (!dir.exists("output")) dir.create("output")
+    if (!dir.exists("output/results")) dir.create("output/results")
+    saveRDS(results, file.path("output/results", paste0(runname, ".rds")))
   }
 
 
