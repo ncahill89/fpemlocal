@@ -2,20 +2,19 @@
 #'
 #' @inherit fpem_plots
 #' @export
-fpem_get_plots_autosave <- function(runname,
-                                    indicators,
-                                    compare_to_global) { #can we replace this optional arguement with ...?
+fpem_plot_autosave <- function(runname,
+                               ...) {
   runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
   results <- readRDS(file.path("output/results", paste0(runname, ".rds")))
-  plotlist <- fpem_plots(
+  plotlist <- fpem_plot(
     runlist = runlist,
     results = results,
-    indicators = indicators,
-    compare_to_global = compare_to_global # also here?
+    ...
   )
   if (!dir.exists("output")) dir.create("output")
   if (!dir.exists("output/plots")) dir.create("output/plots")
-  pdf(file.path("output/plots", paste0(runname, ".pdf")), 18, 10)
+  pathout <- file.path("output/plots", paste0(runname, ".pdf"))
+  pdf(pathout, 18, 10)
   for (i in 1:length(plotlist)) {
     plots <- plotlist[[i]]
     gridExtra::grid.arrange(
@@ -25,6 +24,7 @@ fpem_get_plots_autosave <- function(runname,
     )
   }
   dev.off()
+  print(paste0("Your file was saved to ", pathout))
 }
 
 
@@ -32,13 +32,13 @@ fpem_get_plots_autosave <- function(runname,
 #'
 #' @inherit fpem_plots
 #' @export
-fpem_plots <- function(
+fpem_plot <- function(
   runlist,
   results,
   indicators,
-  compare_to_global
+  ...
 ) {
-  purrr::pmap(list(runlist, results, indicators), fpem_plot)
+  purrr::pmap(list(runlist, results, list(indicators), list(...)), fpem_1union_plot)
 }
 
 
@@ -50,7 +50,7 @@ fpem_plots <- function(
 #' @param compare_to_global logical, if TRUE plots estimates from global model with dotted lines
 #' @return list of plots
 #' @export
-fpem_plot <- function(
+fpem_1union_plot <- function(
   runlist,
   results,
   indicators,

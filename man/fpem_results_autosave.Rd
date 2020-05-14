@@ -7,11 +7,13 @@
 fpem_results_autosave(runname = NULL, country_population_counts = NULL)
 }
 \arguments{
-\item{country_population_counts}{\emph{'Numeric Vector'} A vector of population counts selected from \code{\link[get_population_counts]{get_population_counts}}}
+\item{runname}{}
+
+\item{country_population_counts}{}
 }
 \value{
-\emph{'Data.frame'} A data.frame of point estimates in long format.
+
 }
 \description{
-Returns point estimates from posterior samples in long format.
+A wrapper for \code{\link{fpem_results}} which reads in the model fit from the respective `runname`. The output is saved in the results directory with the same `runname`. The output can be automatically read in by proceeding fpem functions with the `runname` argument specified.
 }

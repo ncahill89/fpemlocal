@@ -25,11 +25,11 @@ fpem_1country_1union(
 \arguments{
 \item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
 
-\item{surveydata_filepath}{\emph{\sQuote{Character}} If NULL package data is used.}
+\item{surveydata_filepath}{\emph{\sQuote{Character}} Path to survey data. Survey data should be a .csv with the following format \code{\link{contraceptive_use}}.}
 
-\item{service_stats}{\emph{\sQuote{Logical}} If FALSE service statistics are not used. Service stats are not public. Requires FPcounts/fpemservicestat package.}
+\item{service_stats}{\emph{\sQuote{Logical}} If TRUE and if a service stat file path is provided, the model is run using service statistic data. Default Service stats are not public. Requires private repository FPcounts/fpemservicestat package.}
 
-\item{service_stats_filepath}{\emph{\sQuote{Character}}If NULL private package data is used. Requires FPcounts/fpemservicestat package.}
+\item{service_stats_filepath}{\emph{\sQuote{Character}}}
 
 \item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
 
@@ -37,7 +37,9 @@ fpem_1country_1union(
 
 \item{last_year}{\emph{\sQuote{Numeric}} The last year of model estimates in output. The model will be fit to all data, including dates after this date if available.}
 
-\item{subnational}{'\emph{\sQuote{Logical}} If FALSE runs the national model.}
+\item{subnational}{'\emph{\sQuote{Logical}} If TRUE runs the sub national model.}
+
+\item{diagnostic}{'\emph{\sQuote{Logical}} If TRUE saves the full jags output.}
 }
 \value{
 \emph{\sQuote{List}}

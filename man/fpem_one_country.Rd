@@ -7,21 +7,8 @@
 fpem_one_country(is_in_union, ...)
 }
 \arguments{
-\item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
-}
-\value{
-\emph{\sQuote{List}}
-\enumerate{
-  \item \strong{posterior_samples}  \emph{\sQuote{Numeric array}} An array of samples of dimension chains x samples x years x proportions.
-  \item \strong{core_data}          \emph{\sQuote{Data.frame}} The processed data associated with the model run from \code{\link{core_data}}.
-}
+\item{...}{Please see \code{\link{fpem_1country_1union}} for additional arguments}
 }
 \description{
-Runs the family planning estimation model and returns samples and bias adjusted observations for respective run.
-}
-\examples{
-See the reposiotry url in references for detailed examples
-}
-\references{
-\url{https://github.com/FPcounts/FPEM}
+A wrapper for \code{\link{fpem_1country_1union}} capable of running multiple unions.
 }

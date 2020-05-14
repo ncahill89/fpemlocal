@@ -4,19 +4,7 @@
 \alias{fpem_plot}
 \title{plot country results}
 \usage{
-fpem_plot(runlist, results, indicators, compare_to_global = FALSE)
-}
-\arguments{
-\item{results}{\emph{'Data.frame'} Results data from \code{\link{fpem_calculate_results}}}
-
-\item{indicators}{name of indicators from results to be plotted}
-
-\item{compare_to_global}{logical, if TRUE plots estimates from global model with dotted lines}
-
-\item{core_data}{data list from \code{\link{core_data}}}
-}
-\value{
-list of plots
+fpem_plot(runlist, results, indicators, compare_to_global)
 }
 \description{
 plot country results

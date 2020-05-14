@@ -15,5 +15,5 @@ fpem_results(runlist, country_population_counts = NULL)
 \emph{'Data.frame'} A data.frame of point estimates in long format.
 }
 \description{
-Returns point estimates from posterior samples in long format.
+Maps multiple sets of runs to \code{\link{fpem_calculate_results}}
 }
