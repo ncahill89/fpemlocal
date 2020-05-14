@@ -48,7 +48,9 @@ fpem_one_country_autosave(
 ## Process the samples
 `fpem_get_results` returns point-estimates for several indicators in long-format.
 ```{r}
-fpem_get_results_autosave(
+# debug(fpem_results)
+# debug(fpem_calculate_results)
+fpem_results_autosave(
   runname = paste0(div)
 )
 ```

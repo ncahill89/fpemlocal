@@ -13,19 +13,6 @@ core_data(
   subnational
 )
 }
-\arguments{
-\item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
-
-\item{surveydata_filepath}{\emph{\sQuote{Character}} If NULL package data is used.}
-
-\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
-
-\item{first_year}{\emph{\sQuote{Numeric}} The first year of model estimates in output. The model will be fit to all data, including dates before this date if available.}
-
-\item{last_year}{\emph{\sQuote{Numeric}} The last year of model estimates in output. The model will be fit to all data, including dates after this date if available.}
-
-\item{subnational}{'\emph{\sQuote{Logical}} If FALSE runs the national model.}
-}
 \description{
 Creates core_data that consists of manipulated observations and run settings for \code{\link{do_1country_run}}
 }

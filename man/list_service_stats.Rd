@@ -13,15 +13,9 @@ list_service_stats(
 )
 }
 \arguments{
-\item{service_stats}{\emph{\sQuote{Logical}} If FALSE service statistics are not used. Service stats are not public. Requires FPcounts/fpemservicestat package.}
-
 \item{service_stats_filepath}{File path to service stat csv}
 
 \item{model_seq_years}{Years of model estimation from\code{\link{year_sequence_maker}}.}
-
-\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
-
-\item{first_year}{\emph{\sQuote{Numeric}} The first year of model estimates in output. The model will be fit to all data, including dates before this date if available.}
 }
 \description{
 Filter service statistics data

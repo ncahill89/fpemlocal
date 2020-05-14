@@ -1,3 +1,45 @@
+#' plot country results
+#'
+#' @inherit fpem_plots
+#' @export
+fpem_get_plots_autosave <- function(runname,
+                                    indicators,
+                                    compare_to_global) { #can we replace this optional arguement with ...?
+  runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
+  results <- readRDS(file.path("output/results", paste0(runname, ".rds")))
+  plotlist <- fpem_plots(
+    runlist = runlist,
+    results = results,
+    indicators = indicators,
+    compare_to_global = compare_to_global # also here?
+  )
+  if (!dir.exists("output")) dir.create("output")
+  if (!dir.exists("output/plots")) dir.create("output/plots")
+  pdf(file.path("output/plots", paste0(runname, ".pdf")), 18, 10)
+  for (i in 1:length(plotlist)) {
+    plots <- plotlist[[i]]
+    gridExtra::grid.arrange(
+      grobs = plots[1:length(indicators)],
+      ncol = 2,
+      top = runlist[[i]]$core_data$is_in_union
+    )
+  }
+  dev.off()
+}
+
+
+#' plot country results
+#'
+#' @inherit fpem_plots
+#' @export
+fpem_plots <- function(
+  runlist,
+  results,
+  indicators,
+  compare_to_global
+) {
+  purrr::pmap(list(runlist, results, indicators), fpem_plot)
+}
 
 
 #' plot country results
@@ -8,12 +50,13 @@
 #' @param compare_to_global logical, if TRUE plots estimates from global model with dotted lines
 #' @return list of plots
 #' @export
-fpem_plots <- function(
+fpem_plot <- function(
   runlist,
   results,
   indicators,
   compare_to_global = FALSE
 ) {
+  indicators <- indicators %>% unlist()
   observations <- runlist$core_data$observations
   first_year <- runlist$core_data$year_sequence_list$result_seq_years %>% min()
   last_year <- runlist$core_data$year_sequence_list$result_seq_years %>% max()

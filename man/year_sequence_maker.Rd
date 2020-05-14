@@ -15,10 +15,6 @@ year_sequence_maker(
 \arguments{
 \item{first_year_max}{model estimation cannot start any later than this year}
 
-\item{first_year}{\emph{\sQuote{Numeric}} The first year of model estimates in output. The model will be fit to all data, including dates before this date if available.}
-
-\item{last_year}{\emph{\sQuote{Numeric}} The last year of model estimates in output. The model will be fit to all data, including dates after this date if available.}
-
 \item{first_year_obs}{first year observed in data}
 
 \item{last_year_obs}{last year observed in data}

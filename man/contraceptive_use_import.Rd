@@ -11,15 +11,6 @@ contraceptive_use_import(
   subnational
 )
 }
-\arguments{
-\item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
-
-\item{surveydata_filepath}{\emph{\sQuote{Character}} If NULL package data is used.}
-
-\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
-
-\item{subnational}{'\emph{\sQuote{Logical}} If FALSE runs the national model.}
-}
 \description{
 contraceptive_use_import
 }

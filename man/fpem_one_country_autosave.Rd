@@ -4,21 +4,8 @@
 \alias{fpem_one_country_autosave}
 \title{Run one country model and automatically save output}
 \usage{
-fpem_one_country_autosave(runname, ...)
-}
-\value{
-\emph{\sQuote{List}}
-\enumerate{
-  \item \strong{posterior_samples}  \emph{\sQuote{Numeric array}} An array of samples of dimension chains x samples x years x proportions.
-  \item \strong{core_data}          \emph{\sQuote{Data.frame}} The processed data associated with the model run from \code{\link{core_data}}.
-}
+fpem_one_country_autosave(runname = NULL, ...)
 }
 \description{
-Runs the family planning estimation model and returns samples and bias adjusted observations for respective run.
-}
-\examples{
-See the reposiotry url in references for detailed examples
-}
-\references{
-\url{https://github.com/FPcounts/FPEM}
+Run one country model and automatically save output
 }

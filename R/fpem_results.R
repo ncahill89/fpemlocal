@@ -1,3 +1,51 @@
+#' Get results from samples
+#' 
+#' @inherit fpem_calculate_results
+#'
+#' @export
+fpem_results_autosave <-
+  function(runname = NULL,
+           country_population_counts = NULL) {
+    
+    runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
+    results <- fpem_results(runlist = runlist,
+                     country_population_counts = country_population_counts)
+    if (!dir.exists("output")) dir.create("output")
+    if (!dir.exists("output/results")) dir.create("output/results")
+    saveRDS(results, file.path("output/results", paste0(runname, ".rds")))
+  }
+
+
+#' Get results from samples
+#'
+#' @inherit fpem_calculate_results
+#'
+#' @export
+fpem_results <-
+  function(runlist,
+           country_population_counts = NULL) {
+    purrr::map2(runlist, list(country_population_counts), fpem_calculate_results)
+  }
+
+
+
+
+
+# myfunction <- function(x, y, z) {
+#   cat <- unlist(z)[1]
+#   dog <- unlist(z)[2]
+#   list(paste(x[[1]] + y, cat),
+#        paste(x[[1]] + y, dog))
+# }
+# 
+# x <- list(cat = 3, cat2 = 4, cat3 = 5)
+# y <- 1
+# z <- list(c("cat", "dog"))
+# purrr::pmap(list(x, y, z), myfunction)
+
+
+
+
 #' Calculate results from samples
 #'
 #' Returns point estimates from posterior samples in long format.
@@ -104,5 +152,11 @@ fpem_calculate_results <-
       demand_satisfied_modern_population_counts = demand_satisfied_modern_population_counts,
       no_need_population_counts = no_need_population_counts
     )
-    
+    return(results)
   }
+
+
+
+
+
+
