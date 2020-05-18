@@ -354,11 +354,10 @@ if (is_in_union == "Y") {
 
 if (include_ss_data) {
   cat("
-      for (k in 1:(n_ss-1)) {
-        delta_emu[k] ~ dnorm(
-        delta_modern[k], tau_emu[k])
-        delta_modern[k] <- mod.ct[1,get_t_ss[k+1]] - mod.ct[1,get_t_ss[k]]
-        tau_emu[k] <- pow(se_emu[k], -2)
+      for (k in 1:K) {
+        ss_delta_k[k] ~ dnorm(ss_delta_modern_k[k], ss_tau_k[k])
+        ss_delta_modern_k[k] <- mod.ct[1,get_t_k[k+1]] - mod.ct[1,get_t_k[k]]
+        ss_tau_k[k] <- pow(ss_se_k[k], -2)
 }
 ",sep="",append=TRUE, file = "model.txt", fill = TRUE)
 }

@@ -4,7 +4,7 @@
 contraceptive_use_import <- function(is_in_union, surveydata_filepath, division_numeric_code, subnational) {
   if (!is.null(surveydata_filepath)) {
     contraceptive_use <- readr::read_csv(surveydata_filepath)
-    validate_this(contraceptive_use_format, contraceptive_use)
+    format_check(contraceptive_use_format, contraceptive_use)
     contraceptive_use <- contraceptive_use %>%
       dplyr::filter(is_in_union == !!is_in_union) %>%
       dplyr::filter(age_range == "15-49")  %>%

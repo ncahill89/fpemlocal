@@ -55,11 +55,8 @@ fpem_one_country <- function(
                 runn = runn,
                 runall = runall)
   } else {
-    runlist <-  fpem_1country_1union(
-      is_in_union = is_in_union,
-      ...
-    )
-    
+    runlist <-  list(run = fpem_1country_1union(is_in_union = is_in_union,
+                                                ...))
   }
   return(runlist)
 
@@ -133,7 +130,7 @@ fpem_1country_1union <- function(
       service_stats_filepath = service_stats_filepath,
       model_seq_years = core_data$year_sequence_list$model_seq_y,
       division_numeric_code,
-      first_year
+      first_year_observed = core_data$year_sequence_list$first_year_observed
     )
   # write and run model
   write_jags_model(

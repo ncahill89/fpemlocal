@@ -36,8 +36,8 @@ When a survey file is not provided (as in this example) the function uses defaul
 div <- 4
 fpem_one_country_autosave(
   runname = paste0(div),
-  is_in_union = "ALL",
-  service_stats = FALSE,
+  is_in_union = "Y",
+  service_stats = TRUE,
   division_numeric_code = div,
   first_year = 1970,
   last_year = 2030

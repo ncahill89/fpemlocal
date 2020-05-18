@@ -6,13 +6,13 @@ drop_na <- function(x) {
 
 
 
-#' Validate this
+#' format check
 #'
 #' @param format_list 
 #' @param data 
 #'
 #' @return an informative error message if data does not pass validation
-validate_this <- function(format_list, data) {
+format_check <- function(format_list, data) {
   error_vector <- c()
   for (name in names(format_list)) {
     if (format_list[[name]][["required"]] & (!name %in% names(data))) { #if not required and not in data iteration continues

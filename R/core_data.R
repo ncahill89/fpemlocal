@@ -24,11 +24,17 @@ core_data <- function(is_in_union,
   year_sequence_list <- year_sequence_maker(first_year_max = 1989,
                                             first_year = first_year,
                                             last_year = last_year,
-                                            first_year_obs = min(contraceptive_use$ref_date),
-                                            last_year_obs = max(contraceptive_use$ref_date))
+                                            contraceptive_use = contraceptive_use
+  )
+                                            # first_year_obs = min(contraceptive_use$ref_date),
+                                            # last_year_obs = max(contraceptive_use$ref_date))
 
   # additional processing required to align with the global run (to be minimized next round)
   if (nrow(contraceptive_use) > 0) {
+    
+    
+    
+    
     contraceptive_use <- contraceptive_use %>%
       ad_hoc_calculate_cp_trad()
     contraceptive_use <- contraceptive_use %>%

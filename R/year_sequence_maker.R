@@ -4,8 +4,7 @@
 #'
 #' @inheritParams do_1country_run
 #' @param first_year_max model estimation cannot start any later than this year
-#' @param first_year_obs first year observed in data
-#' @param last_year_obs last year observed in data
+#' @param contraceptive_use 
 #'
 #' @return \emph{\sQuote{List}}
 #' \enumerate{
@@ -18,11 +17,17 @@
 year_sequence_maker <- function(first_year_max,
                           first_year,
                           last_year,
-                          first_year_obs,
-                          last_year_obs
+                          contraceptive_use
 ) {
-  min_year <- min(first_year, first_year_obs, first_year_max)
-  max_year <- max(last_year, last_year_obs)
+  if (nrow(contraceptive_use) > 0) {
+    first_year_obs = min(contraceptive_use$ref_date)
+    last_year_obs = max(contraceptive_use$ref_date)
+  } else {
+    first_year_obs = NA
+    last_year_obs = NA
+  }
+  min_year <- min(first_year, first_year_obs, first_year_max, na.rm = TRUE)
+  max_year <- max(last_year, last_year_obs, na.rm = TRUE)
   model_seq <- seq(min_year, max_year) - min_year + 1
   model_seq_years <- seq(min_year, max_year)
   first_index <- which(first_year == model_seq_years)
@@ -33,7 +38,8 @@ year_sequence_maker <- function(first_year_max,
     model_seq = model_seq,
     model_seq_years = model_seq_years,
     result_seq = result_seq,
-    result_seq_years = result_seq_years
+    result_seq_years = result_seq_years,
+    first_year_observed = first_year_obs
   ))
 }
 
