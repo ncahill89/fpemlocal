@@ -4,7 +4,8 @@
 \name{service_stats}
 \alias{service_stats}
 \title{Service statistics}
-\format{A data frame with 6 variables:
+\format{
+A data frame with 6 variables:
 \describe{
   \item{"division_numeric_code"}{country code}
   \item{"name"}{country name}
@@ -12,7 +13,8 @@
   \item{"emu"}
   \item{"ss_type"}
   ...
-}}
+}
+}
 \source{
 
 }

@@ -4,7 +4,8 @@
 \name{divisions}
 \alias{divisions}
 \title{Divisions, unit data}
-\format{A data frame with 13 variables:
+\format{
+A data frame with 13 variables:
 \describe{
   \item{division_numeric_code}{\emph{\sQuote{Numeric}} 3-digit \emph{M49} country code (\cite{United Nations, 2019}).}
   \item{name_country}{\emph{\sQuote{Character}}, country name.}
@@ -19,7 +20,8 @@
   \item{is_unmarried_sexual_activity}{\emph{\sQuote{Character}} taking values \dQuote{Y} and \dQuote{N}. Indicates countries classified as having low sexual activity among unmarried women (\code{is_unmarried_sexual_activity == "Y"}; see \cite{Wheldon et al., 2018}).}
   \item{is_low_population}{\emph{\sQuote{Character}} taking values \dQuote{Y} and \dQuote{N}. Indicates countries with population below 90,000 (\code{is_low_population == "Y"}).}
   \item{is_fp2020}{\emph{\sQuote{Character}} taking values \dQuote{Y} and \dQuote{N}. Indicates countries belonging to the group of \emph{FP2020} focus countries (\code{is_fp2020 == "Y"}; \cite{FP2020, 2019}).}
-}}
+}
+}
 \source{
 UN 2018,	2018.0.1
 }

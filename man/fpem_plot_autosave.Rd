@@ -4,7 +4,7 @@
 \alias{fpem_plot_autosave}
 \title{plot country results}
 \usage{
-fpem_plot_autosave(runname, indicators, compare_to_global)
+fpem_plot_autosave(runname, ...)
 }
 \description{
 plot country results

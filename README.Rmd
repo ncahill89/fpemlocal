@@ -33,14 +33,16 @@ devtools::load_all()
 
 When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
-div <- 4
+div <- 64
+runname <- paste0(div, "test")
 fpem_one_country_autosave(
-  runname = paste0(div),
+  runname = runname,
   is_in_union = "Y",
-  service_stats = TRUE,
+  service_stats = FALSE,
   division_numeric_code = div,
   first_year = 1970,
-  last_year = 2030
+  last_year = 2030,
+  diagnostic = TRUE
 )
 
 ```
@@ -50,12 +52,12 @@ fpem_one_country_autosave(
 `fpem_get_results` returns point-estimates for several indicators in long-format.
 ```{r}
 fpem_results_autosave(
-  runname = paste0(div)
+  runname = runname
 )
 ```
 ## <a name="plot"></a>
 ## Plot the results
-`fpem_get_plots` plots the results of the model againts the observations. Choose any indicators returned from `fpem_calculate_results`
+`fpem_get_plots` plots the results of the model against the observations. Choose any indicators returned from `fpem_calculate_results`
 ```{r}
 indicators <- c(
     "unmet_need_any",
@@ -65,7 +67,7 @@ indicators <- c(
     )
 
 fpem_plot_autosave(
-  runname = paste0(div),
+  runname = runname,
   indicators = indicators,
   compare_to_global = TRUE
   )

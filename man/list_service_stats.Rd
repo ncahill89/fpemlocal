@@ -9,7 +9,7 @@ list_service_stats(
   service_stats_filepath,
   model_seq_years,
   division_numeric_code,
-  first_year = NULL
+  first_year_observed = NULL
 )
 }
 \arguments{

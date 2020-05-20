@@ -4,20 +4,12 @@
 \alias{year_sequence_maker}
 \title{year_sequence_maker}
 \usage{
-year_sequence_maker(
-  first_year_max,
-  first_year,
-  last_year,
-  first_year_obs,
-  last_year_obs
-)
+year_sequence_maker(first_year_max, first_year, last_year, contraceptive_use)
 }
 \arguments{
 \item{first_year_max}{model estimation cannot start any later than this year}
 
-\item{first_year_obs}{first year observed in data}
-
-\item{last_year_obs}{last year observed in data}
+\item{contraceptive_use}{}
 }
 \value{
 \emph{\sQuote{List}}

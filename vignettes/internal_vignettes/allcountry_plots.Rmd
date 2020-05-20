@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 )
 knitr::opts_chunk$set(echo = TRUE)
 library(FPEMcountry)
+devtools::load_all()
 library(ggplot2)
 library(grid)
 library(gridExtra)
@@ -67,6 +68,7 @@ indicators <- c(
 ```{r}
 i <- 0
 total <- length(divs)
+# 818, 50, i = 54
 for(div in divs) {
   fpem_one_country_autosave(
     runname = paste0(div),
@@ -76,8 +78,8 @@ for(div in divs) {
     first_year = 1970,
     last_year = 2030
   )
-  fpem_get_results_autosave(runname = paste0(div))
-  fpem_get_plots_autosave(runname = paste0(div),
+  fpem_results_autosave(runname = paste0(div))
+  fpem_plot_autosave(runname = paste0(div),
                           indicators = indicators,
                           compare_to_global = TRUE)
   i <- i + 1

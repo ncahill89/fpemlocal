@@ -4,7 +4,8 @@
 \name{contraceptive_use_track20}
 \alias{contraceptive_use_track20}
 \title{Contraceptive use track 20}
-\format{A data frame with 31 variables:
+\format{
+A data frame with 31 variables:
 \describe{
   \item{division_numeric_code}{\emph{\sQuote{Numeric}} 3-digit \emph{M49} country code (\cite{United Nations, 2019}).}
   \item{start_date}{\emph{\sQuote{Numeric}} Year, as a decimal (e.g., 1999.24...), marking the start of the reference period.}
@@ -52,7 +53,8 @@
     unmet_need_for_any_method / (1 - contraceptive_use_any_method)}}
   \item{source_id}{\emph{\sQuote{Numeric}} Unique source (i.e., survey) identifer.}
   \item{record_id}{\emph{\sQuote{Numeric}} Unique record identifier.}
-}}
+}
+}
 \usage{
 contraceptive_use_track20
 }

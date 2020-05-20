@@ -15,7 +15,7 @@ options(warn=-1)
 
 ```{r}
 #make more dynamic later
-jagsout <- readRDS("output/runs/68.rds")$runy$jagsout
+jagsout <- readRDS("output/runs/68.rds")$run$jagsout
 bugs <- jagsout$BUGSoutput
 # ptm <- proc.time()
 # #### to be replaced with current run

@@ -4,7 +4,7 @@
 \alias{fpem_plot}
 \title{plot country results}
 \usage{
-fpem_plot(runlist, results, indicators, compare_to_global)
+fpem_plot(runlist, results, indicators, ...)
 }
 \description{
 plot country results

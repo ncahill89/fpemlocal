@@ -20,10 +20,10 @@ list_service_stats <- function(
   se_clients = 0.0331
   se_facilities = 0.0389
   se_users = 0.1199
-  if (is.na(first_year_observed)) {
-    stop("No available contraceptive use data for this run. Service statistics cannot be used.")
-  }
   if (service_stats) {
+      if (is.na(first_year_observed)) {
+        stop("No available contraceptive use data for this run. Service statistics cannot be used.")
+      }
       if (!is.null(service_stats_filepath)) {
         ss <- readr::read_csv(service_stats_filepath)
       }

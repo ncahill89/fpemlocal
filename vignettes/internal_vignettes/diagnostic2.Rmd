@@ -39,7 +39,7 @@ When a survey file is not provided (as in this example) the function uses defaul
 div <- 68
 fpem_one_country_autosave(
   runname = paste0(div),
-  is_in_union = "ALL",
+  is_in_union = "Y",
   service_stats = FALSE,
   division_numeric_code = div,
   first_year = 1970,
@@ -78,7 +78,7 @@ fpem_one_country_autosave(
 ## Process the samples
 `fpem_get_results` returns point-estimates for several indicators in long-format.
 ```{r}
-fpem_get_results_autosave(
+fpem_results_autosave(
   runname = paste0(div)
 )
 ```
@@ -94,7 +94,7 @@ indicators <- c(
     "contraceptive_use_any"
     )
 
-fpem_get_plots_autosave(
+fpem_plot_autosave(
   runname = paste0(div),
   indicators = indicators,
   compare_to_global = TRUE

@@ -1,15 +1,14 @@
 ---
-title: "one country vignette"
-author: "Gregory Guranich"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-keep_md: yes
-fig_width: 10
-vignette: >
-  %\VignetteIndexEntry{one country vignette}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "FPEM"
+output: github_document
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# knitr::opts_knit$get("root.dir")  # alternative to the previous line
+# the default autosave location will depend on this being setup
+options(warn=-1)
+```
 
 
 
@@ -21,78 +20,42 @@ vignette: >
   
 ## <a name="intro"></a>
 ## Introduction
-In this vignette we will run two models, one for women in union and another for women not in union. We will use the package default data `fpemdata::contraceptive_use` for this example. Alternatively, you can supply a survey file path to `fpemmodeling::do_1country_run` and run your own data. The resulting samples can be combined to obtain results for all women. After obtaining all results we will plot some of the results.
+This package is the one country implementation of FPEM. It uses higher level parameters estimated in FPEMglobal. The package can be installed by cloning and using `devtools::install()`. The source code for vignettes can be found in [/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes). The directory [/design](https://github.com/FPcounts/FPEM/tree/master/design) contains technical details about the design of this project for package maintainers and contributors. Below is a brief introduction.
 
-```{r, echo=FALSE}
-options(warn=-1)
-```
-
-```{r setup, include=FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(fig.width=10, fig.height=7) 
-  library(fpemdata)
-  library(fpemdata)
-  library(fpemmodeling)
-  library(ggplot2)
-  library(grid)
-  library(gridExtra)
+library(FPEMcountry)
+devtools::load_all()
 ```
-
 ## <a name="run"></a>
 ## Run models
-`fpemmodeling::do_1country_run` is a wrapper function to run the family planning estimation model for a coutnry of interest for either married or unmarried women. If the user provides data with missing values, the values will be imputed. If the user does not supply the first year arguement the function will choose a suitable year based on available data. The function takes in additional inputs such as services statistics if desired. See `??fpemmodeling::do_1country_run` for all possible inputs. `fpemmodeling::posterior_samples_all_women` is used to combine samples to be used in the next step to obtain results for all women.
+`fpem_one_country` is a generic wrapper function to run the family planning estimation model for a country of interest. The wrapper functions ending in `_autosave` such as `fpem_one_country_autosave` save the output and name the files using the runname argument. We will use the division code for Bolivia here as the runname.
+
+When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
-run_y <- fpemmodeling::do_1country_run(
+div <- 64
+runlist <- fpem_one_country(
   is_in_union = "Y",
-  surveydata_filepath = NULL,
   service_stats = FALSE,
-  division_numeric_code = 400,
-  first_year = 1989,
-  last_year = 2030
+  division_numeric_code = div,
+  first_year = 1970,
+  last_year = 2030,
+  diagnostic = TRUE
 )
-run_n <- fpemmodeling::do_1country_run(
-  is_in_union = "N",
-  surveydata_filepath = NULL,
-  service_stats = FALSE,
-  division_numeric_code = 400,
-  first_year = 1989,
-  last_year = 2030
-)
-core_data <- run_y$core_data
-observations_y <- run_y$core_data$observations
-observations_n <- run_n$core_data$observations
-samples_all <- fpemmodeling::posterior_samples_all_women(in_union_posterior_samples = run_y$posterior_samples, 
-                                                         not_in_union_posterior_samples = run_n$posterior_samples, 
-                                                         core_data = core_data)
+
 ```
 
 ## <a name="post-process"></a>
 ## Process the samples
-`fpemreporting::fpem_calculate_results` returns point-estimates for several indicators in long-format.
+`fpem_get_results` returns point-estimates for several indicators in long-format.
 ```{r}
- population_counts <- fpemdata::population_counts %>%
-      dplyr::filter(division_numeric_code == core_data$units$division_numeric_code)
-  results_y <- fpemreporting::fpem_calculate_results(
-    posterior_samples = run_y$posterior_samples,
-    country_population_counts = population_counts %>%
-      dplyr::filter(is_in_union == "Y"),
-    first_year = min(core_data$time_frame$limits())
-  )
-  results_n <- fpemreporting::fpem_calculate_results(
-    posterior_samples = run_n$posterior_samples,
-    country_population_counts = population_counts %>%
-      dplyr::filter(is_in_union == "N"),
-    first_year = min(core_data$time_frame$limits())
-  )
-  results_all <- fpemreporting::fpem_calculate_results(
-    posterior_samples = samples_all,
-    country_population_counts = population_counts,
-    first_year = min(core_data$time_frame$limits())
-  )
+results <- fpem_results(
+  run
+)
 ```
 ## <a name="plot"></a>
-## Plot results for in-union, not-in-union, and all women
-`fpemreporting::fpem_plot_country_results` plots the results of the model againts the observations. Choose any indicators returned from `fpemreporting::fpem_calculate_results`
+## Plot the results
+`fpem_get_plots` plots the results of the model against the observations. Choose any indicators returned from `fpem_calculate_results`
 ```{r}
 indicators <- c(
     "unmet_need_any",
@@ -100,38 +63,30 @@ indicators <- c(
     "contraceptive_use_traditional",
     "contraceptive_use_any"
     )
-plots <- fpemreporting::fpem_plot_country_results(
-  country_results = results_y,
-  observations = observations_y,
-  first_year = core_data$time_frame$`.->.sequence` %>% min,
-  last_year = core_data$time_frame$`.->.sequence` %>% max,
-  is_in_union = "Y",
-  indicators = indicators
-  )
-gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
-                 ncol=2,
-                 top=textGrob("In-union women"))  
 
-plots <- fpemreporting::fpem_plot_country_results(
-  country_results = results_n,
-  observations = observations_n,
-  first_year = core_data$time_frame$`.->.sequence` %>% min,
-  last_year = core_data$time_frame$`.->.sequence` %>% max,
-  is_in_union = "N",
-  indicators = indicators
+fpem_plot(
+  runlist,
+  results,
+  indicators = indicators,
+  compare_to_global = TRUE
   )
-gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
-                 ncol=2,
-                 top=textGrob("Not-in-union women"))  
+```
 
-plots <- fpemreporting::fpem_plot_country_results(
-  country_results = results_all,
-  observations = rbind(observations_n, observations_y),
-  first_year = core_data$time_frame$`.->.sequence` %>% min,
-  last_year = core_data$time_frame$`.->.sequence` %>% max,
-  indicators = indicators
-  )
-gridExtra::grid.arrange(grobs=plots[1:length(indicators)],
-                 ncol=2,
-                 top=textGrob("All women"))       
+
+```{r}
+jagsout <- runlist$run$jagsout
+bugs <- jagsout$BUGSoutput
+max(bugs$summary[,"Rhat"])
+bugs$summary[bugs$summary[,"Rhat"]>1.1,]
+MCMCvis::MCMCtrace(jagsout,
+          params = "all",
+                 ISB = FALSE,
+                 pdf = TRUE,
+                 # prior = pr,
+                 post_zm = TRUE,
+          open_pdf = FALSE,
+          Rhat = TRUE,
+          filename = "output/mcmctrace.pdf")
+          #wd = getwd())
+
 ```

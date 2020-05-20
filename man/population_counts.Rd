@@ -4,14 +4,16 @@
 \name{population_counts}
 \alias{population_counts}
 \title{Population count data}
-\format{A data frame with 5 variables:
+\format{
+A data frame with 5 variables:
 \describe{
   \item{division_numeric_code}{\emph{\sQuote{Numeric}} 3-digit \emph{M49} country code (\cite{United Nations, 2019}).}
   \item{is_in_union}{\emph{\sQuote{Character}} taking values \dQuote{Y} or \dQuote{N}. Rows with \dQuote{Y} are observations for married/in-union women; rows with \dQuote{N} are observations for unmarried/not-in-union women.}
   \item{age_range}{\emph{\sQuote{Character}} age range, e.g., \dQuote{15-49}, \dQuote{15-19}, etc.}
   \item{mid_year}{\emph{\sQuote{Numeric}} Year of \code{population_count}. The values in this field are whole years (e.g., \dQuote{1970}) but the population counts are estimates for the middle of the given year (e.g., \dQuote{1970.5}).}
   \item{population_count}{\emph{\sQuote{Numeric}} Population count.}
-}}
+}
+}
 \source{
 UN 2018,	2018.0.1
 }
