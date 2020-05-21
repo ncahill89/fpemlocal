@@ -66,7 +66,7 @@ indicators <- c(
 ## <a name="run"></a>
 ## run models
 ```{r}
-devtools::load_all()
+# devtools::load_all()
 i <- 0
 total <- length(divs)
 for(div in divs) {
@@ -98,7 +98,7 @@ for(div in divs) {
       "RT.c",
       "unmet.intercept.c"
     ),
-    nchains = 6,
+    nchains = 8,
     niter = 5000,
     nburnin = 1000
   )

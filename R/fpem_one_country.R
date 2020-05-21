@@ -160,11 +160,12 @@ fpem_1country_1union <- function(
   # reformat samples
   posterior_samples <- posterior_samples_array_format(mod, core_data)
   if (diagnostic) {
-    if (max(mod$BUGSoutput$summary[,"Rhat"]) > 1.1) {
-      params_with_large_rhat <- mod$BUGSoutput$summary[mod$BUGSoutput$summary[,"Rhat"]>1.1,]
+    summ <- MCMCvis::MCMCsummary(mod)
+    if (any(summ$Rhat > 1.1)) {
+      params_with_large_rhat <- summ[which(summ$Rhat > 1.1),] %>% dplyr::select(Rhat)
       if (!dir.exists("output")) dir.create("output")
-      cat(paste(division_numeric_code, is_in_union, "has Rhat < 1.1"), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
-      write.table(params_with_large_rhat, paste0("output/", division_numeric_code, "_rhats.txt"))
+      cat(paste(division_numeric_code, is_in_union, "has Rhat > 1.1"), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
+      write.table(params_with_large_rhat, paste0("output/", division_numeric_code, is_in_union, "_rhats.txt"))
       MCMCvis::MCMCtrace(mod,
                          params = "all",
                          ISB = FALSE,
@@ -172,7 +173,7 @@ fpem_1country_1union <- function(
                          post_zm = TRUE,
                          open_pdf = FALSE,
                          Rhat = TRUE,
-                         filename = paste0("output/", division_numeric_code, "_mcmctrace.pdf")
+                         filename = paste0("output/", division_numeric_code, is_in_union, "_mcmctrace.pdf")
       )
     }
     return(list(
