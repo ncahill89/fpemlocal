@@ -99,7 +99,8 @@ fpem_plot(
 ```{r}
 mod <- runlist$run$mod
 summ <- MCMCvis::MCMCsummary(mod)
-this <- summ[which(summ$Rhat > 1),] %>% dplyr::select(Rhat)
+temp <- summ[which(summ$Rhat > 1),]
+rownames(temp)[1]
 write.table(this, "this.txt")
 bugs <- jagsout$BUGSoutput
 max(bugs$summary[,"Rhat"])

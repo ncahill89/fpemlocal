@@ -42,18 +42,18 @@ fpem_one_country <- function(
       is_in_union = "N",
       ...
     )
-    samples_all <- posterior_samples_all_women(in_union_posterior_samples = runy$posterior_samples, 
-                                               not_in_union_posterior_samples = runn$posterior_samples, 
-                                               core_data = runy$core_data)
-    core_data <- runy$core_data
-    core_data$observations <- rbind(runy$core_data$observations,
-                                    runn$core_data$observations)
-    core_data$is_in_union <- is_in_union
-    runall <- list(posterior_samples = samples_all,
-                    core_data = core_data)
+    # samples_all <- posterior_samples_all_women(in_union_posterior_samples = runy$posterior_samples, 
+    #                                            not_in_union_posterior_samples = runn$posterior_samples, 
+    #                                            core_data = runy$core_data)
+    # core_data <- runy$core_data
+    # core_data$observations <- rbind(runy$core_data$observations,
+    #                                 runn$core_data$observations)
+    # core_data$is_in_union <- is_in_union
+    # runall <- list(posterior_samples = samples_all,
+    #                 core_data = core_data)
     runlist <- list(runy = runy,
-                runn = runn,
-                runall = runall)
+                runn = runn) # hacked for testing
+                # runall = runall)
   } else {
     runlist <-  list(run = fpem_1country_1union(is_in_union = is_in_union,
                                                 ...))
@@ -161,13 +161,16 @@ fpem_1country_1union <- function(
   posterior_samples <- posterior_samples_array_format(mod, core_data)
   if (diagnostic) {
     summ <- MCMCvis::MCMCsummary(mod)
+    par_rownumber <- which(summ$Rhat > 1.1)
     if (any(summ$Rhat > 1.1)) {
-      params_with_large_rhat <- summ[which(summ$Rhat > 1.1),] %>% dplyr::select(Rhat)
+      params_with_large_rhat <- summ[par_rownumber,] %>% dplyr::select(Rhat)
+      bad_parnames <- rownames(summ[par_rownumber,])
       if (!dir.exists("output")) dir.create("output")
       cat(paste(division_numeric_code, is_in_union, "has Rhat > 1.1"), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
       write.table(params_with_large_rhat, paste0("output/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_rhats.txt"))
+      
       MCMCvis::MCMCtrace(mod,
-                         params = "all",
+                         params = bad_parnames,
                          ISB = FALSE,
                          pdf = TRUE,
                          post_zm = TRUE,
