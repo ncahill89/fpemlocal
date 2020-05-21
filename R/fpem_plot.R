@@ -20,7 +20,7 @@ fpem_plot_autosave <- function(runname,
     gridExtra::grid.arrange(
       grobs = plots[1:length(indicators)],
       ncol = 2,
-      top = paste(runlist[[i]]$core_data$is_in_union, runlist[[i]]$core_data$units$division_numeric_code)
+      top = paste(runlist[[i]]$core_data$is_in_union, runlist[[i]]$core_data$units$name_country)
     )
   }
   dev.off()

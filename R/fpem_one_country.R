@@ -165,7 +165,7 @@ fpem_1country_1union <- function(
       params_with_large_rhat <- summ[which(summ$Rhat > 1.1),] %>% dplyr::select(Rhat)
       if (!dir.exists("output")) dir.create("output")
       cat(paste(division_numeric_code, is_in_union, "has Rhat > 1.1"), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
-      write.table(params_with_large_rhat, paste0("output/", division_numeric_code, is_in_union, "_rhats.txt"))
+      write.table(params_with_large_rhat, paste0("output/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_rhats.txt"))
       MCMCvis::MCMCtrace(mod,
                          params = "all",
                          ISB = FALSE,
@@ -173,7 +173,7 @@ fpem_1country_1union <- function(
                          post_zm = TRUE,
                          open_pdf = FALSE,
                          Rhat = TRUE,
-                         filename = paste0("output/", division_numeric_code, is_in_union, "_mcmctrace.pdf")
+                         filename = paste0("output/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_mcmctrace.pdf")
       )
     }
     return(list(
