@@ -160,10 +160,25 @@ fpem_1country_1union <- function(
   # reformat samples
   posterior_samples <- posterior_samples_array_format(mod, core_data)
   if (diagnostic) {
+    if (max(mod$BUGSoutput$summary[,"Rhat"]) > 1.1) {
+      params_with_large_rhat <- mod$BUGSoutput$summary[mod$BUGSoutput$summary[,"Rhat"]>1.1,]
+      if (!dir.exists("output")) dir.create("output")
+      cat(paste(division_numeric_code, is_in_union, "has Rhat < 1.1"), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
+      write.table(params_with_large_rhat, paste0("output/", division_numeric_code, "_rhats.txt"))
+      MCMCvis::MCMCtrace(mod,
+                         params = "all",
+                         ISB = FALSE,
+                         pdf = TRUE,
+                         post_zm = TRUE,
+                         open_pdf = FALSE,
+                         Rhat = TRUE,
+                         filename = paste0("output/", division_numeric_code, "_mcmctrace.pdf")
+      )
+    }
     return(list(
       posterior_samples = posterior_samples,
-      jagsout = mod,
-      core_data = core_data
+      core_data = core_data,
+      mod = mod
     )
     )
   } else {

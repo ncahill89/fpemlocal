@@ -66,9 +66,9 @@ indicators <- c(
 ## <a name="run"></a>
 ## run models
 ```{r}
+devtools::load_all()
 i <- 0
 total <- length(divs)
-# 818, 50, i = 54
 for(div in divs) {
   fpem_one_country_autosave(
     runname = paste0(div),
@@ -76,7 +76,31 @@ for(div in divs) {
     service_stats = FALSE,
     division_numeric_code = div,
     first_year = 1970,
-    last_year = 2030
+    last_year = 2030,
+    diagnostic = TRUE,
+    params_to_save = c(
+      "mod.ct",
+      "unmet.ct",
+      "trad.ct",
+      "mu.in",
+      "logitratio.yunmet.hat.i",
+      "pmax.c",
+      "logitpmax.c",
+      "logitRmax.c",
+      "Rmax.c",
+      "logitomega.c",
+      "omega.c",
+      "Romega.c",
+      "logitRomega.c",
+      "s.ct",
+      "setlevel.c",
+      "P.ct",
+      "RT.c",
+      "unmet.intercept.c"
+    ),
+    nchains = 6,
+    niter = 5000,
+    nburnin = 1000
   )
   fpem_results_autosave(runname = paste0(div))
   fpem_plot_autosave(runname = paste0(div),

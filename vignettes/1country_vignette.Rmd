@@ -40,7 +40,30 @@ runlist <- fpem_one_country(
   division_numeric_code = div,
   first_year = 1970,
   last_year = 2030,
-  diagnostic = TRUE
+  diagnostic = TRUE,
+  params_to_save = c(
+    "mod.ct",
+    "unmet.ct",
+    "trad.ct",
+    "mu.in",
+    "logitratio.yunmet.hat.i",
+    "pmax.c",
+    "logitpmax.c",
+    "logitRmax.c",
+    "Rmax.c",
+    "logitomega.c",
+    "omega.c",
+    "Romega.c",
+    "logitRomega.c",
+    "s.ct",
+    "setlevel.c",
+    "P.ct",
+    "RT.c",
+    "unmet.intercept.c"
+  ),
+  nchains = 6,
+  niter = 5000,
+  nburnin = 1000
 )
 
 ```
