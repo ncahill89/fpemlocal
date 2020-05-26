@@ -103,7 +103,7 @@ fpem_1country_1union <- function(
   nchains = 3,
   niter = 2500,
   nburnin = 500,
-  nthin = max(1, floor((niter - nburnin) / 1000))
+  nthin = max(1, floor((niter - nburnin)*nchains / 2000))
 ) {
   # check inputs to this wrapper
   check_inputs(
@@ -160,14 +160,21 @@ fpem_1country_1union <- function(
   # reformat samples
   posterior_samples <- posterior_samples_array_format(mod, core_data)
   if (diagnostic) {
-    summ <- MCMCvis::MCMCsummary(mod)
+
+    summ <- MCMCvis::MCMCsummary(mod) %>% 
+      tibble::rownames_to_column(var = "pars") %>%
+      dplyr::mutate(pars = pars %>% stringr::str_remove_all("[:digit:]") %>% stringr::str_remove("[,]") %>% stringr::str_remove("\\[]")) %>%
+      dplyr::filter(pars %in% c("logit_mod.ct","logit_unmet.ct","logit_trad.ct","mod.ct",
+                                "unmet.ct",
+                                "trad.ct"))
     par_rownumber <- which(summ$Rhat > 1.1)
     if (any(summ$Rhat > 1.1)) {
-      params_with_large_rhat <- summ[par_rownumber,] %>% dplyr::select(Rhat)
-      bad_parnames <- rownames(summ[par_rownumber,])
+      rhat_data <- summ[par_rownumber,] %>% dplyr::select(pars, Rhat)
+      bad_parnames <- summ[par_rownumber,] %>% dplyr::select(pars) %>% dplyr::pull()
       if (!dir.exists("output")) dir.create("output")
-      cat(paste(division_numeric_code, is_in_union, "has Rhat > 1.1"), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
-      write.table(params_with_large_rhat, paste0("output/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_rhats.txt"))
+      cat(paste(division_numeric_code, is_in_union, "has Rhat", max(summ$Rhat)), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
+      if (!dir.exists("output/diagnostic")) dir.create("output/diagnostic")
+      write.table(rhat_data, paste0("output/diagnostic/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_rhats.txt"))
       
       MCMCvis::MCMCtrace(mod,
                          params = bad_parnames,
@@ -176,7 +183,7 @@ fpem_1country_1union <- function(
                          post_zm = TRUE,
                          open_pdf = FALSE,
                          Rhat = TRUE,
-                         filename = paste0("output/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_mcmctrace.pdf")
+                         filename = paste0("output/diagnostic/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_mcmctrace.pdf")
       )
     }
     return(list(

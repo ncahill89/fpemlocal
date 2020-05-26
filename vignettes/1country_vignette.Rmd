@@ -33,7 +33,7 @@ devtools::load_all()
 
 When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
-div <- 64
+div <- 170
 runlist <- fpem_one_country(
   is_in_union = "Y",
   service_stats = FALSE,
@@ -42,6 +42,9 @@ runlist <- fpem_one_country(
   last_year = 2030,
   diagnostic = TRUE,
   params_to_save = c(
+    # "logit_mod.ct",
+    # "logit_trad.ct",
+    # "logit_unmet.ct",
     "mod.ct",
     "unmet.ct",
     "trad.ct",
@@ -59,7 +62,8 @@ runlist <- fpem_one_country(
     "setlevel.c",
     "P.ct",
     "RT.c",
-    "unmet.intercept.c"
+    "unmet.intercept.c",
+    "ptot.k"
   ),
   nchains = 6,
   niter = 5000,
@@ -98,22 +102,37 @@ fpem_plot(
 
 ```{r}
 mod <- runlist$run$mod
-summ <- MCMCvis::MCMCsummary(mod)
+
+for(t in 1:T) {
+mod$BUGSoutput$sims.array[,,paste0("mod.ct[1,", t,"]")] <- gtools::logit(mod$BUGSoutput$sims.array[,,paste0("mod.ct[1,", t,"]")])
+mod$BUGSoutput$sims.array[,,paste0("trad.ct[1,", t,"]")] <- gtools::logit(mod$BUGSoutput$sims.array[,,paste0("trad.ct[1,", t,"]")])
+mod$BUGSoutput$sims.array[,,paste0("unmet.ct[1,", t,"]")] <- gtools::logit(mod$BUGSoutput$sims.array[,,paste0("unmet.ct[1,", t,"]")])
+}
+for(k in 1:K) {
+mod$BUGSoutput$sims.array[,,paste0("ptot.k[", k,"]")] <- gtools::logit(mod$BUGSoutput$sims.array[,,paste0("ptot.k[", k,"]")])
+}
+
+
+summ <- MCMCvis::MCMCsummary(mod) %>% 
+  tibble::rownames_to_column(var = "pars") %>%
+  dplyr::mutate(pars = pars %>% stringr::str_remove_all("[:digit:]") %>% stringr::str_remove("[,]") %>% stringr::str_remove("\\[]")) %>%
+  dplyr::filter(pars %in% c("mod.ct","unmet.ct","trad.ct","ptot.k"))
+
+
+summ[c(1,2,3),] %>% dplyr::select(pars) %>% dplyr::pull()
+test <- tibble::as_tibble(summ)
+
 temp <- summ[which(summ$Rhat > 1),]
-rownames(temp)[1]
-write.table(this, "this.txt")
-bugs <- jagsout$BUGSoutput
-max(bugs$summary[,"Rhat"])
-bugs$summary[bugs$summary[,"Rhat"]>1.1,]
-MCMCvis::MCMCtrace(jagsout,
-          params = "all",
+parname <- rownames(temp)[20]
+parname %>% stringr::str_remove_all("[:digit:]") %>% stringr::str_remove("[,]") %>% stringr::str_remove("\\[]")
+MCMCvis::MCMCtrace(mod,
+          params = parname,
                  ISB = FALSE,
                  pdf = TRUE,
                  # prior = pr,
                  post_zm = TRUE,
           open_pdf = FALSE,
-          Rhat = TRUE,
-          filename = "output/mcmctrace.pdf")
+          Rhat = TRUE)
           #wd = getwd())
 
 ```

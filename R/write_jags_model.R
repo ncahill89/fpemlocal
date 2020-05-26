@@ -107,6 +107,9 @@ model{
       mod.ct[c,t] <- P.ct[c,t]*R.ct[c,t]
       trad.ct[c,t] <- P.ct[c,t]*(1-R.ct[c,t])
       unmet.ct[c,t] <- (1-P.ct[c,t])*Z.ct[c,t]
+      logit_mod.ct[c,t] <- log(mod.ct[c,t]/(1-mod.ct[c,t]))
+      logit_trad.ct[c,t] <- log(trad.ct[c,t]/(1-trad.ct[c,t]))
+      logit_unmet.ct[c,t] <- log(unmet.ct[c,t]/(1-unmet.ct[c,t]))
     }
   }
   ",sep="",append=FALSE, file = "model.txt", fill = TRUE)

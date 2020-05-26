@@ -33,7 +33,7 @@ devtools::load_all()
 
 When a survey file is not provided (as in this example) the function uses default data from `contraceptive_use`. The user may also supply optional services statistics. See `??service_stats` for required service statistic data format. See `??do_1country_run` for all possible inputs to this wrapper function. If you wish to obtain results for all women `posterior_samples_all_women` can be used after completing a run for married women and a run for unmarried women. See  [FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for more details
 ```{r}
-div <- 64
+div <- 894
 runname <- paste0(div, "test")
 fpem_one_country_autosave(
   runname = runname,
@@ -42,8 +42,36 @@ fpem_one_country_autosave(
   division_numeric_code = div,
   first_year = 1970,
   last_year = 2030,
-  diagnostic = TRUE
-)
+    diagnostic = TRUE,
+  params_to_save = c(
+    "logit_mod.ct",
+    "logit_trad.ct",
+    "logit_unmet.ct",
+    "mod.ct",
+    "unmet.ct",
+    "trad.ct",
+    "mu.in",
+    "logitratio.yunmet.hat.i",
+    "pmax.c",
+    "logitpmax.c",
+    "logitRmax.c",
+    "Rmax.c",
+    "logitomega.c",
+    "omega.c",
+    "Romega.c",
+    "logitRomega.c",
+    "s.ct",
+    "setlevel.c",
+    "P.ct",
+    "RT.c",
+    "unmet.intercept.c",
+    "ptot.k"
+  ),
+    nchains = 10,
+    niter = 1200,
+    nburnin = 500
+  )
+
 
 ```
 

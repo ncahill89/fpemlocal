@@ -78,37 +78,48 @@ for(div in divs) {
     first_year = 1970,
     last_year = 2030,
     diagnostic = TRUE,
-    params_to_save = c(
-      "mod.ct",
-      "unmet.ct",
-      "trad.ct",
-      "mu.in",
-      "logitratio.yunmet.hat.i",
-      "pmax.c",
-      "logitpmax.c",
-      "logitRmax.c",
-      "Rmax.c",
-      "logitomega.c",
-      "omega.c",
-      "Romega.c",
-      "logitRomega.c",
-      "s.ct",
-      "setlevel.c",
-      "P.ct",
-      "RT.c",
-      "unmet.intercept.c"
-    ),
-    nchains = 8,
-    niter = 5000,
-    nburnin = 1000
+  params_to_save = c(
+    "logit_mod.ct",
+    "logit_trad.ct",
+    "logit_unmet.ct",
+    "mod.ct",
+    "unmet.ct",
+    "trad.ct",
+    "mu.in",
+    "logitratio.yunmet.hat.i",
+    "pmax.c",
+    "logitpmax.c",
+    "logitRmax.c",
+    "Rmax.c",
+    "logitomega.c",
+    "omega.c",
+    "Romega.c",
+    "logitRomega.c",
+    "s.ct",
+    "setlevel.c",
+    "P.ct",
+    "RT.c",
+    "unmet.intercept.c"
+    # "ptot.k"
+  ),
+    nchains = 10,
+    niter = 2500,
+    nburnin = 500,
+    nthin = 10
   )
-  fpem_results_autosave(runname = paste0(div))
-  fpem_plot_autosave(runname = paste0(div),
-                          indicators = indicators,
-                          compare_to_global = TRUE)
+  # fpem_results_autosave(runname = paste0(div))
+  # fpem_plot_autosave(runname = paste0(div),
+  #                         indicators = indicators,
+  #                         compare_to_global = TRUE)
   i <- i + 1
   print(i/total)
 }
+
+
 ```
 
+```{r}
+files <- paste0("output/plots/", divs, ".pdf")
+pdftools::pdf_combine(files, output = "joined.pdf")
 
+```
