@@ -100,7 +100,7 @@ fpem_1country_1union <- function(
   subnational = FALSE,
   diagnostic = FALSE,
   params_to_save = c("mod.ct", "unmet.ct", "trad.ct", "mu.in", "logitratio.yunmet.hat.i"),
-  nchains = 3,
+  nchains = 10,
   niter = 2500,
   nburnin = 500,
   nthin = max(1, floor((niter - nburnin)*nchains / 2000))
@@ -149,6 +149,9 @@ fpem_1country_1union <- function(
     n.burnin = nburnin,
     n.thin = nthin
   )
+  diagnostic_check(diagnostic = diagnostic,
+                   mod = mod,
+                   core_data = core_data)
   # bias adjusted data added to core data based on model estimates of bias
   if (nrow(core_data$observations) > 0) {
     core_data$observations <- bias_adj(
@@ -159,46 +162,9 @@ fpem_1country_1union <- function(
   }
   # reformat samples
   posterior_samples <- posterior_samples_array_format(mod, core_data)
-  if (diagnostic) {
-
-    summ <- MCMCvis::MCMCsummary(mod) %>% 
-      tibble::rownames_to_column(var = "pars") %>%
-      dplyr::mutate(pars = pars %>% stringr::str_remove_all("[:digit:]") %>% stringr::str_remove("[,]") %>% stringr::str_remove("\\[]")) %>%
-      dplyr::filter(pars %in% c("logit_mod.ct","logit_unmet.ct","logit_trad.ct","mod.ct",
-                                "unmet.ct",
-                                "trad.ct"))
-    par_rownumber <- which(summ$Rhat > 1.1)
-    if (any(summ$Rhat > 1.1)) {
-      rhat_data <- summ[par_rownumber,] %>% dplyr::select(pars, Rhat)
-      bad_parnames <- summ[par_rownumber,] %>% dplyr::select(pars) %>% dplyr::pull()
-      if (!dir.exists("output")) dir.create("output")
-      cat(paste(division_numeric_code, is_in_union, "has Rhat", max(summ$Rhat)), sep = "", append = TRUE, file = "output/automatic_convergence_check.txt", fill = TRUE)
-      if (!dir.exists("output/diagnostic")) dir.create("output/diagnostic")
-      write.table(rhat_data, paste0("output/diagnostic/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_rhats.txt"))
-      
-      MCMCvis::MCMCtrace(mod,
-                         params = bad_parnames,
-                         ISB = FALSE,
-                         pdf = TRUE,
-                         post_zm = TRUE,
-                         open_pdf = FALSE,
-                         Rhat = TRUE,
-                         filename = paste0("output/diagnostic/", division_numeric_code, is_in_union, "_", core_data$units$name_country, "_mcmctrace.pdf")
-      )
-    }
     return(list(
       posterior_samples = posterior_samples,
-      core_data = core_data,
-      mod = mod
-    )
-    )
-  } else {
-    return(list(
-      posterior_samples = posterior_samples,
-      core_data = core_data
-    )
-    )
-  }
+      core_data = core_data))
 }
 
 

@@ -41,7 +41,7 @@ fpem_one_country_autosave(
   service_stats = FALSE,
   division_numeric_code = div,
   first_year = 1970,
-  last_year = 2030,
+  last_year = 2030,1
     diagnostic = TRUE,
   params_to_save = c(
     "logit_mod.ct",
