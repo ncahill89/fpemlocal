@@ -32,7 +32,7 @@ fpem_plot_autosave <- function(runname,
 #'
 #' @inherit fpem_plots
 #' @export
-fpem_plot <- function(
+fpet_plot <- function(
   runlist,
   results,
   indicators,

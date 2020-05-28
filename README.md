@@ -28,10 +28,11 @@ indicators. FPEMcountry comes equiped with survey data, country unit
 data, and country population count data, to produce one-country runs.
 Running FPEM is divided into three main functions.
 
-1.  [Run a one country model](#run) `fpem_one_country`
-2.  [Calculate point estimates for indicators](#results) `fpem_results`
+1.  [Run a one country model](#run) `fpet_fit_model`
+2.  [Calculate point estimates for indicators](#results)
+    `fpet_calculate_indicaotrs`
 3.  [Plot the point estimates against the survey data](#plot)
-    `fpem_plot`
+    `fpet_plot`
 
 These three functions make running one country FPEM straightforward,
 while retaining enough division to carry out a variety of developer and
@@ -110,7 +111,7 @@ contraceptive_use %>% dplyr::filter(division_numeric_code == 4)
 
 ## 1\. Run a one country model
 
-`fpem_one_country` is a wrapper function to run the family planning
+`fpet_fit_model` is a wrapper function to run the family planning
 estimation model. The argument `is_in_union` specifies which model we
 wish to run. There are two models, one for in-union and another for
 not-in-union women. These are indicated with `"Y"` and `"N"`
@@ -122,17 +123,16 @@ function uses default package contraceptive\_use. The user may also
 supply optional services statistics.
 
 ``` r
-div <- 4
-runlist <- fpem_one_country(
+runlist <- fpet_fit_model(
   is_in_union = "Y",
-  division_numeric_code = div,
+  division_numeric_code = 4,
   first_year = 1970,
   last_year = 2030,
   diagnostic = TRUE
 )
 ```
 
-`fpem_one_country` returns a list runs. In this case we have one run,
+`fpet_fit_model` returns a list runs. In this case we have one run,
 in-union women denoted `$y`. This run contain posterior samples and
 another list called `core_data`. Core data contains processed survey
 data and run specific data such as the time frame, union, etc.
@@ -148,25 +148,26 @@ runlist$run$core_data %>% names
 
 ## 2\. Calculate point estimates for indicators
 
-`fpem_results` is a wrapper function for calculating point estimates and
-confidence intervals. By default the function uses package population
-data (See `population_counts`) in order to calculate family planning
-indicators. Custom population count data may be supplied (See
-`??fpem_get_results`).
+`fpet_calculate_indicators` is a wrapper function for calculating point
+estimates and confidence intervals. By default the function uses package
+population data (See `population_counts`) in order to calculate family
+planning indicators. Custom population count data may be supplied (See
+`??fpet_get_results`).
 
-`fpem_results` utilizes `pmap` from the tidyverse package purr allowing
-it to act on any number of runs. We will supply the entire list of runs
-from `fpem_one_country`.
+`fpet_calculate_indicators` utilizes `pmap` from the tidyverse package
+purr allowing it to act on any number of runs. We will supply the entire
+list of runs from `fpet_fit_model`.
 
 ``` r
-results <- fpem_results(runlist)
+results <- fpet_calculate_indicators(runlist)
 ```
 
-Like the previous function, `fpem_results` returns a list of runs. Each
-run containing a list of tibbles. Each tibble contains point-estimates
-for a specific family planning indicators in long-format. Selecting the
-in-union run from the output of `fpem_results` we can inspect the names
-of the list which are the family planning indicators.
+Like the previous function, `fpet_calculate_indicators` returns a list
+of runs. Each run containing a list of tibbles. Each tibble contains
+point-estimates for a specific family planning indicators in
+long-format. Selecting the in-union run from the output of
+`fpet_calculate_indicators` we can inspect the names of the list which
+are the family planning indicators.
 
 ``` r
 results$run %>% names
@@ -221,18 +222,18 @@ results$run$contraceptive_use_modern
 
 ## 3\. Plot the point estimates against the survey data
 
-`fpem_get_plots` plots the results of the model against the survey data.
-The user supplies the objects exported from `fpem_one_country` and
-`fpem_results` as well as indicators of interest. Indicators of interest
-are supplied to the argument `indicators`. The argument
-`compare_to_global` adds point estimate and 95% credible interval from
-the UNPD global model (See `global_estimates`). The global model
-estimates are plotted using dotted lines. Since we are only using the
-default data from UNPD the estimates from our model should align with
-the UNPD estimates.
+`fpet_plot` plots the results of the model against the survey data. The
+user supplies the objects exported from `fpet_fit_model` and
+`fpet_calculate_indicators` as well as indicators of interest.
+Indicators of interest are supplied to the argument `indicators`. The
+argument `compare_to_global` adds point estimate and 95% credible
+interval from the UNPD global model (See `global_estimates`). The global
+model estimates are plotted using dotted lines. Since we are only using
+the default data from UNPD the estimates from our model should align
+with the UNPD estimates.
 
 ``` r
-fpem_plot(
+fpet_plot(
   runlist,
   results,
   indicators = c(
