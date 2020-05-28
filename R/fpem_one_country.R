@@ -51,9 +51,9 @@ fpem_one_country <- function(
     core_data$is_in_union <- is_in_union
     all <- list(posterior_samples = samples_all,
                     core_data = core_data)
-    runlist <- list(y = y,
-                n = n,
-                all = all)
+    runlist <- list(runy = y,
+                runn = n,
+                runall = all)
   } else {
     runlist <-  list(run = fpem_1country_1union(is_in_union = is_in_union,
                                                 ...))

@@ -7,7 +7,7 @@
 fpem_results(runlist, country_population_counts = NULL)
 }
 \arguments{
-\item{runlist}{\emph{'list'} a list with core_dat and posteior samples}
+\item{runlist}{\emph{'list'} a list with core_data and posterior samples}
 
 \item{country_population_counts}{\emph{'Numeric Vector'} A vector of population counts selected from \code{\link[get_population_counts]{get_population_counts}}}
 }

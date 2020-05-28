@@ -137,10 +137,11 @@ another list called `core_data`. Core data contains processed survey
 data and run specific data such as the time frame, union, etc.
 
 ``` r
-runlist$y$core_data %>% names
+runlist$run$core_data %>% names
 ```
 
-    ## NULL
+    ## [1] "is_in_union"        "units"              "start_year"        
+    ## [4] "observations"       "year_sequence_list" "subnational"
 
 ## Process the samples
 
@@ -165,19 +166,53 @@ in-union run from the output of `fpem_results` we can inspect the names
 of the list which are the family planning indicators.
 
 ``` r
-results$y %>% names
+results$run %>% names
 ```
 
-    ## NULL
+    ##  [1] "contraceptive_use_any"                     
+    ##  [2] "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"             
+    ##  [4] "non_use"                                   
+    ##  [5] "unmet_need_any"                            
+    ##  [6] "unmet_need_modern"                         
+    ##  [7] "demand"                                    
+    ##  [8] "demand_modern"                             
+    ##  [9] "demand_satisfied"                          
+    ## [10] "demand_satisfied_modern"                   
+    ## [11] "no_need"                                   
+    ## [12] "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts"
+    ## [14] "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                 
+    ## [16] "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"       
+    ## [18] "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                  
+    ## [20] "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts" 
+    ## [22] "no_need_population_counts"
 
 Let’s take a look at the tibble for the indicator
 `contraceptive_use_modern`
 
 ``` r
-results$y$contraceptive_use_modern
+results$run$contraceptive_use_modern
 ```
 
-    ## NULL
+    ## # A tibble: 488 x 3
+    ##     year percentile  value
+    ##    <int> <chr>       <dbl>
+    ##  1  1970 mean       0.0115
+    ##  2  1971 mean       0.0123
+    ##  3  1972 mean       0.0131
+    ##  4  1973 mean       0.0141
+    ##  5  1974 mean       0.0152
+    ##  6  1975 mean       0.0164
+    ##  7  1976 mean       0.0178
+    ##  8  1977 mean       0.0192
+    ##  9  1978 mean       0.0208
+    ## 10  1979 mean       0.0225
+    ## # ... with 478 more rows
 
 ## Plot the results
 

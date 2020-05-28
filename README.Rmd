@@ -65,7 +65,7 @@ runlist <- fpem_one_country(
 
 `fpem_one_country` returns a list runs. In this case we have one run, in-union women denoted `$y`. This run contain posterior samples and another list called `core_data`. Core data contains processed survey data and run specific data such as the time frame, union, etc.
 ```{r}
-runlist$y$core_data %>% names
+runlist$run$core_data %>% names
 ```
 
 ## Process the samples
@@ -78,11 +78,11 @@ results <- fpem_results(runlist)
 
 Like the previous function, `fpem_results` returns a list of runs. Each run containing a list of tibbles. Each tibble contains point-estimates for a specific family planning indicators in long-format. Selecting the in-union run from the output of `fpem_results` we can inspect the names of the list which are the family planning indicators.
 ```{r}
-results$y %>% names
+results$run %>% names
 ```
 Let's take a look at the tibble for the indicator `contraceptive_use_modern`
 ```{r}
-results$y$contraceptive_use_modern
+results$run$contraceptive_use_modern
 ```
 
 

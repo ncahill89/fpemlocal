@@ -16,10 +16,10 @@ fpem_1country_1union(
   diagnostic = FALSE,
   params_to_save = c("mod.ct", "unmet.ct", "trad.ct", "mu.in",
     "logitratio.yunmet.hat.i"),
-  nchains = 3,
+  nchains = 10,
   niter = 2500,
   nburnin = 500,
-  nthin = max(1, floor((niter - nburnin)/1000))
+  nthin = max(1, floor((niter - nburnin) * nchains/2000))
 )
 }
 \arguments{
