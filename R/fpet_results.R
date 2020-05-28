@@ -9,12 +9,12 @@
 #' @export
 #'
 #' @examples
-fpem_results_autosave <-
+fpet_calculate_indicators_autosave <-
   function(runname = NULL,
            country_population_counts = NULL) {
     
     runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
-    results <- fpem_results(runlist = runlist,
+    results <- fpet_calculate_indicators(runlist = runlist,
                      country_population_counts = country_population_counts)
     if (!dir.exists("output")) dir.create("output")
     if (!dir.exists("output/results")) dir.create("output/results")
@@ -31,10 +31,10 @@ fpem_results_autosave <-
 #' @inherit fpem_calculate_results
 #'
 #' @export
-fpem_results <-
+fpet_calculate_indicators <-
   function(runlist,
            country_population_counts = NULL) {
-    purrr::pmap(list(runlist, list(country_population_counts)), fpem_calculate_results)
+    purrr::pmap(list(runlist, list(country_population_counts)), fpet_calculate_results)
   }
 
 
@@ -46,13 +46,13 @@ fpem_results <-
 #'
 #' Returns point estimates from posterior samples in long format.
 #'
-#' @param runlist \emph{'list'} a list with core_dat and posteior samples
+#' @param runlist \emph{'list'} a list with core_data and posterior samples
 #' @param country_population_counts \emph{'Numeric Vector'} A vector of population counts selected from \code{\link[get_population_counts]{get_population_counts}}
 #'
 #' @return \emph{'Data.frame'} A data.frame of point estimates in long format.
 #'
 #' @export
-fpem_calculate_results <-
+fpet_calculate_results <-
   function(runlist,
            country_population_counts = NULL) {
     

@@ -1,94 +1,271 @@
-FPEM
+FPEMcountry
 ================
 
-## Table of Contents
+<!-- ## Table of Contents -->
 
-1.  [Introduction](#intro)
-2.  [Run models](#run)
-3.  [Post-process](#post-process)
-4.  [Plot model results](#plot)
+<!-- 1. [Introduction](#intro) -->
 
-## <a name="intro"></a>
+<!-- 2. [Run models](#run) -->
+
+<!-- 3. [Post-process](#post-process) -->
+
+<!-- 4. [Plot model results](#plot) -->
+
+## Installation
+
+The package can be installed by cloning and using `devtools::install()`.
+The source code for vignettes can be found in
+[/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes).
+Below is a brief introduction.
 
 ## Introduction
 
-This package is the one country implementation of FPEM. It uses higher
-level parameters estimated in FPEMglobal. The package can be installed
-by cloning and using `devtools::install()`. The source code for
-vignettes can be found in
-[/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes).
-The directory
-[/design](https://github.com/FPcounts/FPEM/tree/master/design) contains
-technical details about the design of this project for package
-maintainers and contributors. Below is a brief introduction.
+The FPEMcountry package is the one-country implementation of FPEM
+(family planning estimation model) designed with tidyverse philosophy.
+The model in this package uses global model results from the package
+FPEMglobal to aid in the estimation of country level family planning
+indicators. FPEMcountry comes equiped with survey data, country unit
+data, and country population count data, to produce one-country runs.
+Running FPEM is divided into three main functions.
+
+1.  [Run a one country model](#run) `fpet_fit_model`
+2.  [Calculate point estimates for indicators](#results)
+    `fpet_calculate_indicaotrs`
+3.  [Plot the point estimates against the survey data](#plot)
+    `fpet_plot`
+
+These three functions make running one country FPEM straightforward,
+while retaining enough division to carry out a variety of developer and
+client tasks. In this document we will cover the typical use of these
+three functions.
+
+To start a run we need to know the country code for the country of
+interest. Our package contains country codes and other country units in
+the dataset `divisions`.
+
+``` r
+divisions
+```
+
+    ## # A tibble: 232 x 13
+    ##    division_numeri~ name_country name_region name_sub_region region_numeric_~
+    ##               <dbl> <chr>        <chr>       <chr>                      <dbl>
+    ##  1                4 Afghanistan  Asia        South-Central ~              935
+    ##  2                8 Albania      Europe      Southern Europe              908
+    ##  3               12 Algeria      Africa      Northern Africa              903
+    ##  4               16 American Sa~ Oceania     Polynesia                    909
+    ##  5               20 Andorra      Europe      Southern Europe              908
+    ##  6               24 Angola       Africa      Middle Africa                903
+    ##  7              660 Anguilla     Latin Amer~ Caribbean                    904
+    ##  8               28 Antigua and~ Latin Amer~ Caribbean                    904
+    ##  9               32 Argentina    Latin Amer~ South America                904
+    ## 10               51 Armenia      Asia        Western Asia                 935
+    ## # ... with 222 more rows, and 8 more variables: sub_region_numeric_code <dbl>,
+    ## #   is_developed_region <chr>, is_less_developed_region <chr>,
+    ## #   is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>,
+    ## #   is_unmarried_sexual_activity <chr>, is_low_population <chr>,
+    ## #   is_fp2020 <chr>
+
+Our package data sets are tibbles. This is particularly useful for large
+datasets because it only prints the first few rows. The country codes
+used by our package, known as `division_numeric_code`, are found in this
+data. In our example we will execute a one-country run for Afghanistan,
+code `4`. Survey data is available in the dataset `contraceptive_use`.
+See `??contraceptive_use` for a detailed description of this dataset.
+
+``` r
+contraceptive_use %>% dplyr::filter(division_numeric_code == 4)
+```
+
+    ## # A tibble: 12 x 31
+    ##    division_numeri~ start_date end_date is_in_union age_range data_series_type
+    ##               <dbl>      <dbl>    <dbl> <chr>       <chr>     <chr>           
+    ##  1                4      1972     1975. Y           15-49     National survey 
+    ##  2                4      2003.    2004. Y           15-49     MICS            
+    ##  3                4      2000.    2001. Y           15-49     MICS            
+    ##  4                4      2005.    2006. Y           15-49     National survey 
+    ##  5                4      2007.    2007. Y           15-49     National survey 
+    ##  6                4      2008.    2009. Y           15-49     National survey 
+    ##  7                4      2011.    2011. Y           15-49     MICS            
+    ##  8                4      2010.    2011. Y           15-49     National survey 
+    ##  9                4      2015.    2016. Y           15-49     DHS             
+    ## 10                4      2015.    2016. Y           15-49     National survey 
+    ## 11                4      2013.    2013. Y           15-49     National survey 
+    ## 12                4      2018.    2019. Y           15-49     National survey 
+    ## # ... with 25 more variables: group_type_relative_to_baseline <chr>,
+    ## #   contraceptive_use_modern <dbl>, contraceptive_use_traditional <dbl>,
+    ## #   contraceptive_use_any <dbl>, unmet_need_modern <lgl>, unmet_need_any <dbl>,
+    ## #   is_pertaining_to_methods_used_since_last_pregnancy <chr>,
+    ## #   pertaining_to_methods_used_since_last_pregnancy_reason <lgl>,
+    ## #   has_geographical_region_bias <chr>, geographical_region_bias_reason <chr>,
+    ## #   has_non_pregnant_and_other_positive_biases <chr>,
+    ## #   non_pregnant_and_other_positive_biases_reason <chr>, age_group_bias <chr>,
+    ## #   modern_method_bias <chr>, has_traditional_method_bias <chr>,
+    ## #   traditional_method_bias_reason <chr>,
+    ## #   has_absence_of_probing_questions_bias <chr>, se_modern <dbl>,
+    ## #   se_traditional <dbl>, se_unmet_need <dbl>, se_log_r_modern_no_use <dbl>,
+    ## #   se_log_r_traditional_no_use <dbl>, se_log_r_unmet_no_need <dbl>,
+    ## #   source_id <dbl>, record_id <chr>
 
 ## <a name="run"></a>
 
-## Run models
+## 1\. Run a one country model
 
-`fpem_one_country` is a generic wrapper function to run the family
-planning estimation model for a country of interest. The wrapper
-functions ending in `_autosave` such as `fpem_one_country_autosave` save
-the output and name the files using the runname argument. We will use
-the division code for Bolivia here as the runname.
-
-When a survey file is not provided (as in this example) the function
-uses default data from `contraceptive_use`. The user may also supply
-optional services statistics. See `??service_stats` for required service
-statistic data format. See `??do_1country_run` for all possible inputs
-to this wrapper function. If you wish to obtain results for all women
-`posterior_samples_all_women` can be used after completing a run for
-married women and a run for unmarried women. See
-[FPEM/vignettes](https://github.com/FPcounts/FPEMcountry/vignettes) for
-more details
+`fpet_fit_model` is a wrapper function to run the family planning
+estimation model. The argument `is_in_union` specifies which model we
+wish to run. There are two models, one for in-union and another for
+not-in-union women. These are indicated with `"Y"` and `"N"`
+respectively. The first\_year and last\_year arguments determine the
+years of estimates exported from the run. Regardless of these arguments,
+the function will use all years in which data is available for
+estimation. When a survey file is not provided, as in this example, the
+function uses default package contraceptive\_use. The user may also
+supply optional services statistics.
 
 ``` r
-div <- 68
-fpem_one_country_autosave(
-  runname = paste0(div),
-  is_in_union = "ALL",
-  service_stats = FALSE,
-  division_numeric_code = div,
+runlist <- fpet_fit_model(
+  is_in_union = "Y",
+  division_numeric_code = 4,
   first_year = 1970,
-  last_year = 2030
+  last_year = 2030,
+  diagnostic = TRUE
 )
 ```
 
-## <a name="post-process"></a>
-
-## Process the samples
-
-`fpem_get_results` returns point-estimates for several indicators in
-long-format.
+`fpet_fit_model` returns a list runs. In this case we have one run,
+in-union women denoted `$y`. This run contain posterior samples and
+another list called `core_data`. Core data contains processed survey
+data and run specific data such as the time frame, union, etc.
 
 ``` r
-fpem_get_results_autosave(
-  runname = paste0(div)
-)
+runlist$run$core_data %>% names
 ```
+
+    ## [1] "is_in_union"        "units"              "start_year"        
+    ## [4] "observations"       "year_sequence_list" "subnational"
+
+## <a name="results"></a>
+
+## 2\. Calculate point estimates for indicators
+
+`fpet_calculate_indicators` is a wrapper function for calculating point
+estimates and confidence intervals. By default the function uses package
+population data (See `population_counts`) in order to calculate family
+planning indicators. Custom population count data may be supplied (See
+`??fpet_get_results`).
+
+`fpet_calculate_indicators` utilizes `pmap` from the tidyverse package
+purr allowing it to act on any number of runs. We will supply the entire
+list of runs from `fpet_fit_model`.
+
+``` r
+results <- fpet_calculate_indicators(runlist)
+```
+
+Like the previous function, `fpet_calculate_indicators` returns a list
+of runs. Each run containing a list of tibbles. Each tibble contains
+point-estimates for a specific family planning indicators in
+long-format. Selecting the in-union run from the output of
+`fpet_calculate_indicators` we can inspect the names of the list which
+are the family planning indicators.
+
+``` r
+results$run %>% names
+```
+
+    ##  [1] "contraceptive_use_any"                     
+    ##  [2] "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"             
+    ##  [4] "non_use"                                   
+    ##  [5] "unmet_need_any"                            
+    ##  [6] "unmet_need_modern"                         
+    ##  [7] "demand"                                    
+    ##  [8] "demand_modern"                             
+    ##  [9] "demand_satisfied"                          
+    ## [10] "demand_satisfied_modern"                   
+    ## [11] "no_need"                                   
+    ## [12] "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts"
+    ## [14] "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                 
+    ## [16] "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"       
+    ## [18] "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                  
+    ## [20] "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts" 
+    ## [22] "no_need_population_counts"
+
+Let’s take a look at the tibble for the indicator
+`contraceptive_use_modern`
+
+``` r
+results$run$contraceptive_use_modern
+```
+
+    ## # A tibble: 488 x 3
+    ##     year percentile  value
+    ##    <int> <chr>       <dbl>
+    ##  1  1970 mean       0.0115
+    ##  2  1971 mean       0.0123
+    ##  3  1972 mean       0.0131
+    ##  4  1973 mean       0.0141
+    ##  5  1974 mean       0.0152
+    ##  6  1975 mean       0.0164
+    ##  7  1976 mean       0.0178
+    ##  8  1977 mean       0.0192
+    ##  9  1978 mean       0.0208
+    ## 10  1979 mean       0.0225
+    ## # ... with 478 more rows
 
 ## <a name="plot"></a>
 
-## Plot the results
+## 3\. Plot the point estimates against the survey data
 
-`fpem_get_plots` plots the results of the model againts the
-observations. Choose any indicators returned from
-`fpem_calculate_results`
+`fpet_plot` plots the results of the model against the survey data. The
+user supplies the objects exported from `fpet_fit_model` and
+`fpet_calculate_indicators` as well as indicators of interest.
+Indicators of interest are supplied to the argument `indicators`. The
+argument `compare_to_global` adds point estimate and 95% credible
+interval from the UNPD global model (See `global_estimates`). The global
+model estimates are plotted using dotted lines. Since we are only using
+the default data from UNPD the estimates from our model should align
+with the UNPD estimates.
 
 ``` r
-indicators <- c(
+fpet_plot(
+  runlist,
+  results,
+  indicators = c(
     "unmet_need_any",
     "contraceptive_use_modern",
     "contraceptive_use_traditional",
     "contraceptive_use_any"
-    )
-
-fpem_get_plots_autosave(
-  runname = paste0(div),
-  indicators = indicators,
+    ),
   compare_to_global = TRUE
   )
 ```
 
-    ## png 
-    ##   2
+    ## Joining, by = "year"
+    ## Joining, by = "year"
+    ## Joining, by = "year"
+
+    ## $run
+    ## $run[[1]]
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+    ## 
+    ## $run[[2]]
+
+![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+
+    ## 
+    ## $run[[3]]
+
+![](README_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+
+    ## 
+    ## $run[[4]]
+
+![](README_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
