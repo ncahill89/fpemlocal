@@ -1,5 +1,5 @@
 ---
-title: "FPEMcountry "
+title: "..."
 output: github_document
 ---
 ```{r setup, include=FALSE}
@@ -28,11 +28,11 @@ devtools::load_all()
 The package can be installed by cloning and using `devtools::install()`. The source code for vignettes can be found in [/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes). Below is a brief introduction.
 
 ## Introduction
-The FPEMcountry package is the one-country implementation of FPEM (family planning estimation model) designed with tidyverse philosophy. The model in this package uses global model results from the package FPEMglobal to aid in the estimation of country level family planning indicators. FPEMcountry comes equiped with survey data, country unit data, and country population count data, to produce one-country runs. Running FPEM is divided into three main wrapper functions.
+This R package is the one-country implementation of FPEM (family planning estimation model) designed with tidyverse philosophy. The model in this package uses global model results from `FPEMglobal` to aid in the estimation of country level family planning indicators. `FPEMcountry` comes complete with survey data, country unit data, and country population count data, to produce one-country runs. Running FPEM is divided into three main wrapper functions.
 
-1. Run a one country model `fpem_one_country`
-2. Calculate point estimates for indicators `fpem_results`
-3. Plot the  point estimates against the survey data `fpem_plot`
+1. Run the model `fpem_one_country`
+2. Calculate point estimates `fpem_results`
+3. Plot the point estimates against the survey data `fpem_plot`
 
 These three functions make running one country FPEM straightforward, while retaining enough division to carry out a variety of developer and client tasks. In this document we will cover the typical use of these three functions.
 
@@ -51,11 +51,11 @@ contraceptive_use %>% dplyr::filter(division_numeric_code == 4)
 
 ## <a name="run"></a>
 ## Run models
-`fpem_one_country` is a wrapper function to run the family planning estimation model. The argument `is_in_union` specifies which model we wish to run. There are two models, one for in-union and another for not-in-union women. These are indicated with `"Y"` and `"N"` respectively. The first_year and last_year arguments determine the years of estimates exported from the run. Regardless of these arguments, the function will use all years in which data is available for estimation. When a survey file is not provided, as in this example, the function uses default package contraceptive_use. The user may also supply optional services statistics.
+`fpem_one_country` is a wrapper function to run the family planning estimation model. The argument `is_in_union` specifies which model we wish to run. There are two models, one for in-union and another for not-in-union women. These are indicated with `"Y"` and `"N"` respectively. We can also supply `"ALL" `to this argument to obtain results for all women. In this case both models are run and the posterior samples are combined to obtain posterior samples for all women.
 ```{r}
 div <- 4
 runlist <- fpem_one_country(
-  is_in_union = "Y",
+  is_in_union = "ALL",
   division_numeric_code = div,
   first_year = 1970,
   last_year = 2030,
@@ -63,26 +63,26 @@ runlist <- fpem_one_country(
 )
 ```
 
-`fpem_one_country` returns a list runs. In this case we have one run, in-union women denoted `$y`. This run contain posterior samples and another list called `core_data`. Core data contains processed survey data and run specific data such as the time frame, union, etc.
+`fpem_one_country` returns a list runs. In this case where `"ALL"` women were requested, three lists are returned. Each with identical structure. These lists contain posterior samples and another list called `core_data`. Core data contains processed survey data and run specific data such as the time frame, union, etc.
 ```{r}
-runlist$y$core_data %>% names
+runlist$runy$core_data %>% names
 ```
 
 ## Process the samples
 `fpem_results` is a wrapper function for calculating point estimates and confidence intervals. By default the function uses package population data (See `population_counts`) in order to calculate family planning indicators. Custom population count data may be supplied (See `??fpem_get_results`).
 
-`fpem_results` utilizes `pmap` from the tidyverse package purr allowing it to act on any number of runs. We will supply the entire list of runs from `fpem_one_country`.
+`fpem_results` utilizes `pmap` from the tidyverse package `purr` allowing it to act on any number of runs. We will supply the entire list of runs from `fpem_one_country`.
 ```{r}
 results <- fpem_results(runlist)
 ```
 
 Like the previous function, `fpem_results` returns a list of runs. Each run containing a list of tibbles. Each tibble contains point-estimates for a specific family planning indicators in long-format. Selecting the in-union run from the output of `fpem_results` we can inspect the names of the list which are the family planning indicators.
 ```{r}
-results$y %>% names
+results$runy %>% names
 ```
 Let's take a look at the tibble for the indicator `contraceptive_use_modern`
 ```{r}
-results$y$contraceptive_use_modern
+results$runy$contraceptive_use_modern
 ```
 
 

@@ -1,5 +1,5 @@
 ---
-title: "FPEMcountry "
+title: "..."
 output: github_document
 ---
 ```{r setup, include=FALSE}
@@ -28,7 +28,7 @@ devtools::load_all()
 The package can be installed by cloning and using `devtools::install()`. The source code for vignettes can be found in [/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes). Below is a brief introduction.
 
 ## Introduction
-The FPEMcountry package is the one-country implementation of FPEM (family planning estimation model) designed with tidyverse philosophy. The model in this package uses global model results from the package FPEMglobal to aid in the estimation of country level family planning indicators. FPEMcountry comes equiped with survey data, country unit data, and country population count data, to produce one-country runs. Running FPEM is divided into three main wrapper functions.
+This R package is the one-country implementation of FPEM (family planning estimation model) designed with tidyverse philosophy. The model in this package uses global model results from `FPEMglobal` to aid in the estimation of country level family planning indicators. `FPEMcountry` comes complete with survey data, country unit data, and country population count data, to produce one-country runs. Running FPEM is divided into three main wrapper functions.
 
 1. Run a one country model `fpem_one_country`
 2. Calculate point estimates for indicators `fpem_results`
@@ -71,18 +71,18 @@ runlist$y$core_data %>% names
 ## Process the samples
 `fpem_results` is a wrapper function for calculating point estimates and confidence intervals. By default the function uses package population data (See `population_counts`) in order to calculate family planning indicators. Custom population count data may be supplied (See `??fpem_get_results`).
 
-`fpem_results` utilizes `pmap` from the tidyverse package purr allowing it to act on any number of runs. We will supply the entire list of runs from `fpem_one_country`.
+`fpem_results` utilizes `pmap` from the tidyverse package `purr` allowing it to act on any number of runs. We will supply the entire list of runs from `fpem_one_country`.
 ```{r}
 results <- fpem_results(runlist)
 ```
 
 Like the previous function, `fpem_results` returns a list of runs. Each run containing a list of tibbles. Each tibble contains point-estimates for a specific family planning indicators in long-format. Selecting the in-union run from the output of `fpem_results` we can inspect the names of the list which are the family planning indicators.
 ```{r}
-results$y %>% names
+results$runy %>% names
 ```
 Let's take a look at the tibble for the indicator `contraceptive_use_modern`
 ```{r}
-results$y$contraceptive_use_modern
+results$runy$contraceptive_use_modern
 ```
 
 

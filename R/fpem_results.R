@@ -46,7 +46,7 @@ fpem_results <-
 #'
 #' Returns point estimates from posterior samples in long format.
 #'
-#' @param runlist \emph{'list'} a list with core_dat and posteior samples
+#' @param runlist \emph{'list'} a list with core_data and posterior samples
 #' @param country_population_counts \emph{'Numeric Vector'} A vector of population counts selected from \code{\link[get_population_counts]{get_population_counts}}
 #'
 #' @return \emph{'Data.frame'} A data.frame of point estimates in long format.

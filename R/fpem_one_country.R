@@ -34,26 +34,26 @@ fpem_one_country <- function(
   
 ) {
   if(is_in_union == "ALL") {
-    runy <- fpem_1country_1union(
+    y <- fpem_1country_1union(
       is_in_union = "Y",
       ...
     )
-    runn <- fpem_1country_1union(
+    n <- fpem_1country_1union(
       is_in_union = "N",
       ...
     )
-    # samples_all <- posterior_samples_all_women(in_union_posterior_samples = runy$posterior_samples, 
-    #                                            not_in_union_posterior_samples = runn$posterior_samples, 
-    #                                            core_data = runy$core_data)
-    # core_data <- runy$core_data
-    # core_data$observations <- rbind(runy$core_data$observations,
-    #                                 runn$core_data$observations)
-    # core_data$is_in_union <- is_in_union
-    # runall <- list(posterior_samples = samples_all,
-    #                 core_data = core_data)
-    runlist <- list(runy = runy,
-                runn = runn) # hacked for testing
-                # runall = runall)
+    samples_all <- posterior_samples_all_women(in_union_posterior_samples = y$posterior_samples,
+                                               not_in_union_posterior_samples = n$posterior_samples,
+                                               core_data = y$core_data)
+    core_data <- y$core_data
+    core_data$observations <- rbind(y$core_data$observations,
+                                    n$core_data$observations)
+    core_data$is_in_union <- is_in_union
+    all <- list(posterior_samples = samples_all,
+                    core_data = core_data)
+    runlist <- list(y = y,
+                n = n,
+                all = all)
   } else {
     runlist <-  list(run = fpem_1country_1union(is_in_union = is_in_union,
                                                 ...))
