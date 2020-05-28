@@ -26,11 +26,12 @@ The model in this package uses global model results from the package
 FPEMglobal to aid in the estimation of country level family planning
 indicators. FPEMcountry comes equiped with survey data, country unit
 data, and country population count data, to produce one-country runs.
-Running FPEM is divided into three main wrapper functions.
+Running FPEM is divided into three main functions.
 
-1.  Run a one country model `fpem_one_country`
-2.  Calculate point estimates for indicators `fpem_results`
-3.  Plot the point estimates against the survey data `fpem_plot`
+1.  [Run a one country model](#run) `fpem_one_country`
+2.  [Calculate point estimates for indicators](#results) `fpem_results`
+3.  [Plot the point estimates against the survey data](#plot)
+    `fpem_plot`
 
 These three functions make running one country FPEM straightforward,
 while retaining enough division to carry out a variety of developer and
@@ -107,7 +108,7 @@ contraceptive_use %>% dplyr::filter(division_numeric_code == 4)
 
 ## <a name="run"></a>
 
-## Run models
+## 1\. Run a one country model
 
 `fpem_one_country` is a wrapper function to run the family planning
 estimation model. The argument `is_in_union` specifies which model we
@@ -143,7 +144,9 @@ runlist$run$core_data %>% names
     ## [1] "is_in_union"        "units"              "start_year"        
     ## [4] "observations"       "year_sequence_list" "subnational"
 
-## Process the samples
+## <a name="results"></a>
+
+## 2\. Calculate point estimates for indicators
 
 `fpem_results` is a wrapper function for calculating point estimates and
 confidence intervals. By default the function uses package population
@@ -214,7 +217,9 @@ results$run$contraceptive_use_modern
     ## 10  1979 mean       0.0225
     ## # ... with 478 more rows
 
-## Plot the results
+## <a name="plot"></a>
+
+## 3\. Plot the point estimates against the survey data
 
 `fpem_get_plots` plots the results of the model against the survey data.
 The user supplies the objects exported from `fpem_one_country` and
