@@ -53,19 +53,17 @@ fpet_calculate_indicators <-
 #'
 #' @export
 fpet_calculate_results <-
-  function(runlist,
+  function(fit,
            country_population_counts = NULL) {
     
     if(is.null(country_population_counts)) {
-      country_population_counts <- population_counts
+      country_population_counts <- population_counts %>%
+        dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code) %>%
+        dplyr::filter(is_in_union == fit$core_data$is_in_union)
     }
-    country_population_counts <- country_population_counts %>%
-      dplyr::filter(division_numeric_code == runlist$core_data$units$division_numeric_code) %>%
-      dplyr::filter(is_in_union == runlist$core_data$is_in_union)
     
-    
-    posterior_samples <- runlist$posterior_samples
-    first_year <- runlist$core_data$year_sequence_list$result_seq_years %>% min()
+    posterior_samples <- fit$posterior_samples
+    first_year <- fit$core_data$year_sequence_list$result_seq_years %>% min()
     
     contraceptive_use_any <-
       get_contraceptive_use_any(posterior_samples = posterior_samples, first_year = first_year)

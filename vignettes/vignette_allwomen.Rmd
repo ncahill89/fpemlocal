@@ -1,0 +1,95 @@
+---
+title: "FPEMcountry "
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# knitr::opts_knit$get("root.dir")  # alternative to the previous line
+# the default autosave location will depend on this being setup
+options(warn=-1)
+```
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(FPEMcountry)
+devtools::load_all()
+```
+
+## Introduction
+There are two main versions of the family planning estimation model, one for in-union women and another for not-in-union women. In addition to this breakdown, there is an interest in obtaining family planning indicators for all women. This vignette will step through the process of obtaining point estimates and plots for all women. We can do this with the same three functions.
+
+1. [Fit models and obtain samples for all women](#fit) `fpet_fit_model`
+2. [Calculate point estimates for indicators](#results) `fpet_calculate_indicaotrs`
+3. [Plot the  point estimates against the survey data](#plot) `fpet_plot`
+
+
+## <a name="fit"></a>
+## 1. Fit models and obtain samples for all women
+`fpet_fit_model` is a wrapper function to run the one-country implementation of the family planning estimation model. The argument `is_in_union` is used to specify the union. The function can be used to obtain samples for all women denoted `"ALL"`. To obtain samples for all women, the two individual union models are fit and the samples are combined. This results in a list of three fits. We will demonstrate this below. 
+
+```{r}
+fitlist <- fpet_fit_model(
+  is_in_union = "ALL",
+  division_numeric_code = 4,
+  first_year = 1970,
+  last_year = 2030
+)
+```
+
+`fpet_fit_model` returns a list of fits.
+```{r}
+fitlist %>% names
+```
+
+The fit contains posterior samples and another list called `core_data`. 
+```{r}
+fitlist$fity %>% names
+```
+
+Core data contains processed survey data and run specific data such as the time frame, union, etc.
+```{r}
+fitlist$fity$core_data %>% names
+```
+
+## <a name="results"></a>
+## 2. Calculate point estimates for indicators
+`fpet_calculate_indicators` is a wrapper function for calculating point estimates and confidence intervals. By default the function uses package population data (See `population_counts`) in order to calculate family planning indicators. Custom population count data may be supplied (See `??fpet_get_results`). 
+
+`fpet_calculate_indicators` utilizes `pmap` from the tidyverse package purr allowing it to act on any number of fits. We will supply the entire list of fits from `fpet_fit_model`.
+```{r}
+resultlist <- fpet_calculate_indicators(fitlist)
+```
+
+Like the previous function, `fpet_calculate_indicators` returns a list. Since we supplied three fits the function returns three sets of calculated family planning indicators.
+```{r}
+resultlist %>% names
+```
+A set of results here consist of the following family planning indicators
+```{r}
+resultlist$fitall %>% names
+```
+The point estimates for each indicator are long-format tibbles. Let's take a look at the tibble for the indicator `contraceptive_use_modern`
+```{r}
+resultlist$fitall$contraceptive_use_modern
+```
+
+## <a name="plot"></a>
+## 3. Plot the  point estimates against the survey data
+`fpet_plot` plots the indicators we obtained from the model against the indicators in the survey data. This function also handles lists. We will supply the fit list and the results list to the function to obtain plots for all three fits. We must also specify which indicators we wish to plot. The function will return a plot per indicator. Indicators of interest are supplied to the argument `indicators` as a vector.
+<!-- The argument `compare_to_global` adds point estimate and 95% credible interval from the UNPD global model (See `global_estimates`). The global model estimates are plotted using dotted lines. Since we are only using the default data from UNPD the estimates from our model should align with the UNPD estimates. -->
+```{r}
+fpet_plot(
+  fitlist,
+  resultlist,
+  indicators = c(
+    "unmet_need_any",
+    "contraceptive_use_modern",
+    "contraceptive_use_traditional",
+    "contraceptive_use_any"
+    )
+  )
+```
+
+

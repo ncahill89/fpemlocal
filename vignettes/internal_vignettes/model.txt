@@ -261,33 +261,20 @@ for (m in 1:2){
         }
   
 
-  ## m = 1
-  for (i in 2:ncat.emal){
-    V.emal.12i[1,i] <- 1/(1+exp(mu.pos.m[1]))
-  }
-  
-  ## m = 2
-  for (i in 2:ncat.emal){
-    W.emal.12i[2,i] ~ dlnorm(mu.pos.m[2], tau.pos)
-    V.emal.12i[2,i] <- 1/(1+W.emal.12i[2,i])
-  }
-  
-  ## m = 1
-  for (i in 2:ncat.hw){
-    V.hw.12i[1,i] <- 1+exp(mu.pos.m[1])
-  }
-  
-  ## m = 2
-  for (i in 2:ncat.hw){
-    W.hw.12i[2,i] ~ dlnorm(mu.pos.m[2], tau.pos)
-    V.hw.12i[2,i] <- 1+W.hw.12i[2,i]
-  }
-  
+        for(k in 1:n.training.modonly) {
+            logit.ymodonly.i[geti.training.modonly.k[k]] ~ dnorm(logit(q.ii[2,geti.training.modonly.k[k]]), tau.sourcemodonly)
+        }
+        
 
-      for (k in 1:K) {
-        ss_delta_k[k] ~ dnorm(ss_delta_modern_k[k], ss_tau_k[k])
-        ss_delta_modern_k[k] <- mod.ct[1,get_t_k[k+1]] - mod.ct[1,get_t_k[k]]
-        ss_tau_k[k] <- pow(ss_se_k[k], -2)
-}
-
+        for (m in 1:2){
+        for (i in 2:ncat.emal){
+        V.emal.12i[m,i] ~ dlnorm(0, tau.geo.m[m])
+        }
+        for (i in 2:ncat.hw){
+        V.hw.12i[m,i] ~ dlnorm(0, tau.geo.m[m])
+        }
+        }
+  
+  
+  
 } # end model

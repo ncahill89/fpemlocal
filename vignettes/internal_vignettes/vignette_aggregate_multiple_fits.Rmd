@@ -1,0 +1,111 @@
+---
+title: "all country"
+author: "Gregory Guranich"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{all country}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+knitr::opts_chunk$set(echo = TRUE)
+library(FPEMcountry)
+devtools::load_all()
+library(ggplot2)
+library(grid)
+library(gridExtra)
+```
+
+## Table of Contents
+1. [Introduction](#intro)
+2. [Run models](#run)
+3. [Plot model results](#plot)
+  
+## <a name="intro"></a>
+## Introduction
+In this vignette we will run two models for each country available, one for women in union and another for women not in union. We will use the package default data `fpemdata::contraceptive_use` for this example.
+## Make directories for model files, import observed data and global model results
+```{r}
+divs <- divisions %>%
+  dplyr::filter(name_region == "Africa") %>%
+  dplyr::filter(division_numeric_code %in% contraceptive_use$division_numeric_code) %>% 
+  dplyr::pull(division_numeric_code) %>%
+  as.list()
+names(divs) <- divs %>% unlist()
+```
+
+## <a name="run"></a>
+## run models
+```{r}
+first_year <- 1990
+last_year <- 2010
+fits <- purrr::pmap(list(division_numeric_code = divs, 
+                         is_in_union = list("Y"), 
+                         first_year = list(first_year), 
+                         last_year = list(last_year),
+                         nchains = 3 %>% list,
+                         niter = 500 %>% list,
+                         nburnin = 100 %>% list
+                         ), 
+                    fpet_fit_model)
+
+
+
+```
+
+```{r}
+
+# new function to combine samples
+dim <- fits[[1]][["run"]][["posterior_samples"]] %>% dim()
+posterior_samples <- array(NA, 
+                           c(length(divs), dim[2:4])
+                           )
+
+divs <- names(divs) %>% as.numeric()
+for (i in 1:length(divs)) {
+  div <- divs[i]
+    posterior_samples[i, , , ] <- fits[[paste(div)]][["run"]][["posterior_samples"]]
+  }
+dimnames(posterior_samples) <- list(divs, NULL, NULL, NULL)
+
+
+
+```
+
+
+## <a name="Aggregation"></a>
+## Aggregation 
+```{r}
+## Get population data
+population_data <- population_counts %>%
+  dplyr::filter(is_in_union == "Y") %>%
+  dplyr::filter(mid_year >= first_year) %>%
+  dplyr::filter(mid_year <= last_year) %>%
+  dplyr::filter(division_numeric_code %in% divs) %>% 
+   dplyr::group_by(division_numeric_code, mid_year) %>%
+   dplyr::top_n(1) %>% # years are doubled for some reason so this choses the correct ones
+   dplyr::ungroup()
+
+## Get divisions data
+division_level_data <- divisions %>%
+   dplyr::mutate(division_level = region_numeric_code)%>%
+   dplyr::select(division_numeric_code, division_level) %>% 
+   dplyr::filter(division_numeric_code %in% divs)
+
+## Create the array with the weigthed posterior samples i.e., aggregate
+# undebug(weight_samples)
+# # debug(fpemreporting:::weight_division_match)
+# debug(weight_generator)
+posterior_samples_list <- weight_samples(division_level_data, 
+                                         population_data, 
+                                         posterior_samples =  posterior_samples)
+## Pull out the aggregate samples, in this case we aggregated for a sinlge region
+samps_central_asia <- posterior_samples_list$`935`
+
+```

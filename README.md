@@ -28,7 +28,7 @@ indicators. FPEMcountry comes equiped with survey data, country unit
 data, and country population count data, to produce one-country runs.
 Running FPEM is divided into three main functions.
 
-1.  [Run a one country model](#run) `fpet_fit_model`
+1.  [Fit a one country model](#fit) `fpet_fit_model`
 2.  [Calculate point estimates for indicators](#results)
     `fpet_calculate_indicaotrs`
 3.  [Plot the point estimates against the survey data](#plot)
@@ -73,76 +73,29 @@ data. In our example we will execute a one-country run for Afghanistan,
 code `4`. Survey data is available in the dataset `contraceptive_use`.
 See `??contraceptive_use` for a detailed description of this dataset.
 
-``` r
-contraceptive_use %>% dplyr::filter(division_numeric_code == 4)
-```
+## <a name="fit"></a>
 
-    ## # A tibble: 12 x 31
-    ##    division_numeri~ start_date end_date is_in_union age_range data_series_type
-    ##               <dbl>      <dbl>    <dbl> <chr>       <chr>     <chr>           
-    ##  1                4      1972     1975. Y           15-49     National survey 
-    ##  2                4      2003.    2004. Y           15-49     MICS            
-    ##  3                4      2000.    2001. Y           15-49     MICS            
-    ##  4                4      2005.    2006. Y           15-49     National survey 
-    ##  5                4      2007.    2007. Y           15-49     National survey 
-    ##  6                4      2008.    2009. Y           15-49     National survey 
-    ##  7                4      2011.    2011. Y           15-49     MICS            
-    ##  8                4      2010.    2011. Y           15-49     National survey 
-    ##  9                4      2015.    2016. Y           15-49     DHS             
-    ## 10                4      2015.    2016. Y           15-49     National survey 
-    ## 11                4      2013.    2013. Y           15-49     National survey 
-    ## 12                4      2018.    2019. Y           15-49     National survey 
-    ## # ... with 25 more variables: group_type_relative_to_baseline <chr>,
-    ## #   contraceptive_use_modern <dbl>, contraceptive_use_traditional <dbl>,
-    ## #   contraceptive_use_any <dbl>, unmet_need_modern <lgl>, unmet_need_any <dbl>,
-    ## #   is_pertaining_to_methods_used_since_last_pregnancy <chr>,
-    ## #   pertaining_to_methods_used_since_last_pregnancy_reason <lgl>,
-    ## #   has_geographical_region_bias <chr>, geographical_region_bias_reason <chr>,
-    ## #   has_non_pregnant_and_other_positive_biases <chr>,
-    ## #   non_pregnant_and_other_positive_biases_reason <chr>, age_group_bias <chr>,
-    ## #   modern_method_bias <chr>, has_traditional_method_bias <chr>,
-    ## #   traditional_method_bias_reason <chr>,
-    ## #   has_absence_of_probing_questions_bias <chr>, se_modern <dbl>,
-    ## #   se_traditional <dbl>, se_unmet_need <dbl>, se_log_r_modern_no_use <dbl>,
-    ## #   se_log_r_traditional_no_use <dbl>, se_log_r_unmet_no_need <dbl>,
-    ## #   source_id <dbl>, record_id <chr>
+## 1\. Fit a one country model
 
-## <a name="run"></a>
-
-## 1\. Run a one country model
-
-`fpet_fit_model` is a wrapper function to run the family planning
-estimation model. The argument `is_in_union` specifies which model we
-wish to run. There are two models, one for in-union and another for
-not-in-union women. These are indicated with `"Y"` and `"N"`
-respectively. The first\_year and last\_year arguments determine the
-years of estimates exported from the run. Regardless of these arguments,
-the function will use all years in which data is available for
-estimation. When a survey file is not provided, as in this example, the
-function uses default package contraceptive\_use. The user may also
-supply optional services statistics.
+`fpet_fit_model` is a wrapper function to run the one-country
+implementation of the family planning estimation model. There are two
+versions of this model, one for in-union and another for not-in-union
+women which can be specified with the argument `is_in_union`. These are
+denoted `"Y"` and `"N"` respectively. The first\_year and last\_year
+arguments determine the years of estimates exported from the run.
+Regardless of these arguments, the function will use all years in which
+data is available for estimation. When a survey file is not provided, as
+in this example, the function uses default package contraceptive\_use.
+The user may also supply optional services statistics.
 
 ``` r
-runlist <- fpet_fit_model(
+fit <- fpet_fit_model(
   is_in_union = "Y",
   division_numeric_code = 4,
   first_year = 1970,
-  last_year = 2030,
-  diagnostic = TRUE
+  last_year = 2030
 )
 ```
-
-`fpet_fit_model` returns a list runs. In this case we have one run,
-in-union women denoted `$y`. This run contain posterior samples and
-another list called `core_data`. Core data contains processed survey
-data and run specific data such as the time frame, union, etc.
-
-``` r
-runlist$run$core_data %>% names
-```
-
-    ## [1] "is_in_union"        "units"              "start_year"        
-    ## [4] "observations"       "year_sequence_list" "subnational"
 
 ## <a name="results"></a>
 
@@ -154,69 +107,9 @@ population data (See `population_counts`) in order to calculate family
 planning indicators. Custom population count data may be supplied (See
 `??fpet_get_results`).
 
-`fpet_calculate_indicators` utilizes `pmap` from the tidyverse package
-purr allowing it to act on any number of runs. We will supply the entire
-list of runs from `fpet_fit_model`.
-
 ``` r
-results <- fpet_calculate_indicators(runlist)
+results <- fpet_calculate_indicators(fit)
 ```
-
-Like the previous function, `fpet_calculate_indicators` returns a list
-of runs. Each run containing a list of tibbles. Each tibble contains
-point-estimates for a specific family planning indicators in
-long-format. Selecting the in-union run from the output of
-`fpet_calculate_indicators` we can inspect the names of the list which
-are the family planning indicators.
-
-``` r
-results$run %>% names
-```
-
-    ##  [1] "contraceptive_use_any"                     
-    ##  [2] "contraceptive_use_modern"                  
-    ##  [3] "contraceptive_use_traditional"             
-    ##  [4] "non_use"                                   
-    ##  [5] "unmet_need_any"                            
-    ##  [6] "unmet_need_modern"                         
-    ##  [7] "demand"                                    
-    ##  [8] "demand_modern"                             
-    ##  [9] "demand_satisfied"                          
-    ## [10] "demand_satisfied_modern"                   
-    ## [11] "no_need"                                   
-    ## [12] "contraceptive_use_any_population_counts"   
-    ## [13] "contraceptive_use_modern_population_counts"
-    ## [14] "traditional_cpr_population_counts"         
-    ## [15] "non_use_population_counts"                 
-    ## [16] "unmet_need_population_counts"              
-    ## [17] "unmet_need_modern_population_counts"       
-    ## [18] "demand_modern_population_counts"           
-    ## [19] "demand_population_counts"                  
-    ## [20] "demand_satisfied_population_counts"        
-    ## [21] "demand_satisfied_modern_population_counts" 
-    ## [22] "no_need_population_counts"
-
-Let’s take a look at the tibble for the indicator
-`contraceptive_use_modern`
-
-``` r
-results$run$contraceptive_use_modern
-```
-
-    ## # A tibble: 488 x 3
-    ##     year percentile  value
-    ##    <int> <chr>       <dbl>
-    ##  1  1970 mean       0.0115
-    ##  2  1971 mean       0.0123
-    ##  3  1972 mean       0.0131
-    ##  4  1973 mean       0.0141
-    ##  5  1974 mean       0.0152
-    ##  6  1975 mean       0.0164
-    ##  7  1976 mean       0.0178
-    ##  8  1977 mean       0.0192
-    ##  9  1978 mean       0.0208
-    ## 10  1979 mean       0.0225
-    ## # ... with 478 more rows
 
 ## <a name="plot"></a>
 
@@ -234,7 +127,7 @@ with the UNPD estimates.
 
 ``` r
 fpet_plot(
-  runlist,
+  fit,
   results,
   indicators = c(
     "unmet_need_any",
@@ -253,19 +146,19 @@ fpet_plot(
     ## $run
     ## $run[[1]]
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
     ## 
     ## $run[[2]]
 
-![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
 
     ## 
     ## $run[[3]]
 
-![](README_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->
 
     ## 
     ## $run[[4]]
 
-![](README_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
