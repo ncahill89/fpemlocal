@@ -30,7 +30,7 @@ fpem_plot_autosave <- function(runname,
 
 #' plot country results
 #'
-#' @inherit fpem_plots
+#' @inherit fpet_plots
 #' @export
 fpet_plot <- function(
   runlist,
@@ -38,7 +38,7 @@ fpet_plot <- function(
   indicators,
   ...
 ) {
-  purrr::pmap(list(runlist, results, list(indicators), list(...)), fpem_1union_plot)
+  purrr::pmap(list(runlist, results, list(indicators), list(...)), fpet_1union_plot)
 }
 
 
@@ -50,7 +50,7 @@ fpet_plot <- function(
 #' @param compare_to_global logical, if TRUE plots estimates from global model with dotted lines
 #' @return list of plots
 #' @export
-fpem_1union_plot <- function(
+fpet_1union_plot <- function(
   runlist,
   results,
   indicators,

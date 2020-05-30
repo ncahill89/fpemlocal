@@ -51,11 +51,11 @@ fpet_fit_model <- function(
     core_data$is_in_union <- is_in_union
     all <- list(posterior_samples = samples_all,
                     core_data = core_data)
-    runlist <- list(runy = y,
-                runn = n,
-                runall = all)
+    runlist <- list(fity = y,
+                fitn = n,
+                fitall = all)
   } else {
-    runlist <-  list(run = fpet_fit_1country_1union_model(is_in_union = is_in_union,
+    runlist <-  list(fit = fpet_fit_1country_1union_model(is_in_union = is_in_union,
                                                 ...))
   }
   return(runlist)
@@ -90,11 +90,11 @@ fpet_fit_model <- function(
 #' @references \url{https://github.com/FPcounts/FPEM}
 #' @export
 fpet_fit_1country_1union_model <- function(
+  division_numeric_code,
   is_in_union = "Y",
   surveydata_filepath = NULL,
   service_stats = FALSE,
   service_stats_filepath = NULL,
-  division_numeric_code,
   first_year = NULL,
   last_year,
   subnational = FALSE,

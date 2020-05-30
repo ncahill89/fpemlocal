@@ -87,7 +87,7 @@ weight_samples <- function(division_level_data, population_data, posterior_sampl
   posterior_samples <- weight_division_match(division_level_data, population_data, posterior_samples)
   weight_data <- weight_generator(division_level_data, population_data)
   levels <- division_level_data$division_level %>% unique()
-  population_data$index <- 1:nrow(division_level_data)
+  # population_data$index <- 1:nrow(division_level_data)
   posterior_samples_list <- list()
   for(level in levels) {
     weight_subset <- weight_data %>%
