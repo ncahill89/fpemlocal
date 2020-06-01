@@ -37,7 +37,6 @@ divs <- divisions %>%
   dplyr::filter(division_numeric_code %in% contraceptive_use$division_numeric_code) %>% 
   dplyr::pull(division_numeric_code) %>%
   as.list()
-names(divs) <- divs %>% unlist()
 ```
 
 ## <a name="run"></a>
@@ -46,7 +45,7 @@ names(divs) <- divs %>% unlist()
 first_year <- 1990
 last_year <- 2010
 fits <- purrr::pmap(list(division_numeric_code = divs, 
-                         is_in_union = list("Y"), 
+                         is_in_union = list("Y"), #may not need to list given the current data format, list seems to be a hack for data frames or other complex argument data types
                          first_year = list(first_year), 
                          last_year = list(last_year),
                          nchains = 3 %>% list,
@@ -54,33 +53,18 @@ fits <- purrr::pmap(list(division_numeric_code = divs,
                          nburnin = 100 %>% list
                          ), 
                     fpet_fit_model)
-
-
-
 ```
 
+## Combine posterior samples from fits into one large array
+Plucks the fits and corresponding posterior samples and combines each array of samples along index 1 making one large array. The first index of this large array corresponds to the country of the samples. Use dimnames() to see how to index a country. This is the identical format of an FPEMglobal run.
 ```{r}
-
-# new function to combine samples
-dim <- fits[[1]][["run"]][["posterior_samples"]] %>% dim()
-posterior_samples <- array(NA, 
-                           c(length(divs), dim[2:4])
-                           )
-
-divs <- names(divs) %>% as.numeric()
-for (i in 1:length(divs)) {
-  div <- divs[i]
-    posterior_samples[i, , , ] <- fits[[paste(div)]][["run"]][["posterior_samples"]]
-  }
-dimnames(posterior_samples) <- list(divs, NULL, NULL, NULL)
-
-
-
+combined_samples <- combine_samples_from_fits(fits, divs)
 ```
 
 
 ## <a name="Aggregation"></a>
 ## Aggregation 
+To brainstrom: Should make another wrapper for first part of this section?
 ```{r}
 ## Get population data
 population_data <- population_counts %>%
@@ -98,14 +82,26 @@ division_level_data <- divisions %>%
    dplyr::select(division_numeric_code, division_level) %>% 
    dplyr::filter(division_numeric_code %in% divs)
 
-## Create the array with the weigthed posterior samples i.e., aggregate
-# undebug(weight_samples)
-# # debug(fpemreporting:::weight_division_match)
-# debug(weight_generator)
-posterior_samples_list <- weight_samples(division_level_data, 
+posterior_samples_list <- aggregate_samples(division_level_data, 
                                          population_data, 
-                                         posterior_samples =  posterior_samples)
-## Pull out the aggregate samples, in this case we aggregated for a sinlge region
-samps_central_asia <- posterior_samples_list$`935`
+                                         posterior_samples =  combined_samples)
 
 ```
+
+
+
+
+## <a name="post-process"></a>
+## Post-process, get point estimates from weighted samples
+```{r}
+## hack up a fit object similar to a one country fit 
+fake_fit <- list()
+fake_fit[["posterior_samples"]] <- posterior_samples_list[["903"]]
+fake_fit$core_data$year_sequence_list$result_seq_years <- first_year
+fake_fit_list <- list(fake_fit)
+results_africa <- fpet_calculate_indicators(fake_fit_list,
+                                            population_data)
+
+```
+
+

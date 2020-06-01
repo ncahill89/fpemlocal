@@ -28,38 +28,42 @@ fpet_fit_model_autosave <- function(
 #' @param ... Please see \code{\link{fpet_fit_1country_1union_model}} for additional arguments
 #' 
 #' @export
-fpet_fit_model <- function(
-  is_in_union,
-  ...
-  
-) {
-  if(is_in_union == "ALL") {
-    y <- fpet_fit_1country_1union_model(
-      is_in_union = "Y",
-      ...
-    )
-    n <- fpet_fit_1country_1union_model(
-      is_in_union = "N",
-      ...
-    )
-    samples_all <- posterior_samples_all_women(in_union_posterior_samples = y$posterior_samples,
-                                               not_in_union_posterior_samples = n$posterior_samples,
-                                               core_data = y$core_data)
-    core_data <- y$core_data
-    core_data$observations <- rbind(y$core_data$observations,
-                                    n$core_data$observations)
+fpet_fit_model <- function(is_in_union,
+                           ...) {
+  if (is_in_union == "ALL") {
+    fits <-
+      purrr::pmap(list(is_in_union = list(
+        Y = "Y", N = "N"
+      ), 
+      ...),
+      fpet_fit_1country_1union_model)
+    samples_all <-
+      posterior_samples_all_women(
+        in_union_posterior_samples = fits %>% purrr::chuck("Y", "posterior_samples"),
+        not_in_union_posterior_samples = fits %>% purrr::chuck("N", "posterior_samples"),
+        core_data = fits %>% purrr::chuck("Y", "core_data")
+      )
+    core_data <- fits %>% purrr::chuck("Y", "core_data")
+    core_data$observations <-
+      rbind(
+        fits %>% purrr::chuck("Y", "core_data", "observations"),
+        fits %>% purrr::chuck("N", "core_data", "observations")
+      )
     core_data$is_in_union <- is_in_union
-    all <- list(posterior_samples = samples_all,
-                    core_data = core_data)
-    runlist <- list(fity = y,
-                fitn = n,
-                fitall = all)
+    fitall <- list(posterior_samples = samples_all,
+                   core_data = core_data)
+    runlist <- list(
+      fity =  fits %>% purrr::chuck("Y"),
+      fitn =  fits %>% purrr::chuck("N"),
+      fitall = fitall
+    )
   } else {
-    runlist <-  list(fit = fpet_fit_1country_1union_model(is_in_union = is_in_union,
+    runlist <-
+      list(fit = fpet_fit_1country_1union_model(is_in_union = is_in_union,
                                                 ...))
   }
   return(runlist)
-
+  
 }
 
 
