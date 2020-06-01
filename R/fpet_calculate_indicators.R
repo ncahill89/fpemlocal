@@ -32,9 +32,9 @@ fpet_calculate_indicators_autosave <-
 #'
 #' @export
 fpet_calculate_indicators <-
-  function(runlist,
+  function(fitlist,
            country_population_counts = NULL) {
-    purrr::pmap(list(runlist, list(country_population_counts)), fpet_calculate_results)
+    purrr::pmap(list(fitlist, list(country_population_counts)), fpet_calculate_results)
   }
 
 
