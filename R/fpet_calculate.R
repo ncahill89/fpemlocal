@@ -34,11 +34,21 @@ fpet_calculate_indicators_autosave <-
 fpet_calculate_indicators <-
   function(fitlist,
            country_population_counts = NULL) {
-    purrr::pmap(list(fitlist, list(country_population_counts)), fpet_calculate_easy_wrapper)
+    if(is.null(country_population_counts)) {
+      country_population_counts <- population_counts %>%
+        dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code) %>%
+        dplyr::filter(is_in_union == fit$core_data$is_in_union)
+    }
+    
+    posterior_samples <- fit$posterior_samples
+    first_year <- fit$core_data$year_sequence_list$result_seq_years %>% min()
+    
+    
+    purrr::pmap(list(fitlist, list(country_population_counts)), fpet_calculate_easy_Wrapper)
   }
 
 
-fpet_calculate_easy_wrapper <- function(fit,
+fpet_calculate_easy_Wrapper <- function(fit,
                                         country_population_counts = NULL) {
   if(is.null(country_population_counts)) {
     country_population_counts <- population_counts %>%

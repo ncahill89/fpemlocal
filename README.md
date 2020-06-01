@@ -143,22 +143,22 @@ fpet_plot(
     ## Joining, by = "year"
     ## Joining, by = "year"
 
-    ## $run
-    ## $run[[1]]
+    ## $fit
+    ## $fit[[1]]
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
     ## 
-    ## $run[[2]]
+    ## $fit[[2]]
 
 ![](README_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
 
     ## 
-    ## $run[[3]]
+    ## $fit[[3]]
 
 ![](README_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->
 
     ## 
-    ## $run[[4]]
+    ## $fit[[4]]
 
 ![](README_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
