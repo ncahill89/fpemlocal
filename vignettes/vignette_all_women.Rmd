@@ -1,5 +1,5 @@
 ---
-title: "FPEMcountry "
+title: "Estimates all women"
 output: github_document
 ---
 ```{r setup, include=FALSE}
@@ -78,7 +78,7 @@ resultlist$fitall$contraceptive_use_modern
 ## <a name="plot"></a>
 ## 3. Plot the  point estimates against the survey data
 `fpet_plot` plots the indicators we obtained from the model against the indicators in the survey data. This function also handles lists. We will supply the fit list and the results list to the function to obtain plots for all three fits. We must also specify which indicators we wish to plot. The function will return a plot per indicator. Indicators of interest are supplied to the argument `indicators` as a vector.
-<!-- The argument `compare_to_global` adds point estimate and 95% credible interval from the UNPD global model (See `global_estimates`). The global model estimates are plotted using dotted lines. Since we are only using the default data from UNPD the estimates from our model should align with the UNPD estimates. -->
+
 ```{r}
 fpet_plot(
   fitlist,

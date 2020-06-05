@@ -110,7 +110,7 @@ weight_division_match <-
 #'   mutate(division_level = region_numeric_code)%>%
 #'   select(division_numeric_code, division_level)
 #' posterior_samples_list <- weight_samples(division_level_data, population_data, posterior_samples)
-fpet_aggregate <-
+fpem_aggregate <-
   function(division_level_data,
            population_data,
            posterior_samples) {
@@ -120,7 +120,7 @@ fpet_aggregate <-
     weight_data <-
       weight_generator(division_level_data, population_data)
     levels <- division_level_data$division_level %>% unique() %>% list()
-    purrr::pmap(list(levels,
+    posterior_samples_list <- purrr::pmap(list(levels,
               list(weight_data), 
               list(posterior_samples)),
          aggregate_set_per_level
