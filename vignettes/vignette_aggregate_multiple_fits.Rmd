@@ -1,13 +1,8 @@
 ---
-title: "all country"
-author: "Gregory Guranich"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{all country}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "Aggregate estimates for multiple fits"
+output: github_document
 ---
+
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -19,23 +14,27 @@ library(FPEMcountry)
 devtools::load_all()
 ```
 
-## Introduction
-In this vignette we will fit FPET to multiple countries and aggregate the samples to obtain results for aggregate levels.
-## Table of contents
-1. [Fit models](#fit)
-2. [Aggregate](#aggregate)
-3. [Calculate results](#results)
+
   
+## Introduction
+In this vignette we will fit FPET to multiple countries and aggregate the samples to obtain results for aggregate levels. 
+
+## Table of Contents
+1. [Fit models](#fit)
+2. [Aggregate](#run)
+3. [Calculate results](#results)
+
 ## <a name="fit"></a>
 ## Fit models
-Let’s task ourselves with obtaining results for each sub-region within Africa.
+Let's task ourselves with obtaining results for each sub-region within Africa. 
 ```{r}
 divisions %>%
   dplyr::filter(name_region == "Africa") %>%
   dplyr::select(sub_region_numeric_code, name_sub_region) %>%
   unique()
 ```
-First, we need fits for all countries in Africa. Start by constructing a list of country codes
+
+First, we need fits for all countries in Africa. Start by constructing a list of country codes.
 ```{r}
 divs <- divisions %>%
   dplyr::filter(name_region == "Africa") %>%
@@ -44,7 +43,7 @@ divs <- divisions %>%
   as.list() 
 ```
 
-Next, map the country codes to the function `fpet_fit_model’.
+Next, map the country codes to the function `fpet_fit_model'.
 ```{r}
 first_year <- 1970
 last_year <- 2030
@@ -64,17 +63,19 @@ Within out list of fits we have more complex lists. We only need the samples fro
 combined_samples <- combine_samples_from_fits(fits, divs)
 ```
 
-To aggregate these samples we need to construct two tibbles. First, create a tibble with the aggregation level and corresponding division codes. The aggregation level column must be named division_level and contain division codes. In this example we will obtain aggregate results for all sub-regions in Africa. Everything we need for our division level column is in the column sub_region_numeric_code of the data set division.
+
+To aggregate these samples we need to construct two tibbles. First, create a tibble with the aggregation level and corresponding division codes. The aggregation level column must be named division_level and contain division codes. In this example we will obtain aggregate results for all sub-regions in Africa. Everything we need for our division level column is in the column sub_region_numeric_code of the data set `division`. 
 ```{r}
+## Get divisions data
 division_level_data <- divisions %>%
    dplyr::mutate(division_level = sub_region_numeric_code)%>%
    dplyr::select(division_numeric_code, division_level) %>% 
    dplyr::filter(division_numeric_code %in% divs)
 division_level_data
 ```
-
 Lastly, we need the population counts for these countries within the specified years.
 ```{r}
+## Get population data
 population_data <- population_counts %>%
   dplyr::filter(division_numeric_code %in% divs) %>%
   dplyr::filter(is_in_union == union) %>%
@@ -82,7 +83,8 @@ population_data <- population_counts %>%
   dplyr::filter(mid_year <= last_year) 
 population_data
 ```
-Now supply these two tibbles of data and the large array of posterior samples to the function fpem_aggregate. This function returns a named list of aggregated samples.
+
+Now supply these two tibbles of data and the large array of posterior samples to the function `fpem_aggregate`. This function returns a named list of aggregated samples. 
 ```{r}
 posterior_samples_list <- fpem_aggregate(division_level_data, 
                                          population_data, 
@@ -90,9 +92,12 @@ posterior_samples_list <- fpem_aggregate(division_level_data,
 names(posterior_samples_list)
 ```
 
+
+
+
 ## <a name="results"></a>
 ## Calculate results
-We can map the list of samples to fpem_calculate_results to obtain results for each sub-region
+We can map the list of samples to `fpem_calculate_results` to obtain results for each sub-region
 ```{r}
 results_list <- purrr::pmap(list(posterior_samples = posterior_samples_list,
                             country_population_counts = list(population_data), #need to wrap any complex inputs in another list()
@@ -100,5 +105,7 @@ results_list <- purrr::pmap(list(posterior_samples = posterior_samples_list,
                        fpem_calculate_results)
 results_list$`912`$contraceptive_use_modern
 ```
+
+
 
 

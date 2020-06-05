@@ -195,19 +195,19 @@ fpet_plot(
     ## $fit
     ## $fit[[1]]
 
-![](test_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
     ## 
     ## $fit[[2]]
 
-![](test_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
     ## 
     ## $fit[[3]]
 
-![](test_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
 
     ## 
     ## $fit[[4]]
 
-![](test_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->

@@ -17,12 +17,6 @@ library(FPEMcountry)
 devtools::load_all()
 ```
 
-<!-- ## Table of Contents -->
-<!-- 1. [Introduction](#intro) -->
-<!-- 2. [Run models](#run) -->
-<!-- 3. [Post-process](#post-process) -->
-<!-- 4. [Plot model results](#plot) -->
- 
  
 ## Installation
 The package can be installed by cloning and using `devtools::install()`. The source code for vignettes can be found in [/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes). Below is a brief introduction.

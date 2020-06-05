@@ -1,7 +1,6 @@
 ---
 title: "Estimates for married women"
 output: github_document
-output_dir: "D:/git/FPEMcountry"
 ---
 
 ```{r setup, include=FALSE}
