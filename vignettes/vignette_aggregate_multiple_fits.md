@@ -4,9 +4,13 @@ Aggregate estimates for multiple fits
 ## Introduction
 
 In this vignette we will fit FPET to multiple countries and aggregate
-the samples to obtain results for aggregate levels. \#\# Table of
-contents 1. [Fit models](#fit) 2. [Aggregate](#aggregate) 3. [Calculate
-results](#results)
+the samples to obtain results for aggregate levels.
+
+## Table of Contents
+
+1.  [Fit models](#fit)
+2.  [Aggregate](#run)
+3.  [Calculate results](#results)
 
 ## <a name="fit"></a>
 
@@ -31,7 +35,7 @@ divisions %>%
 ```
 
 First, we need fits for all countries in Africa. Start by constructing a
-list of country codes
+list of country codes.
 
 ``` r
 divs <- divisions %>%
@@ -41,7 +45,7 @@ divs <- divisions %>%
   as.list() 
 ```
 
-Next, map the country codes to the function \`fpet\_fit\_model’.
+Next, map the country codes to the function `fpet_fit_model`.
 
 ``` r
 first_year <- 1970
@@ -63,7 +67,7 @@ Within out list of fits we have more complex lists. We only need the
 samples from these fits. This function plucks the posterior samples and
 combines each array of samples along index 1 making one large array. The
 first index of this large array corresponds to the country of the
-samples. Use dimnames() on the resulting list to see how to index a
+samples. Use `dimnames()` on the resulting list to see how to index a
 country. This is the identical format of a posterior samples array from
 FPEMglobal.
 
@@ -77,9 +81,10 @@ codes. The aggregation level column must be named division\_level and
 contain division codes. In this example we will obtain aggregate results
 for all sub-regions in Africa. Everything we need for our division level
 column is in the column sub\_region\_numeric\_code of the data set
-division.
+`division`.
 
 ``` r
+## Get divisions data
 division_level_data <- divisions %>%
    dplyr::mutate(division_level = sub_region_numeric_code)%>%
    dplyr::select(division_numeric_code, division_level) %>% 
@@ -105,6 +110,7 @@ Lastly, we need the population counts for these countries within the
 specified years.
 
 ``` r
+## Get population data
 population_data <- population_counts %>%
   dplyr::filter(division_numeric_code %in% divs) %>%
   dplyr::filter(is_in_union == union) %>%
@@ -130,7 +136,7 @@ population_data
 ```
 
 Now supply these two tibbles of data and the large array of posterior
-samples to the function fpem\_aggregate. This function returns a named
+samples to the function `fpem_aggregate`. This function returns a named
 list of aggregated samples.
 
 ``` r
@@ -146,7 +152,7 @@ names(posterior_samples_list)
 
 ## Calculate results
 
-We can map the list of samples to fpem\_calculate\_results to obtain
+We can map the list of samples to `fpem_calculate_results` to obtain
 results for each sub-region
 
 ``` r

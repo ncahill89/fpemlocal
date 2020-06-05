@@ -43,7 +43,7 @@ divs <- divisions %>%
   as.list() 
 ```
 
-Next, map the country codes to the function `fpet_fit_model'.
+Next, map the country codes to the function `fpet_fit_model`.
 ```{r}
 first_year <- 1970
 last_year <- 2030
@@ -58,7 +58,7 @@ fits <- purrr::pmap(list(division_numeric_code = divs,
 
 ## <a name="aggregate"></a>
 ## Aggregate
-Within out list of fits we have more complex lists. We only need the samples from these fits. This function plucks the posterior samples and combines each array of samples along index 1 making one large array. The first index of this large array corresponds to the country of the samples. Use dimnames() on the resulting list to see how to index a country. This is the identical format of a posterior samples array from FPEMglobal.
+Within out list of fits we have more complex lists. We only need the samples from these fits. This function plucks the posterior samples and combines each array of samples along index 1 making one large array. The first index of this large array corresponds to the country of the samples. Use `dimnames()` on the resulting list to see how to index a country. This is the identical format of a posterior samples array from FPEMglobal.
 ```{r}
 combined_samples <- combine_samples_from_fits(fits, divs)
 ```

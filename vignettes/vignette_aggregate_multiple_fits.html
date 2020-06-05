@@ -602,7 +602,13 @@ body {
 
 <h1 id="aggregate-estimates-for-multiple-fits">Aggregate estimates for multiple fits</h1>
 <h2 id="introduction">Introduction</h2>
-<p>In this vignette we will fit FPET to multiple countries and aggregate the samples to obtain results for aggregate levels. ## Table of contents 1. <a href="#fit">Fit models</a> 2. <a href="#aggregate">Aggregate</a> 3. <a href="#results">Calculate results</a></p>
+<p>In this vignette we will fit FPET to multiple countries and aggregate the samples to obtain results for aggregate levels.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#fit">Fit models</a></li>
+<li><a href="#run">Aggregate</a></li>
+<li><a href="#results">Calculate results</a></li>
+</ol>
 <h2 id="section"><a name="fit"></a></h2>
 <h2 id="fit-models">Fit models</h2>
 <p>Let’s task ourselves with obtaining results for each sub-region within Africa.</p>
@@ -618,13 +624,13 @@ body {
 <span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt; 3                     914 Western Africa </span></span>
 <span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; 4                     913 Southern Africa</span></span>
 <span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt; 5                     910 Eastern Africa</span></span></code></pre></div>
-<p>First, we need fits for all countries in Africa. Start by constructing a list of country codes</p>
+<p>First, we need fits for all countries in Africa. Start by constructing a list of country codes.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>divs &lt;-<span class="st"> </span>divisions <span class="op">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(name_region <span class="op">==</span><span class="st"> &quot;Africa&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(division_numeric_code <span class="op">%in%</span><span class="st"> </span>contraceptive_use<span class="op">$</span>division_numeric_code) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Filtering on the countries available in `contraceptive_use` because we are using this package data</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">pull</span>(division_numeric_code) <span class="op">%&gt;%</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw">as.list</span>() </span></code></pre></div>
-<p>Next, map the country codes to the function `fpet_fit_model’.</p>
+<p>Next, map the country codes to the function <code>fpet_fit_model</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>first_year &lt;-<span class="st"> </span><span class="dv">1970</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a>last_year &lt;-<span class="st"> </span><span class="dv">2030</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a>union &lt;-<span class="st"> &quot;Y&quot;</span></span>
@@ -636,52 +642,54 @@ body {
 <span id="cb3-9"><a href="#cb3-9"></a>                    fpet_fit_model)</span></code></pre></div>
 <h2 id="section-1"><a name="aggregate"></a></h2>
 <h2 id="aggregate">Aggregate</h2>
-<p>Within out list of fits we have more complex lists. We only need the samples from these fits. This function plucks the posterior samples and combines each array of samples along index 1 making one large array. The first index of this large array corresponds to the country of the samples. Use dimnames() on the resulting list to see how to index a country. This is the identical format of a posterior samples array from FPEMglobal.</p>
+<p>Within out list of fits we have more complex lists. We only need the samples from these fits. This function plucks the posterior samples and combines each array of samples along index 1 making one large array. The first index of this large array corresponds to the country of the samples. Use <code>dimnames()</code> on the resulting list to see how to index a country. This is the identical format of a posterior samples array from FPEMglobal.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>combined_samples &lt;-<span class="st"> </span><span class="kw">combine_samples_from_fits</span>(fits, divs)</span></code></pre></div>
-<p>To aggregate these samples we need to construct two tibbles. First, create a tibble with the aggregation level and corresponding division codes. The aggregation level column must be named division_level and contain division codes. In this example we will obtain aggregate results for all sub-regions in Africa. Everything we need for our division level column is in the column sub_region_numeric_code of the data set division.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>division_level_data &lt;-<span class="st"> </span>divisions <span class="op">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">division_level =</span> sub_region_numeric_code)<span class="op">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">select</span>(division_numeric_code, division_level) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">filter</span>(division_numeric_code <span class="op">%in%</span><span class="st"> </span>divs)</span>
-<span id="cb5-5"><a href="#cb5-5"></a>division_level_data</span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; # A tibble: 54 x 2</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt;    division_numeric_code division_level</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt;                    &lt;dbl&gt;          &lt;dbl&gt;</span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt;  1                    12            912</span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt;  2                    24            911</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt;  3                   204            914</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt;  4                    72            913</span></span>
-<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt;  5                   854            914</span></span>
-<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt;  6                   108            910</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt;  7                   132            914</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt;  8                   120            911</span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt;  9                   140            911</span></span>
-<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt; 10                   148            911</span></span>
-<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; # ... with 44 more rows</span></span></code></pre></div>
+<p>To aggregate these samples we need to construct two tibbles. First, create a tibble with the aggregation level and corresponding division codes. The aggregation level column must be named division_level and contain division codes. In this example we will obtain aggregate results for all sub-regions in Africa. Everything we need for our division level column is in the column sub_region_numeric_code of the data set <code>division</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">## Get divisions data</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>division_level_data &lt;-<span class="st"> </span>divisions <span class="op">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">division_level =</span> sub_region_numeric_code)<span class="op">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">select</span>(division_numeric_code, division_level) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">filter</span>(division_numeric_code <span class="op">%in%</span><span class="st"> </span>divs)</span>
+<span id="cb5-6"><a href="#cb5-6"></a>division_level_data</span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; # A tibble: 54 x 2</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt;    division_numeric_code division_level</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt;                    &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt;  1                    12            912</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt;  2                    24            911</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt;  3                   204            914</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt;  4                    72            913</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt;  5                   854            914</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt;  6                   108            910</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt;  7                   132            914</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt;  8                   120            911</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt;  9                   140            911</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; 10                   148            911</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a><span class="co">#&gt; # ... with 44 more rows</span></span></code></pre></div>
 <p>Lastly, we need the population counts for these countries within the specified years.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>population_data &lt;-<span class="st"> </span>population_counts <span class="op">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(division_numeric_code <span class="op">%in%</span><span class="st"> </span>divs) <span class="op">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(is_in_union <span class="op">==</span><span class="st"> </span>union) <span class="op">%&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(mid_year <span class="op">&gt;=</span><span class="st"> </span>first_year) <span class="op">%&gt;%</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(mid_year <span class="op">&lt;=</span><span class="st"> </span>last_year) </span>
-<span id="cb6-6"><a href="#cb6-6"></a>population_data</span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt; # A tibble: 3,294 x 5</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt;    is_in_union division_numeri~</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;    &lt;chr&gt;                  &lt;dbl&gt;</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt;  1 Y                         12</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt;  2 Y                         24</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt;  3 Y                         72</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;  4 Y                        108</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt;  5 Y                        120</span></span>
-<span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt;  6 Y                        132</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a><span class="co">#&gt;  7 Y                        140</span></span>
-<span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;  8 Y                        148</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt;  9 Y                        174</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt; 10 Y                        178</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; # ... with 3,284 more rows, and 3 more</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; #   variables: population_count &lt;dbl&gt;,</span></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; #   age_range &lt;chr&gt;, mid_year &lt;dbl&gt;</span></span></code></pre></div>
-<p>Now supply these two tibbles of data and the large array of posterior samples to the function fpem_aggregate. This function returns a named list of aggregated samples.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## Get population data</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>population_data &lt;-<span class="st"> </span>population_counts <span class="op">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(division_numeric_code <span class="op">%in%</span><span class="st"> </span>divs) <span class="op">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(is_in_union <span class="op">==</span><span class="st"> </span>union) <span class="op">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(mid_year <span class="op">&gt;=</span><span class="st"> </span>first_year) <span class="op">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(mid_year <span class="op">&lt;=</span><span class="st"> </span>last_year) </span>
+<span id="cb6-7"><a href="#cb6-7"></a>population_data</span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; # A tibble: 3,294 x 5</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;    is_in_union division_numeri~</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt;    &lt;chr&gt;                  &lt;dbl&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt;  1 Y                         12</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt;  2 Y                         24</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;  3 Y                         72</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt;  4 Y                        108</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt;  5 Y                        120</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="co">#&gt;  6 Y                        132</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;  7 Y                        140</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt;  8 Y                        148</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt;  9 Y                        174</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; 10 Y                        178</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; # ... with 3,284 more rows, and 3 more</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; #   variables: population_count &lt;dbl&gt;,</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co">#&gt; #   age_range &lt;chr&gt;, mid_year &lt;dbl&gt;</span></span></code></pre></div>
+<p>Now supply these two tibbles of data and the large array of posterior samples to the function <code>fpem_aggregate</code>. This function returns a named list of aggregated samples.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>posterior_samples_list &lt;-<span class="st"> </span><span class="kw">fpem_aggregate</span>(division_level_data, </span>
 <span id="cb7-2"><a href="#cb7-2"></a>                                         population_data, </span>
 <span id="cb7-3"><a href="#cb7-3"></a>                                         <span class="dt">posterior_samples =</span>  combined_samples)</span>
@@ -690,7 +698,7 @@ body {
 <span id="cb7-6"><a href="#cb7-6"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <h2 id="section-2"><a name="results"></a></h2>
 <h2 id="calculate-results">Calculate results</h2>
-<p>We can map the list of samples to fpem_calculate_results to obtain results for each sub-region</p>
+<p>We can map the list of samples to <code>fpem_calculate_results</code> to obtain results for each sub-region</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>results_list &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">pmap</span>(<span class="kw">list</span>(<span class="dt">posterior_samples =</span> posterior_samples_list,</span>
 <span id="cb8-2"><a href="#cb8-2"></a>                            <span class="dt">country_population_counts =</span> <span class="kw">list</span>(population_data), <span class="co">#need to wrap any complex inputs in another list()</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a>                            <span class="dt">first_year =</span> first_year),</span>
