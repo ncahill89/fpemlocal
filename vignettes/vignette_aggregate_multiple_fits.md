@@ -42,21 +42,21 @@ divs <- divisions %>%
   dplyr::filter(name_region == "Africa") %>%
   dplyr::filter(division_numeric_code %in% contraceptive_use$division_numeric_code) %>% # Filtering on the countries available in `contraceptive_use` because we are using this package data
   dplyr::pull(division_numeric_code) %>%
-  as.list() 
+  as.list()
 ```
 
-Next, map the country codes to the function `fpet_fit_model`.
+Next, map the country codes to the function `fit_fp_c`.
 
 ``` r
 first_year <- 1970
 last_year <- 2030
 union <- "Y"
-fits <- purrr::pmap(list(division_numeric_code = divs, 
+fits <- purrr::pmap(list(division_numeric_code = divs,
                          is_in_union = union,
-                         first_year = first_year, 
+                         first_year = first_year,
                          last_year = last_year
-                         ), 
-                    fpet_fit_model)
+                         ),
+                    fit_fp_c)
 ```
 
 ## <a name="aggregate"></a>
@@ -72,7 +72,7 @@ country. This is the identical format of a posterior samples array from
 FPEMglobal.
 
 ``` r
-combined_samples <- combine_samples_from_fits(fits, divs)
+posterior_samples_array <- pluck_abind_fp_c(fits, divs)
 ```
 
 To aggregate these samples we need to construct two tibbles. First,
@@ -87,7 +87,7 @@ column is in the column sub\_region\_numeric\_code of the data set
 ## Get divisions data
 division_level_data <- divisions %>%
    dplyr::mutate(division_level = sub_region_numeric_code)%>%
-   dplyr::select(division_numeric_code, division_level) %>% 
+   dplyr::select(division_numeric_code, division_level) %>%
    dplyr::filter(division_numeric_code %in% divs)
 division_level_data
 #> # A tibble: 54 x 2
@@ -115,36 +115,34 @@ population_data <- population_counts %>%
   dplyr::filter(division_numeric_code %in% divs) %>%
   dplyr::filter(is_in_union == union) %>%
   dplyr::filter(mid_year >= first_year) %>%
-  dplyr::filter(mid_year <= last_year) 
+  dplyr::filter(mid_year <= last_year)
 population_data
 #> # A tibble: 3,294 x 5
-#>    is_in_union division_numeri~
-#>    <chr>                  <dbl>
-#>  1 Y                         12
-#>  2 Y                         24
-#>  3 Y                         72
-#>  4 Y                        108
-#>  5 Y                        120
-#>  6 Y                        132
-#>  7 Y                        140
-#>  8 Y                        148
-#>  9 Y                        174
-#> 10 Y                        178
-#> # ... with 3,284 more rows, and 3 more
-#> #   variables: population_count <dbl>,
-#> #   age_range <chr>, mid_year <dbl>
+#>    is_in_union division_numeric_code population_count age_range mid_year
+#>    <chr>                       <dbl>            <dbl> <chr>        <dbl>
+#>  1 Y                              12          1995757 15-49         1970
+#>  2 Y                              24           980282 15-49         1970
+#>  3 Y                              72            64076 15-49         1970
+#>  4 Y                             108           498976 15-49         1970
+#>  5 Y                             120          1097088 15-49         1970
+#>  6 Y                             132            25759 15-49         1970
+#>  7 Y                             140           312421 15-49         1970
+#>  8 Y                             148           650581 15-49         1970
+#>  9 Y                             174            34282 15-49         1970
+#> 10 Y                             178           173462 15-49         1970
+#> # ... with 3,284 more rows
 ```
 
 Now supply these two tibbles of data and the large array of posterior
-samples to the function `fpem_aggregate`. This function returns a named
+samples to the function `aggregate_fp`. This function returns a named
 list of aggregated samples.
 
 ``` r
-posterior_samples_list <- fpem_aggregate(division_level_data, 
-                                         population_data, 
-                                         posterior_samples =  combined_samples)
+posterior_samples_aggregated <- aggregate_fp(division_level_data,
+                                         population_data,
+                                         posterior_samples =  posterior_samples_array)
 #> Joining, by = "division_numeric_code"
-names(posterior_samples_list)
+names(posterior_samples_aggregated)
 #> NULL
 ```
 
@@ -152,14 +150,14 @@ names(posterior_samples_list)
 
 ## Calculate results
 
-We can map the list of samples to `fpem_calculate_results` to obtain
-results for each sub-region
+We can map the list of samples to `calc_fp` to obtain results for each
+sub-region
 
 ``` r
-results_list <- purrr::pmap(list(posterior_samples = posterior_samples_list,
+results_list <- purrr::pmap(list(posterior_samples = posterior_samples_aggregated,
                             country_population_counts = list(population_data), #need to wrap any complex inputs in another list()
                             first_year = first_year),
-                       fpem_calculate_results)
+                       calc_fp)
 results_list$`912`$contraceptive_use_modern
 #> NULL
 ```

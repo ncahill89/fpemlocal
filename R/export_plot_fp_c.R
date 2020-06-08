@@ -1,8 +1,8 @@
 #' plot country results
 #'
-#' @inherit fpem_plots
+#' @inherit plot_fp_csub
 #' @export
-fpem_plot_autosave <- function(runname,
+plot_fp_c_autosave <- function(runname,
                                ...) {
   runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
   results <- readRDS(file.path("output/results", paste0(runname, ".rds")))
@@ -30,27 +30,27 @@ fpem_plot_autosave <- function(runname,
 
 #' plot country results
 #'
-#' @inherit fpet_plots
+#' @inherit plot_fp_csub
 #' @export
-fpet_plot <- function(
+plot_fp_c <- function(
   runlist,
   results,
   indicators,
   ...
 ) {
-  purrr::pmap(list(runlist, results, list(indicators), list(...)), fpet_1union_plot)
+  purrr::pmap(list(runlist, results, list(indicators), list(...)), plot_fp_csub)
 }
 
 
 #' plot country results
-#' 
+#'
 #' @param results \emph{'Data.frame'} Results data from \code{\link{fpem_calculate_results}}
 #' @param core_data data list from \code{\link{core_data}}
 #' @param indicators name of indicators from results to be plotted
 #' @param compare_to_global logical, if TRUE plots estimates from global model with dotted lines
 #' @return list of plots
 #' @export
-fpet_1union_plot <- function(
+plot_fp_csub <- function(
   runlist,
   results,
   indicators,
@@ -90,7 +90,7 @@ fpet_1union_plot <- function(
       ggplot2::geom_ribbon(ggplot2::aes(ymin = `2.5%`, ymax = `97.5%`), fill = "plum1") +
       ggplot2::geom_ribbon(ggplot2::aes(ymin = `10%`, ymax = `90%`), fill = "plum") +
       ggplot2::geom_line(ggplot2::aes(y = `50%`), color = "black")
-  
+
     # plot observations if they exist
     if(!is.null(observations) &
        nrow(observations) > 0 &
@@ -120,7 +120,7 @@ fpet_1union_plot <- function(
         ggplot2::labs(color = "Data series/type", shape = "Group")
     }
   }
-  if (runlist$core_data$units$division_numeric_code %in% global_estimates$division_numeric_code 
+  if (runlist$core_data$units$division_numeric_code %in% global_estimates$division_numeric_code
       & compare_to_global
       & runlist$core_data$is_in_union != "ALL") {
     global_estimates <- global_estimates %>%
@@ -130,9 +130,9 @@ fpet_1union_plot <- function(
     for(indicator in indicators[1:3]) { # hack since we only have the first three
       global_estimates_filt <- global_estimates %>%
         dplyr::filter(indicator == !!indicator)
-      
+
       # compare global and on country estimates for a particular indicator for one country one union
-      res <- results[[indicator]] %>% 
+      res <- results[[indicator]] %>%
         dplyr::mutate(year = year + .5) %>%
         tidyr::spread(percentile, value)
       global_and_onecountry_estimates <- dplyr::left_join(res, global_estimates_filt)
@@ -142,16 +142,13 @@ fpet_1union_plot <- function(
                      is_in_union = runlist$core_data$is_in_union,
                      indicator = indicator)
       # end checking
-  
+
       pl[[indicator]] <- pl[[indicator]] +
         ggplot2::geom_line(ggplot2::aes(x = year, y = `0.5`), data = global_estimates_filt, linetype = 'dashed') +
         ggplot2::geom_line(ggplot2::aes(x = year, y = `0.025`), data = global_estimates_filt, linetype = 'dashed') +
         ggplot2::geom_line(ggplot2::aes(x = year, y = `0.975`), data = global_estimates_filt, linetype = 'dashed')
     }
   }
-  
+
   return(list(pl[[1]], pl[[2]], pl[[3]], pl[[4]]))
 }
-
-
-

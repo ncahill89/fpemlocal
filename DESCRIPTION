@@ -1,7 +1,7 @@
 Package: FPEMcountry
 Type: Package
-Title: FPEM
-Version: 0.1.0
+Title: FPEMcountry
+Version: 1.0.2
 Date: 2019-12-24
 Authors@R: c(person("Gregory", "Guranich", email = "gguranic@umass.edu", role = c("aut", "cre")),
              person("Mark", "Wheldon", email = "wheldon@un.org", role = c("aut")),
@@ -16,7 +16,8 @@ Imports:
     dplyr,
     jsonlite,
     readr,
-    rlang
+    rlang,
+    purrr
 Suggests: knitr, rmarkdown, testthat, ggplot2, grid, gridExtra
 VignetteBuilder: knitr
 Encoding: UTF-8

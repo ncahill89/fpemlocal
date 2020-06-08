@@ -604,70 +604,54 @@ body {
 <h2 id="introduction">Introduction</h2>
 <p>There are two main versions of the family planning estimation model, one for in-union women and another for not-in-union women. In addition to this breakdown, there is an interest in obtaining family planning indicators for all women. This vignette will step through the process of obtaining point estimates and plots for all women. We can do this with the same three functions.</p>
 <ol>
-<li><a href="#fit">Fit models and obtain samples for all women</a> <code>fpet_fit_model</code></li>
+<li><a href="#fit">Fit models and obtain samples for all women</a> <code>fit_fp_c</code></li>
 <li><a href="#results">Calculate point estimates for indicators</a> <code>fpet_calculate_indicaotrs</code></li>
-<li><a href="#plot">Plot the point estimates against the survey data</a> <code>fpet_plot</code></li>
+<li><a href="#plot">Plot the point estimates against the survey data</a> <code>plot_fp_c</code></li>
 </ol>
 <h2 id="section"><a name="fit"></a></h2>
 <h2 id="1-fit-models-and-obtain-samples-for-all-women">1. Fit models and obtain samples for all women</h2>
-<p><code>fpet_fit_model</code> is a wrapper function to run the one-country implementation of the family planning estimation model. The argument <code>is_in_union</code> is used to specify the union. The function can be used to obtain samples for all women denoted <code>&quot;ALL&quot;</code>. To obtain samples for all women, the two individual union models are fit and the samples are combined. This results in a list of three fits. We will demonstrate this below.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>fitlist &lt;-<span class="st"> </span><span class="kw">fpet_fit_model</span>(</span>
+<p><code>fit_fp_c</code> is a wrapper function to run the one-country implementation of the family planning estimation model. The argument <code>is_in_union</code> is used to specify the union. The function can be used to obtain samples for all women denoted <code>&quot;ALL&quot;</code>. To obtain samples for all women, the two individual union models are fit and the samples are combined. This results in a list of three fits. We will demonstrate this below.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>fitlist &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
 <span id="cb1-2"><a href="#cb1-2"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;ALL&quot;</span>,</span>
 <span id="cb1-3"><a href="#cb1-3"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">4</span>,</span>
 <span id="cb1-4"><a href="#cb1-4"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
 <span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
 <span id="cb1-6"><a href="#cb1-6"></a>)</span></code></pre></div>
-<p><code>fpet_fit_model</code> returns a list of fits.</p>
+<p><code>fit_fp_c</code> returns a list of fits.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>fitlist <span class="op">%&gt;%</span><span class="st"> </span>names</span></code></pre></div>
 <pre><code>## [1] &quot;fity&quot;   &quot;fitn&quot;   &quot;fitall&quot;
 </code></pre>
 <p>The fit contains posterior samples and another list called <code>core_data</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>fitlist<span class="op">$</span>fity <span class="op">%&gt;%</span><span class="st"> </span>names</span></code></pre></div>
-<pre><code>## [1] &quot;posterior_samples&quot;
-## [2] &quot;core_data&quot;
+<pre><code>## [1] &quot;posterior_samples&quot; &quot;core_data&quot;
 </code></pre>
 <p>Core data contains processed survey data and run specific data such as the time frame, union, etc.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>fitlist<span class="op">$</span>fity<span class="op">$</span>core_data <span class="op">%&gt;%</span><span class="st"> </span>names</span></code></pre></div>
-<pre><code>## [1] &quot;is_in_union&quot;       
-## [2] &quot;units&quot;             
-## [3] &quot;start_year&quot;        
-## [4] &quot;observations&quot;      
-## [5] &quot;year_sequence_list&quot;
-## [6] &quot;subnational&quot;
+<pre><code>## [1] &quot;is_in_union&quot;        &quot;units&quot;              &quot;start_year&quot;         &quot;observations&quot;      
+## [5] &quot;year_sequence_list&quot; &quot;subnational&quot;
 </code></pre>
 <h2 id="section-1"><a name="results"></a></h2>
 <h2 id="2-calculate-point-estimates-for-indicators">2. Calculate point estimates for indicators</h2>
-<p><code>fpet_calculate_indicators</code> is a wrapper function for calculating point estimates and confidence intervals. By default the function uses package population data (See <code>population_counts</code>) in order to calculate family planning indicators. Custom population count data may be supplied (See <code>??fpet_get_results</code>).</p>
-<p><code>fpet_calculate_indicators</code> utilizes <code>pmap</code> from the tidyverse package purr allowing it to act on any number of fits. We will supply the entire list of fits from <code>fpet_fit_model</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>resultlist &lt;-<span class="st"> </span><span class="kw">fpet_calculate_indicators</span>(fitlist)</span></code></pre></div>
-<p>Like the previous function, <code>fpet_calculate_indicators</code> returns a list. Since we supplied three fits the function returns three sets of calculated family planning indicators.</p>
+<p><code>calc_fp_c</code> is a wrapper function for calculating point estimates and confidence intervals. By default the function uses package population data (See <code>population_counts</code>) in order to calculate family planning indicators. Custom population count data may be supplied (See <code>??fpet_get_results</code>).</p>
+<p><code>calc_fp_c</code> utilizes <code>pmap</code> from the tidyverse package purr allowing it to act on any number of fits. We will supply the entire list of fits from <code>fit_fp_c</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>resultlist &lt;-<span class="st"> </span><span class="kw">calc_fp_c</span>(fitlist)</span></code></pre></div>
+<p>Like the previous function, <code>calc_fp_c</code> returns a list. Since we supplied three fits the function returns three sets of calculated family planning indicators.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>resultlist <span class="op">%&gt;%</span><span class="st"> </span>names</span></code></pre></div>
 <pre><code>## [1] &quot;fity&quot;   &quot;fitn&quot;   &quot;fitall&quot;
 </code></pre>
 <p>A set of results here consist of the following family planning indicators</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>resultlist<span class="op">$</span>fitall <span class="op">%&gt;%</span><span class="st"> </span>names</span></code></pre></div>
-<pre><code>##  [1] &quot;contraceptive_use_any&quot;                     
-##  [2] &quot;contraceptive_use_modern&quot;                  
-##  [3] &quot;contraceptive_use_traditional&quot;             
-##  [4] &quot;non_use&quot;                                   
-##  [5] &quot;unmet_need_any&quot;                            
-##  [6] &quot;unmet_need_modern&quot;                         
-##  [7] &quot;demand&quot;                                    
-##  [8] &quot;demand_modern&quot;                             
-##  [9] &quot;demand_satisfied&quot;                          
-## [10] &quot;demand_satisfied_modern&quot;                   
-## [11] &quot;no_need&quot;                                   
-## [12] &quot;contraceptive_use_any_population_counts&quot;   
-## [13] &quot;contraceptive_use_modern_population_counts&quot;
-## [14] &quot;traditional_cpr_population_counts&quot;         
-## [15] &quot;non_use_population_counts&quot;                 
-## [16] &quot;unmet_need_population_counts&quot;              
-## [17] &quot;unmet_need_modern_population_counts&quot;       
-## [18] &quot;demand_modern_population_counts&quot;           
-## [19] &quot;demand_population_counts&quot;                  
-## [20] &quot;demand_satisfied_population_counts&quot;        
-## [21] &quot;demand_satisfied_modern_population_counts&quot; 
-## [22] &quot;no_need_population_counts&quot;
+<pre><code>##  [1] &quot;contraceptive_use_any&quot;                      &quot;contraceptive_use_modern&quot;                  
+##  [3] &quot;contraceptive_use_traditional&quot;              &quot;non_use&quot;                                   
+##  [5] &quot;unmet_need_any&quot;                             &quot;unmet_need_modern&quot;                         
+##  [7] &quot;demand&quot;                                     &quot;demand_modern&quot;                             
+##  [9] &quot;demand_satisfied&quot;                           &quot;demand_satisfied_modern&quot;                   
+## [11] &quot;no_need&quot;                                    &quot;contraceptive_use_any_population_counts&quot;   
+## [13] &quot;contraceptive_use_modern_population_counts&quot; &quot;traditional_cpr_population_counts&quot;         
+## [15] &quot;non_use_population_counts&quot;                  &quot;unmet_need_population_counts&quot;              
+## [17] &quot;unmet_need_modern_population_counts&quot;        &quot;demand_modern_population_counts&quot;           
+## [19] &quot;demand_population_counts&quot;                   &quot;demand_satisfied_population_counts&quot;        
+## [21] &quot;demand_satisfied_modern_population_counts&quot;  &quot;no_need_population_counts&quot;
 </code></pre>
 <p>The point estimates for each indicator are long-format tibbles. Let’s take a look at the tibble for the indicator <code>contraceptive_use_modern</code></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>resultlist<span class="op">$</span>fitall<span class="op">$</span>contraceptive_use_modern</span></code></pre></div>
@@ -688,8 +672,8 @@ body {
 </code></pre>
 <h2 id="section-2"><a name="plot"></a></h2>
 <h2 id="3-plot-the-point-estimates-against-the-survey-data">3. Plot the point estimates against the survey data</h2>
-<p><code>fpet_plot</code> plots the indicators we obtained from the model against the indicators in the survey data. This function also handles lists. We will supply the fit list and the results list to the function to obtain plots for all three fits. We must also specify which indicators we wish to plot. The function will return a plot per indicator. Indicators of interest are supplied to the argument <code>indicators</code> as a vector.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">fpet_plot</span>(</span>
+<p><code>plot_fp_c</code> plots the indicators we obtained from the model against the indicators in the survey data. This function also handles lists. We will supply the fit list and the results list to the function to obtain plots for all three fits. We must also specify which indicators we wish to plot. The function will return a plot per indicator. Indicators of interest are supplied to the argument <code>indicators</code> as a vector.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">plot_fp_c</span>(</span>
 <span id="cb15-2"><a href="#cb15-2"></a>  fitlist,</span>
 <span id="cb15-3"><a href="#cb15-3"></a>  resultlist,</span>
 <span id="cb15-4"><a href="#cb15-4"></a>  <span class="dt">indicators =</span> <span class="kw">c</span>(</span>

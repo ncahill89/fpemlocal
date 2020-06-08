@@ -10,26 +10,25 @@ indicators for all women. This vignette will step through the process of
 obtaining point estimates and plots for all women. We can do this with
 the same three functions.
 
-1.  [Fit models and obtain samples for all women](#fit) `fpet_fit_model`
+1.  [Fit models and obtain samples for all women](#fit) `fit_fp_c`
 2.  [Calculate point estimates for indicators](#results)
     `fpet_calculate_indicaotrs`
 3.  [Plot the point estimates against the survey data](#plot)
-    `fpet_plot`
+    `plot_fp_c`
 
 ## <a name="fit"></a>
 
 ## 1\. Fit models and obtain samples for all women
 
-`fpet_fit_model` is a wrapper function to run the one-country
-implementation of the family planning estimation model. The argument
-`is_in_union` is used to specify the union. The function can be used to
-obtain samples for all women denoted `"ALL"`. To obtain samples for all
-women, the two individual union models are fit and the samples are
-combined. This results in a list of three fits. We will demonstrate this
-below.
+`fit_fp_c` is a wrapper function to run the one-country implementation
+of the family planning estimation model. The argument `is_in_union` is
+used to specify the union. The function can be used to obtain samples
+for all women denoted `"ALL"`. To obtain samples for all women, the two
+individual union models are fit and the samples are combined. This
+results in a list of three fits. We will demonstrate this below.
 
 ``` r
-fitlist <- fpet_fit_model(
+fitlist <- fit_fp_c(
   is_in_union = "ALL",
   division_numeric_code = 4,
   first_year = 1970,
@@ -37,7 +36,7 @@ fitlist <- fpet_fit_model(
 )
 ```
 
-`fpet_fit_model` returns a list of fits.
+`fit_fp_c` returns a list of fits.
 
 ``` r
 fitlist %>% names
@@ -51,8 +50,7 @@ The fit contains posterior samples and another list called `core_data`.
 fitlist$fity %>% names
 ```
 
-    ## [1] "posterior_samples"
-    ## [2] "core_data"
+    ## [1] "posterior_samples" "core_data"
 
 Core data contains processed survey data and run specific data such as
 the time frame, union, etc.
@@ -61,34 +59,30 @@ the time frame, union, etc.
 fitlist$fity$core_data %>% names
 ```
 
-    ## [1] "is_in_union"       
-    ## [2] "units"             
-    ## [3] "start_year"        
-    ## [4] "observations"      
-    ## [5] "year_sequence_list"
-    ## [6] "subnational"
+    ## [1] "is_in_union"        "units"              "start_year"         "observations"      
+    ## [5] "year_sequence_list" "subnational"
 
 ## <a name="results"></a>
 
 ## 2\. Calculate point estimates for indicators
 
-`fpet_calculate_indicators` is a wrapper function for calculating point
-estimates and confidence intervals. By default the function uses package
-population data (See `population_counts`) in order to calculate family
-planning indicators. Custom population count data may be supplied (See
+`calc_fp_c` is a wrapper function for calculating point estimates and
+confidence intervals. By default the function uses package population
+data (See `population_counts`) in order to calculate family planning
+indicators. Custom population count data may be supplied (See
 `??fpet_get_results`).
 
-`fpet_calculate_indicators` utilizes `pmap` from the tidyverse package
-purr allowing it to act on any number of fits. We will supply the entire
-list of fits from `fpet_fit_model`.
+`calc_fp_c` utilizes `pmap` from the tidyverse package purr allowing it
+to act on any number of fits. We will supply the entire list of fits
+from `fit_fp_c`.
 
 ``` r
-resultlist <- fpet_calculate_indicators(fitlist)
+resultlist <- calc_fp_c(fitlist)
 ```
 
-Like the previous function, `fpet_calculate_indicators` returns a list.
-Since we supplied three fits the function returns three sets of
-calculated family planning indicators.
+Like the previous function, `calc_fp_c` returns a list. Since we
+supplied three fits the function returns three sets of calculated family
+planning indicators.
 
 ``` r
 resultlist %>% names
@@ -103,28 +97,17 @@ indicators
 resultlist$fitall %>% names
 ```
 
-    ##  [1] "contraceptive_use_any"                     
-    ##  [2] "contraceptive_use_modern"                  
-    ##  [3] "contraceptive_use_traditional"             
-    ##  [4] "non_use"                                   
-    ##  [5] "unmet_need_any"                            
-    ##  [6] "unmet_need_modern"                         
-    ##  [7] "demand"                                    
-    ##  [8] "demand_modern"                             
-    ##  [9] "demand_satisfied"                          
-    ## [10] "demand_satisfied_modern"                   
-    ## [11] "no_need"                                   
-    ## [12] "contraceptive_use_any_population_counts"   
-    ## [13] "contraceptive_use_modern_population_counts"
-    ## [14] "traditional_cpr_population_counts"         
-    ## [15] "non_use_population_counts"                 
-    ## [16] "unmet_need_population_counts"              
-    ## [17] "unmet_need_modern_population_counts"       
-    ## [18] "demand_modern_population_counts"           
-    ## [19] "demand_population_counts"                  
-    ## [20] "demand_satisfied_population_counts"        
-    ## [21] "demand_satisfied_modern_population_counts" 
-    ## [22] "no_need_population_counts"
+    ##  [1] "contraceptive_use_any"                      "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"              "non_use"                                   
+    ##  [5] "unmet_need_any"                             "unmet_need_modern"                         
+    ##  [7] "demand"                                     "demand_modern"                             
+    ##  [9] "demand_satisfied"                           "demand_satisfied_modern"                   
+    ## [11] "no_need"                                    "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts" "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                  "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"        "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                   "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts"  "no_need_population_counts"
 
 The point estimates for each indicator are long-format tibbles. Let’s
 take a look at the tibble for the indicator `contraceptive_use_modern`
@@ -152,7 +135,7 @@ resultlist$fitall$contraceptive_use_modern
 
 ## 3\. Plot the point estimates against the survey data
 
-`fpet_plot` plots the indicators we obtained from the model against the
+`plot_fp_c` plots the indicators we obtained from the model against the
 indicators in the survey data. This function also handles lists. We will
 supply the fit list and the results list to the function to obtain plots
 for all three fits. We must also specify which indicators we wish to
@@ -160,7 +143,7 @@ plot. The function will return a plot per indicator. Indicators of
 interest are supplied to the argument `indicators` as a vector.
 
 ``` r
-fpet_plot(
+plot_fp_c(
   fitlist,
   resultlist,
   indicators = c(

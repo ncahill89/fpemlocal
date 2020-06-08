@@ -1,4 +1,4 @@
-combine_samples_from_fits <- function(fits, divs) {
+pluck_abind_fp_c <- function(fits, divs) {
   fits_v2 <- purrr::pmap(list(fits, #this is a list of country lists, thus supplying one country at a time
                               "fit",
                               "posterior_samples"),

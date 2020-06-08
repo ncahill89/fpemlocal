@@ -18,11 +18,10 @@ indicators. FPEMcountry comes equiped with survey data, country unit
 data, and country population count data, to produce one-country runs.
 Running FPEM is divided into three main functions.
 
-1.  [Fit a one country model](#fit) `fpet_fit_model`
-2.  [Calculate point estimates for indicators](#results)
-    `fpet_calculate_indicaotrs`
+1.  [Fit a one country model](#fit) `fit_fp_c`
+2.  [Calculate point estimates for indicators](#results) `calc_fp_c`
 3.  [Plot the point estimates against the survey data](#plot)
-    `fpet_plot`
+    `plot_fp_c`
 
 These three functions make running one country FPEM straightforward,
 while retaining enough division to carry out a variety of developer and
@@ -38,30 +37,21 @@ divisions
 ```
 
     ## # A tibble: 232 x 13
-    ##    division_numeri~ name_country
-    ##               <dbl> <chr>       
-    ##  1                4 Afghanistan 
-    ##  2                8 Albania     
-    ##  3               12 Algeria     
-    ##  4               16 American Sa~
-    ##  5               20 Andorra     
-    ##  6               24 Angola      
-    ##  7              660 Anguilla    
-    ##  8               28 Antigua and~
-    ##  9               32 Argentina   
-    ## 10               51 Armenia     
-    ## # ... with 222 more rows, and 11 more
-    ## #   variables: name_region <chr>,
-    ## #   name_sub_region <chr>,
-    ## #   region_numeric_code <dbl>,
-    ## #   sub_region_numeric_code <dbl>,
-    ## #   is_developed_region <chr>,
-    ## #   is_less_developed_region <chr>,
-    ## #   is_least_developed_country <chr>,
-    ## #   is_in_sub_saharan_africa <chr>,
-    ## #   is_unmarried_sexual_activity <chr>,
-    ## #   is_low_population <chr>,
-    ## #   is_fp2020 <chr>
+    ##    division_numeri~ name_country name_region name_sub_region region_numeric_~ sub_region_nume~
+    ##               <dbl> <chr>        <chr>       <chr>                      <dbl>            <dbl>
+    ##  1                4 Afghanistan  Asia        South-Central ~              935              921
+    ##  2                8 Albania      Europe      Southern Europe              908              925
+    ##  3               12 Algeria      Africa      Northern Africa              903              912
+    ##  4               16 American Sa~ Oceania     Polynesia                    909              957
+    ##  5               20 Andorra      Europe      Southern Europe              908              925
+    ##  6               24 Angola       Africa      Middle Africa                903              911
+    ##  7              660 Anguilla     Latin Amer~ Caribbean                    904              915
+    ##  8               28 Antigua and~ Latin Amer~ Caribbean                    904              915
+    ##  9               32 Argentina    Latin Amer~ South America                904              931
+    ## 10               51 Armenia      Asia        Western Asia                 935              922
+    ## # ... with 222 more rows, and 7 more variables: is_developed_region <chr>,
+    ## #   is_less_developed_region <chr>, is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>,
+    ## #   is_unmarried_sexual_activity <chr>, is_low_population <chr>, is_fp2020 <chr>
 
 Our package data sets are tibbles. This is particularly useful for large
 datasets because it only prints the first few rows. The country codes
@@ -74,19 +64,19 @@ See `??contraceptive_use` for a detailed description of this dataset.
 
 ## 1\. Fit a one country model
 
-`fpet_fit_model` is a wrapper function to run the one-country
-implementation of the family planning estimation model. There are two
-versions of this model, one for in-union and another for not-in-union
-women which can be specified with the argument `is_in_union`. These are
-denoted `"Y"` and `"N"` respectively. The first\_year and last\_year
-arguments determine the years of estimates exported from the run.
-Regardless of these arguments, the function will use all years in which
-data is available for estimation. When a survey file is not provided, as
-in this example, the function uses default package contraceptive\_use.
-The user may also supply optional services statistics.
+`fit_fp_c` is a wrapper function to run the one-country implementation
+of the family planning estimation model. There are two versions of this
+model, one for in-union and another for not-in-union women which can be
+specified with the argument `is_in_union`. These are denoted `"Y"` and
+`"N"` respectively. The first\_year and last\_year arguments determine
+the years of estimates exported from the run. Regardless of these
+arguments, the function will use all years in which data is available
+for estimation. When a survey file is not provided, as in this example,
+the function uses default package contraceptive\_use. The user may also
+supply optional services statistics.
 
 ``` r
-fit <- fpet_fit_model(
+fit <- fit_fp_c(
   is_in_union = "Y",
   division_numeric_code = 4,
   first_year = 1970,
@@ -98,14 +88,14 @@ fit <- fpet_fit_model(
 
 ## 2\. Calculate point estimates for indicators
 
-`fpet_calculate_indicators` is a wrapper function for calculating point
-estimates and confidence intervals. By default the function uses package
-population data (See `population_counts`) in order to calculate family
-planning indicators. Custom population count data may be supplied (See
+`calc_fp_c` is a wrapper function for calculating point estimates and
+confidence intervals. By default the function uses package population
+data (See `population_counts`) in order to calculate family planning
+indicators. Custom population count data may be supplied (See
 `??fpet_get_results`).
 
 ``` r
-results <- fpet_calculate_indicators(fit)
+results <- calc_fp_c(fit)
 ```
 
 A set of results here consist of the following family planning
@@ -115,28 +105,17 @@ indicators
 results$fit %>% names
 ```
 
-    ##  [1] "contraceptive_use_any"                     
-    ##  [2] "contraceptive_use_modern"                  
-    ##  [3] "contraceptive_use_traditional"             
-    ##  [4] "non_use"                                   
-    ##  [5] "unmet_need_any"                            
-    ##  [6] "unmet_need_modern"                         
-    ##  [7] "demand"                                    
-    ##  [8] "demand_modern"                             
-    ##  [9] "demand_satisfied"                          
-    ## [10] "demand_satisfied_modern"                   
-    ## [11] "no_need"                                   
-    ## [12] "contraceptive_use_any_population_counts"   
-    ## [13] "contraceptive_use_modern_population_counts"
-    ## [14] "traditional_cpr_population_counts"         
-    ## [15] "non_use_population_counts"                 
-    ## [16] "unmet_need_population_counts"              
-    ## [17] "unmet_need_modern_population_counts"       
-    ## [18] "demand_modern_population_counts"           
-    ## [19] "demand_population_counts"                  
-    ## [20] "demand_satisfied_population_counts"        
-    ## [21] "demand_satisfied_modern_population_counts" 
-    ## [22] "no_need_population_counts"
+    ##  [1] "contraceptive_use_any"                      "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"              "non_use"                                   
+    ##  [5] "unmet_need_any"                             "unmet_need_modern"                         
+    ##  [7] "demand"                                     "demand_modern"                             
+    ##  [9] "demand_satisfied"                           "demand_satisfied_modern"                   
+    ## [11] "no_need"                                    "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts" "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                  "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"        "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                   "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts"  "no_need_population_counts"
 
 The point estimates for each indicator are long-format tibbles. Let’s
 take a look at the tibble for the indicator `contraceptive_use_modern`
@@ -164,18 +143,17 @@ results$fit$contraceptive_use_modern
 
 ## 3\. Plot the point estimates against the survey data
 
-`fpet_plot` plots the results of the model against the survey data. The
-user supplies the objects exported from `fpet_fit_model` and
-`fpet_calculate_indicators` as well as indicators of interest.
-Indicators of interest are supplied to the argument `indicators`. The
-argument `compare_to_global` adds point estimate and 95% credible
-interval from the UNPD global model (See `global_estimates`). The global
-model estimates are plotted using dotted lines. Since we are only using
-the default data from UNPD the estimates from our model should align
-with the UNPD estimates.
+`plot_fp_c` plots the results of the model against the survey data. The
+user supplies the objects exported from `fit_fp_c` and `calc_fp_c` as
+well as indicators of interest. Indicators of interest are supplied to
+the argument `indicators`. The argument `compare_to_global` adds point
+estimate and 95% credible interval from the UNPD global model (See
+`global_estimates`). The global model estimates are plotted using dotted
+lines. Since we are only using the default data from UNPD the estimates
+from our model should align with the UNPD estimates.
 
 ``` r
-fpet_plot(
+plot_fp_c(
   fit,
   results,
   indicators = c(

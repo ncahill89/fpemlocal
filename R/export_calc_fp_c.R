@@ -1,18 +1,18 @@
-#' Get results from samples
+#' Calculate fp indicators from samples, autosave
 #'
-#' A wrapper for \code{\link{fpem_results}} which reads in the model fit from the respective `runname`. The output is saved in the results directory with the same `runname`. The output can be automatically read in by proceeding fpem functions with the `runname` argument specified.
+#' A wrapper for \code{\link{calc_fp_c}} which reads in the model fit from the respective `runname`. The output is saved in the results directory with the same `runname`. The output can be automatically read in by proceeding wrapper functions with the `runname` argument specified.
 #'
-#' @param runname 
-#' @param country_population_counts 
+#' @param runname
+#' @param country_population_counts
 #'
 #' @return
 #' @export
 #'
 #' @examples
-fpet_calculate_indicators_autosave <-
+calc_fp_c_autosave <-
   function(runname = NULL,
            country_population_counts = NULL) {
-    
+
     runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
     results <- fpet_calculate_indicators(runlist = runlist,
                      country_population_counts = country_population_counts)
@@ -24,21 +24,21 @@ fpet_calculate_indicators_autosave <-
   }
 
 
-#' Get results from samples
+#' Calculate fp indicators from samples
 #'
-#' Maps multiple sets of runs to \code{\link{fpem_calculate_results}}
+#' Maps multiple sets of runs to \code{\link{calc_fp}}
 #'
-#' @inherit fpem_calculate_results
+#' @inherit calc_fp
 #'
 #' @export
-fpet_calculate_indicators <-
+calc_fp_c <-
   function(fitlist,
            country_population_counts = NULL) {
-    purrr::pmap(list(fitlist, list(country_population_counts)), fpet_calculate_easy_wrapper)
+    purrr::pmap(list(fitlist, list(country_population_counts)), calc_fp_csub)
   }
 
 
-fpet_calculate_easy_wrapper <- function(fit,
+calc_fp_csub <- function(fit,
                                         country_population_counts = NULL) {
   if(is.null(country_population_counts)) {
     country_population_counts <- population_counts %>%
@@ -47,11 +47,9 @@ fpet_calculate_easy_wrapper <- function(fit,
   }
   posterior_samples <- fit$posterior_samples
   first_year <- fit$core_data$year_sequence_list$result_seq_years %>% min()
-  results <- fpem_calculate_results(posterior_samples,
+  results <- calc_fp(posterior_samples,
                                     country_population_counts,
                                     first_year
                          )
   return(results)
 }
-
-
