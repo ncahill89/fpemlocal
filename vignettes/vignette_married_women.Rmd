@@ -25,17 +25,7 @@ devtools::load_all()
 ## <a name="fit"></a>
 ## 1. Fit a one country model
 
-The primary input to `fit_fp_c` is country-level survey data of contraceptive use aggregates. When a survey file is not provided, as in this example, the function uses the default package dataset `contraceptive_use`. 
-
-
-The country code for the country of interest is necessary to fit the model. We will refer to these codes as division numeric codes. Division numeric codes, with their corresponding country names, are found in the package dataset called `divisions`. Enter `divisions` in the R console to access this dataset.
-
-```{r}
-divisions
-```
-
-Our package data sets are tibbles. This is particularly useful for large datasets because it only prints the first few rows. In our example we will execute a one-country run for Afghanistan, code `4`.
-
+The primary input to `fit_fp_c` is country-level survey data of contraceptive use aggregates. When a survey file is not provided, the function uses UNPD package data and filters the data based on union status and country code (See `??contraceptive_use` for UNPD contracetpive use aggregate data). UNPD country codes, known as division numeric codes, are found in the package dataset called `divisions`. 
 
 `fit_fp_c` is a wrapper function to run the one-country implementation of the family planning estimation model. There are two versions of this model, one for in-union and another for not-in-union women which are specified with the argument `is_in_union` denoted `"Y"` and `"N"` respectively. Lastly, specify the years of estimates to be returned. Note: These arguments will not filter the supplied survey data. All years of available survey data will be used.
 ```{r}
@@ -50,24 +40,24 @@ fit <- fit_fp_c(
 
 ## <a name="results"></a>
 ## 2. Calculate point estimates for indicators
-Calculate point estimates for family planning indicators with the function `calc_fp_c`. Simply supply the fit object from `fit_fp_c`. Alternatively, combine steps one and two with pipes. 
+Calculate point estimates for family planning indicators with the function `calc_fp_c`. Simply supply the fit object from `fit_fp_c`. By default the function uses UNPD package data (See `??population_counts`). Custom population count data may be supplied (See `??calc_fp_c`).
 ```{r}
 results <- calc_fp_c(fit)
 ```
 
 A set of results here consist of the following family planning indicators
 ```{r}
-results$fit %>% names
+results$Y %>% names
 ```
 
 The point estimates for each indicator are long-format tibbles. Let's take a look at the tibble for the indicator `contraceptive_use_modern`
 ```{r}
-results$fit$contraceptive_use_modern
+results$Y$contraceptive_use_modern
 ```
 
 
 ## <a name="plot"></a>
-## 3. Plot the  point estimates against the survey data
+## 3. Plot estimates and survey data
 FPEMcountry also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2.
 ```{r}
 plot_fp_c(

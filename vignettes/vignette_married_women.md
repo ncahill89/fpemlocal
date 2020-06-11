@@ -11,47 +11,11 @@ Estimating family planning indicators for married women
 ## 1\. Fit a one country model
 
 The primary input to `fit_fp_c` is country-level survey data of
-contraceptive use aggregates. When a survey file is not provided, as in
-this example, the function uses the default package dataset
-`contraceptive_use`.
-
-The country code for the country of interest is necessary to fit the
-model. We will refer to these codes as division numeric codes. Division
-numeric codes, with their corresponding country names, are found in the
-package dataset called `divisions`. Enter `divisions` in the R console
-to access this dataset.
-
-``` r
-divisions
-```
-
-    ## # A tibble: 232 x 13
-    ##    division_numeri~ name_country name_region
-    ##               <dbl> <chr>        <chr>      
-    ##  1                4 Afghanistan  Asia       
-    ##  2                8 Albania      Europe     
-    ##  3               12 Algeria      Africa     
-    ##  4               16 American Sa~ Oceania    
-    ##  5               20 Andorra      Europe     
-    ##  6               24 Angola       Africa     
-    ##  7              660 Anguilla     Latin Amer~
-    ##  8               28 Antigua and~ Latin Amer~
-    ##  9               32 Argentina    Latin Amer~
-    ## 10               51 Armenia      Asia       
-    ## # ... with 222 more rows, and 10 more variables:
-    ## #   name_sub_region <chr>,
-    ## #   region_numeric_code <dbl>,
-    ## #   sub_region_numeric_code <dbl>,
-    ## #   is_developed_region <chr>,
-    ## #   is_less_developed_region <chr>,
-    ## #   is_least_developed_country <chr>,
-    ## #   is_in_sub_saharan_africa <chr>,
-    ## #   is_unmarried_sexual_activity <chr>,
-    ## #   is_low_population <chr>, is_fp2020 <chr>
-
-Our package data sets are tibbles. This is particularly useful for large
-datasets because it only prints the first few rows. In our example we
-will execute a one-country run for Afghanistan, code `4`.
+contraceptive use aggregates. When a survey file is not provided, the
+function uses UNPD package data and filters the data based on union
+status and country code (See `??contraceptive_use` for UNPD
+contracetpive use aggregate data). UNPD country codes, known as division
+numeric codes, are found in the package dataset called `divisions`.
 
 `fit_fp_c` is a wrapper function to run the one-country implementation
 of the family planning estimation model. There are two versions of this
@@ -75,8 +39,9 @@ fit <- fit_fp_c(
 ## 2\. Calculate point estimates for indicators
 
 Calculate point estimates for family planning indicators with the
-function `calc_fp_c`. Simply supply the fit object from `fit_fp_c`.
-Alternatively, combine steps one and two with pipes.
+function `calc_fp_c`. Simply supply the fit object from `fit_fp_c`. By
+default the function uses UNPD package data (See `??population_counts`).
+Custom population count data may be supplied (See `??calc_fp_c`).
 
 ``` r
 results <- calc_fp_c(fit)
@@ -86,37 +51,26 @@ A set of results here consist of the following family planning
 indicators
 
 ``` r
-results$fit %>% names
+results$Y %>% names
 ```
 
-    ##  [1] "contraceptive_use_any"                     
-    ##  [2] "contraceptive_use_modern"                  
-    ##  [3] "contraceptive_use_traditional"             
-    ##  [4] "non_use"                                   
-    ##  [5] "unmet_need_any"                            
-    ##  [6] "unmet_need_modern"                         
-    ##  [7] "demand"                                    
-    ##  [8] "demand_modern"                             
-    ##  [9] "demand_satisfied"                          
-    ## [10] "demand_satisfied_modern"                   
-    ## [11] "no_need"                                   
-    ## [12] "contraceptive_use_any_population_counts"   
-    ## [13] "contraceptive_use_modern_population_counts"
-    ## [14] "traditional_cpr_population_counts"         
-    ## [15] "non_use_population_counts"                 
-    ## [16] "unmet_need_population_counts"              
-    ## [17] "unmet_need_modern_population_counts"       
-    ## [18] "demand_modern_population_counts"           
-    ## [19] "demand_population_counts"                  
-    ## [20] "demand_satisfied_population_counts"        
-    ## [21] "demand_satisfied_modern_population_counts" 
-    ## [22] "no_need_population_counts"
+    ##  [1] "contraceptive_use_any"                      "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"              "non_use"                                   
+    ##  [5] "unmet_need_any"                             "unmet_need_modern"                         
+    ##  [7] "demand"                                     "demand_modern"                             
+    ##  [9] "demand_satisfied"                           "demand_satisfied_modern"                   
+    ## [11] "no_need"                                    "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts" "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                  "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"        "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                   "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts"  "no_need_population_counts"
 
 The point estimates for each indicator are long-format tibbles. Let’s
 take a look at the tibble for the indicator `contraceptive_use_modern`
 
 ``` r
-results$fit$contraceptive_use_modern
+results$Y$contraceptive_use_modern
 ```
 
     ## # A tibble: 488 x 3
@@ -136,7 +90,7 @@ results$fit$contraceptive_use_modern
 
 ## <a name="plot"></a>
 
-## 3\. Plot the point estimates against the survey data
+## 3\. Plot estimates and survey data
 
 FPEMcountry also includes a function named `plot_fp_c` to plot the
 calculated point estimates against the survey data. The arguments to
@@ -157,22 +111,22 @@ plot_fp_c(
   )
 ```
 
-    ## $fit
-    ## $fit[[1]]
+    ## $Y
+    ## $Y$unmet_need_any
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
-
-    ## 
-    ## $fit[[2]]
-
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
     ## 
-    ## $fit[[3]]
+    ## $Y$contraceptive_use_modern
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-2.png)<!-- -->
 
     ## 
-    ## $fit[[4]]
+    ## $Y$contraceptive_use_traditional
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-3.png)<!-- -->
+
+    ## 
+    ## $Y$contraceptive_use_any
+
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-4.png)<!-- -->

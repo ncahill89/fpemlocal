@@ -56,12 +56,12 @@ resultlist %>% names
 
 A set of results here consist of the following family planning indicators
 ```{r}
-resultlist$fitall %>% names
+resultlist$ALL %>% names
 ```
 
 The point estimates for each indicator are long-format tibbles. Let's take a look at the tibble for the indicator `contraceptive_use_modern`
 ```{r}
-resultlist$fitall$contraceptive_use_modern
+resultlist$ALL$contraceptive_use_modern
 ```
 
 ## <a name="plot"></a>
