@@ -32,14 +32,14 @@ calc_fp_c_autosave <-
 #'
 #' @export
 calc_fp_c <-
-  function(fitlist,
+  function(fit,
            country_population_counts = NULL) {
-    purrr::pmap(list(fitlist, list(country_population_counts)), calc_fp_csub)
+    purrr::pmap(list(fit, list(country_population_counts)), calc_fp_csub)
   }
 
 
 calc_fp_csub <- function(fit,
-                                        country_population_counts = NULL) {
+                         country_population_counts = NULL) {
   if(is.null(country_population_counts)) {
     country_population_counts <- population_counts %>%
       dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code) %>%

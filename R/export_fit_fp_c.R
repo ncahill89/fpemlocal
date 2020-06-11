@@ -50,19 +50,18 @@ fit_fp_c <- function(is_in_union,
         fits %>% purrr::chuck("N", "core_data", "observations")
       )
     core_data$is_in_union <- is_in_union
-    fitall <- list(posterior_samples = samples_all,
+    ALL <- list(posterior_samples = samples_all,
                    core_data = core_data)
-    runlist <- list(
-      fity =  fits %>% purrr::chuck("Y"),
-      fitn =  fits %>% purrr::chuck("N"),
-      fitall = fitall
+    fitr <- list(
+      Y =  fits %>% purrr::chuck("Y"),
+      N =  fits %>% purrr::chuck("N"),
+      ALL = ALL
     )
   } else {
-    runlist <-
-      list(fit = fit_fp_csub(is_in_union = is_in_union,
-                                                ...))
+    fitr <- list(fit_fp_csub(is_in_union = is_in_union, ...))
+    names(fitr) <- is_in_union
   }
-  return(runlist)
+  return(fitr)
 
 }
 

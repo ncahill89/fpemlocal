@@ -4,10 +4,10 @@
 #' @export
 plot_fp_c_autosave <- function(runname,
                                ...) {
-  runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
+  fit <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
   results <- readRDS(file.path("output/results", paste0(runname, ".rds")))
   plotlist <- fpem_plot(
-    runlist = runlist,
+    fit = fit,
     results = results,
     ...
   )
@@ -20,7 +20,7 @@ plot_fp_c_autosave <- function(runname,
     gridExtra::grid.arrange(
       grobs = plots[1:length(indicators)],
       ncol = 2,
-      top = paste(runlist[[i]]$core_data$is_in_union, runlist[[i]]$core_data$units$name_country)
+      top = paste(fit[[i]]$core_data$is_in_union, fit[[i]]$core_data$units$name_country)
     )
   }
   dev.off()
@@ -33,12 +33,12 @@ plot_fp_c_autosave <- function(runname,
 #' @inherit plot_fp_csub
 #' @export
 plot_fp_c <- function(
-  runlist,
+  fit,
   results,
   indicators,
   compare_to_global = FALSE
 ) {
-  purrr::pmap(list(runlist, results, list(indicators), compare_to_global), plot_fp_csub)
+  purrr::pmap(list(fit, results, list(indicators), compare_to_global), plot_fp_csub)
 }
 
 
@@ -51,19 +51,19 @@ plot_fp_c <- function(
 #' @return list of plots
 #' @export
 plot_fp_csub <- function(
-  runlist,
+  fit,
   results,
   indicators,
   compare_to_global = FALSE
 ) {
   indicators <- indicators %>% unlist()
-  observations <- runlist$core_data$observations
+  observations <- fit$core_data$observations
   # This is a hack to fix downstream plotting errors caused my dplyr::filter, if resulting columns from filter have only NA's the column type becomes "unknown"
   # Changes vector value but not column type
   observations <- observations %>%
     dplyr::mutate_at(.vars = indicators, .funs = as.numeric)
-  first_year <- runlist$core_data$year_sequence_list$result_seq_years %>% min()
-  last_year <- runlist$core_data$year_sequence_list$result_seq_years %>% max()
+  first_year <- fit$core_data$year_sequence_list$result_seq_years %>% min()
+  last_year <- fit$core_data$year_sequence_list$result_seq_years %>% max()
   y_label = "Proportion"
   breaks = seq(
     first_year,
@@ -120,12 +120,12 @@ plot_fp_csub <- function(
         ggplot2::labs(color = "Data series/type", shape = "Group")
     }
   }
-  if (runlist$core_data$units$division_numeric_code %in% global_estimates$division_numeric_code
+  if (fit$core_data$units$division_numeric_code %in% global_estimates$division_numeric_code
       & compare_to_global
-      & runlist$core_data$is_in_union != "ALL") {
+      & fit$core_data$is_in_union != "ALL") {
     global_estimates <- global_estimates %>%
-      dplyr::filter(division_numeric_code == runlist$core_data$units$division_numeric_code,
-                    is_in_union == runlist$core_data$is_in_union)
+      dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code,
+                    is_in_union == fit$core_data$is_in_union)
 
     for(indicator in indicators[1:3]) { # hack since we only have the first three
       global_estimates_filt <- global_estimates %>%
@@ -138,8 +138,8 @@ plot_fp_csub <- function(
       global_and_onecountry_estimates <- dplyr::left_join(res, global_estimates_filt)
       check_estimate(x = global_and_onecountry_estimates$`50%`,
                      y = global_and_onecountry_estimates$`0.5`,
-                     division_numeric_code = runlist$core_data$units$division_numeric_code,
-                     is_in_union = runlist$core_data$is_in_union,
+                     division_numeric_code = fit$core_data$units$division_numeric_code,
+                     is_in_union = fit$core_data$is_in_union,
                      indicator = indicator)
       # end checking
 
@@ -150,5 +150,5 @@ plot_fp_csub <- function(
     }
   }
 
-  return(list(pl[[1]], pl[[2]], pl[[3]], pl[[4]]))
+  return(pl)
 }
