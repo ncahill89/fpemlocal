@@ -1,5 +1,5 @@
 ---
-title: "Aggregate estimates for multiple fits"
+title: "Aggregating estimates from multiple fits"
 output: github_document
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: "Estimates for all women"
+title: "Estimating family planning indicators for all women"
 output: github_document
 ---
 ```{r setup, include=FALSE}
@@ -17,9 +17,6 @@ library(FPEMcountry)
 devtools::load_all()
 ```
 
-## Introduction
-There are two main versions of the family planning estimation model, one for in-union women and another for not-in-union women. In addition to this breakdown, there is an interest in obtaining family planning indicators for all women. This vignette will step through the process of obtaining point estimates and plots for all women. We can do this with the same three functions.
-
 1. [Fit models and obtain samples for all women](#fit) `fit_fp_c`
 2. [Calculate point estimates for indicators](#results) `fpet_calculate_indicaotrs`
 3. [Plot the  point estimates against the survey data](#plot) `plot_fp_c`
@@ -27,7 +24,7 @@ There are two main versions of the family planning estimation model, one for in-
 
 ## <a name="fit"></a>
 ## 1. Fit models and obtain samples for all women
-`fit_fp_c` is a wrapper function to run the one-country implementation of the family planning estimation model. The argument `is_in_union` is used to specify the union. The function can be used to obtain samples for all women denoted `"ALL"`. To obtain samples for all women, the two individual union models are fit and the samples are combined. This results in a list of three fits. We will demonstrate this below.
+`fit_fp_c` is a wrapper function to run the one-country implementation of the family planning estimation model. Specify the division numeric code, the union status of women (denote all women with `“ALL”`), and the time frame.
 
 ```{r}
 fitlist <- fit_fp_c(
@@ -38,24 +35,14 @@ fitlist <- fit_fp_c(
 )
 ```
 
-`fit_fp_c` returns a list of fits.
+Obtaining results for all women entails running the in-union and not-in-union model.  In this case, `fit_fp_c` returns a named list of fits.
 ```{r}
 fitlist %>% names
 ```
 
-The fit contains posterior samples and another list called `core_data`.
-```{r}
-fitlist$fity %>% names
-```
-
-Core data contains processed survey data and run specific data such as the time frame, union, etc.
-```{r}
-fitlist$fity$core_data %>% names
-```
-
 ## <a name="results"></a>
 ## 2. Calculate point estimates for indicators
-`calc_fp_c` is a wrapper function for calculating point estimates and confidence intervals. By default the function uses package population data (See `population_counts`) in order to calculate family planning indicators. Custom population count data may be supplied (See `??fpet_get_results`).
+Calculate point estimates for family planning indicators with the function `calc_fp_c`. 
 
 `calc_fp_c` utilizes `pmap` from the tidyverse package purr allowing it to act on any number of fits. We will supply the entire list of fits from `fit_fp_c`.
 ```{r}
@@ -66,10 +53,12 @@ Like the previous function, `calc_fp_c` returns a list. Since we supplied three 
 ```{r}
 resultlist %>% names
 ```
+
 A set of results here consist of the following family planning indicators
 ```{r}
 resultlist$fitall %>% names
 ```
+
 The point estimates for each indicator are long-format tibbles. Let's take a look at the tibble for the indicator `contraceptive_use_modern`
 ```{r}
 resultlist$fitall$contraceptive_use_modern
@@ -77,7 +66,7 @@ resultlist$fitall$contraceptive_use_modern
 
 ## <a name="plot"></a>
 ## 3. Plot the  point estimates against the survey data
-`plot_fp_c` plots the indicators we obtained from the model against the indicators in the survey data. This function also handles lists. We will supply the fit list and the results list to the function to obtain plots for all three fits. We must also specify which indicators we wish to plot. The function will return a plot per indicator. Indicators of interest are supplied to the argument `indicators` as a vector.
+FPEMcountry also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2. This function also handles lists.
 
 ```{r}
 plot_fp_c(

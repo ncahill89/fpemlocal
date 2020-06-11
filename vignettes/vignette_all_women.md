@@ -1,14 +1,5 @@
-Estimates for all women
+Estimating family planning indicators for all women
 ================
-
-## Introduction
-
-There are two main versions of the family planning estimation model, one
-for in-union women and another for not-in-union women. In addition to
-this breakdown, there is an interest in obtaining family planning
-indicators for all women. This vignette will step through the process of
-obtaining point estimates and plots for all women. We can do this with
-the same three functions.
 
 1.  [Fit models and obtain samples for all women](#fit) `fit_fp_c`
 2.  [Calculate point estimates for indicators](#results)
@@ -21,11 +12,9 @@ the same three functions.
 ## 1\. Fit models and obtain samples for all women
 
 `fit_fp_c` is a wrapper function to run the one-country implementation
-of the family planning estimation model. The argument `is_in_union` is
-used to specify the union. The function can be used to obtain samples
-for all women denoted `"ALL"`. To obtain samples for all women, the two
-individual union models are fit and the samples are combined. This
-results in a list of three fits. We will demonstrate this below.
+of the family planning estimation model. Specify the division numeric
+code, the union status of women (denote all women with `“ALL”`), and the
+time frame.
 
 ``` r
 fitlist <- fit_fp_c(
@@ -36,7 +25,9 @@ fitlist <- fit_fp_c(
 )
 ```
 
-`fit_fp_c` returns a list of fits.
+Obtaining results for all women entails running the in-union and
+not-in-union model. In this case, `fit_fp_c` returns a named list of
+fits.
 
 ``` r
 fitlist %>% names
@@ -44,33 +35,12 @@ fitlist %>% names
 
     ## [1] "fity"   "fitn"   "fitall"
 
-The fit contains posterior samples and another list called `core_data`.
-
-``` r
-fitlist$fity %>% names
-```
-
-    ## [1] "posterior_samples" "core_data"
-
-Core data contains processed survey data and run specific data such as
-the time frame, union, etc.
-
-``` r
-fitlist$fity$core_data %>% names
-```
-
-    ## [1] "is_in_union"        "units"              "start_year"         "observations"      
-    ## [5] "year_sequence_list" "subnational"
-
 ## <a name="results"></a>
 
 ## 2\. Calculate point estimates for indicators
 
-`calc_fp_c` is a wrapper function for calculating point estimates and
-confidence intervals. By default the function uses package population
-data (See `population_counts`) in order to calculate family planning
-indicators. Custom population count data may be supplied (See
-`??fpet_get_results`).
+Calculate point estimates for family planning indicators with the
+function `calc_fp_c`.
 
 `calc_fp_c` utilizes `pmap` from the tidyverse package purr allowing it
 to act on any number of fits. We will supply the entire list of fits
@@ -97,17 +67,28 @@ indicators
 resultlist$fitall %>% names
 ```
 
-    ##  [1] "contraceptive_use_any"                      "contraceptive_use_modern"                  
-    ##  [3] "contraceptive_use_traditional"              "non_use"                                   
-    ##  [5] "unmet_need_any"                             "unmet_need_modern"                         
-    ##  [7] "demand"                                     "demand_modern"                             
-    ##  [9] "demand_satisfied"                           "demand_satisfied_modern"                   
-    ## [11] "no_need"                                    "contraceptive_use_any_population_counts"   
-    ## [13] "contraceptive_use_modern_population_counts" "traditional_cpr_population_counts"         
-    ## [15] "non_use_population_counts"                  "unmet_need_population_counts"              
-    ## [17] "unmet_need_modern_population_counts"        "demand_modern_population_counts"           
-    ## [19] "demand_population_counts"                   "demand_satisfied_population_counts"        
-    ## [21] "demand_satisfied_modern_population_counts"  "no_need_population_counts"
+    ##  [1] "contraceptive_use_any"                     
+    ##  [2] "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"             
+    ##  [4] "non_use"                                   
+    ##  [5] "unmet_need_any"                            
+    ##  [6] "unmet_need_modern"                         
+    ##  [7] "demand"                                    
+    ##  [8] "demand_modern"                             
+    ##  [9] "demand_satisfied"                          
+    ## [10] "demand_satisfied_modern"                   
+    ## [11] "no_need"                                   
+    ## [12] "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts"
+    ## [14] "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                 
+    ## [16] "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"       
+    ## [18] "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                  
+    ## [20] "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts" 
+    ## [22] "no_need_population_counts"
 
 The point estimates for each indicator are long-format tibbles. Let’s
 take a look at the tibble for the indicator `contraceptive_use_modern`
@@ -135,12 +116,12 @@ resultlist$fitall$contraceptive_use_modern
 
 ## 3\. Plot the point estimates against the survey data
 
-`plot_fp_c` plots the indicators we obtained from the model against the
-indicators in the survey data. This function also handles lists. We will
-supply the fit list and the results list to the function to obtain plots
-for all three fits. We must also specify which indicators we wish to
-plot. The function will return a plot per indicator. Indicators of
-interest are supplied to the argument `indicators` as a vector.
+FPEMcountry also includes a function named `plot_fp_c` to plot the
+calculated point estimates against the survey data. The arguments to
+this function are, the fit object from step 1, the results from step 2,
+and a vector of indicator names. The vector of indicator names
+corresponds to the names which appear in the results from step 2. This
+function also handles lists.
 
 ``` r
 plot_fp_c(
@@ -155,4 +136,66 @@ plot_fp_c(
   )
 ```
 
-    ## list()
+    ## $fity
+    ## $fity[[1]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+    ## 
+    ## $fity[[2]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+
+    ## 
+    ## $fity[[3]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+
+    ## 
+    ## $fity[[4]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+
+    ## 
+    ## 
+    ## $fitn
+    ## $fitn[[1]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
+
+    ## 
+    ## $fitn[[2]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
+
+    ## 
+    ## $fitn[[3]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
+
+    ## 
+    ## $fitn[[4]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-8.png)<!-- -->
+
+    ## 
+    ## 
+    ## $fitall
+    ## $fitall[[1]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-9.png)<!-- -->
+
+    ## 
+    ## $fitall[[2]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-10.png)<!-- -->
+
+    ## 
+    ## $fitall[[3]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-11.png)<!-- -->
+
+    ## 
+    ## $fitall[[4]]
+
+![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-12.png)<!-- -->

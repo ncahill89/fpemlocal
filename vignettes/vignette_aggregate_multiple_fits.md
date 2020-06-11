@@ -1,4 +1,4 @@
-Aggregate estimates for multiple fits
+Aggregating estimates from multiple fits
 ================
 
 ## Introduction
@@ -118,19 +118,20 @@ population_data <- population_counts %>%
   dplyr::filter(mid_year <= last_year)
 population_data
 #> # A tibble: 3,294 x 5
-#>    is_in_union division_numeric_code population_count age_range mid_year
-#>    <chr>                       <dbl>            <dbl> <chr>        <dbl>
-#>  1 Y                              12          1995757 15-49         1970
-#>  2 Y                              24           980282 15-49         1970
-#>  3 Y                              72            64076 15-49         1970
-#>  4 Y                             108           498976 15-49         1970
-#>  5 Y                             120          1097088 15-49         1970
-#>  6 Y                             132            25759 15-49         1970
-#>  7 Y                             140           312421 15-49         1970
-#>  8 Y                             148           650581 15-49         1970
-#>  9 Y                             174            34282 15-49         1970
-#> 10 Y                             178           173462 15-49         1970
-#> # ... with 3,284 more rows
+#>    is_in_union division_numeri~ population_count
+#>    <chr>                  <dbl>            <dbl>
+#>  1 Y                         12          1995757
+#>  2 Y                         24           980282
+#>  3 Y                         72            64076
+#>  4 Y                        108           498976
+#>  5 Y                        120          1097088
+#>  6 Y                        132            25759
+#>  7 Y                        140           312421
+#>  8 Y                        148           650581
+#>  9 Y                        174            34282
+#> 10 Y                        178           173462
+#> # ... with 3,284 more rows, and 2 more variables:
+#> #   age_range <chr>, mid_year <dbl>
 ```
 
 Now supply these two tibbles of data and the large array of posterior

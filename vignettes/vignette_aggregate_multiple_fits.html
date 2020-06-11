@@ -600,7 +600,7 @@ body {
 
 <body>
 
-<h1 id="aggregate-estimates-for-multiple-fits">Aggregate estimates for multiple fits</h1>
+<h1 id="aggregating-estimates-from-multiple-fits">Aggregating estimates from multiple fits</h1>
 <h2 id="introduction">Introduction</h2>
 <p>In this vignette we will fit FPET to multiple countries and aggregate the samples to obtain results for aggregate levels.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
@@ -674,19 +674,20 @@ body {
 <span id="cb6-6"><a href="#cb6-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(mid_year <span class="op">&lt;=</span><span class="st"> </span>last_year)</span>
 <span id="cb6-7"><a href="#cb6-7"></a>population_data</span>
 <span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; # A tibble: 3,294 x 5</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;    is_in_union division_numeric_code population_count age_range mid_year</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt;    &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt;  1 Y                              12          1995757 15-49         1970</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt;  2 Y                              24           980282 15-49         1970</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;  3 Y                              72            64076 15-49         1970</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt;  4 Y                             108           498976 15-49         1970</span></span>
-<span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt;  5 Y                             120          1097088 15-49         1970</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a><span class="co">#&gt;  6 Y                             132            25759 15-49         1970</span></span>
-<span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;  7 Y                             140           312421 15-49         1970</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt;  8 Y                             148           650581 15-49         1970</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt;  9 Y                             174            34282 15-49         1970</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; 10 Y                             178           173462 15-49         1970</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; # ... with 3,284 more rows</span></span></code></pre></div>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;    is_in_union division_numeri~ population_count</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt;    &lt;chr&gt;                  &lt;dbl&gt;            &lt;dbl&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt;  1 Y                         12          1995757</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt;  2 Y                         24           980282</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;  3 Y                         72            64076</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt;  4 Y                        108           498976</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt;  5 Y                        120          1097088</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="co">#&gt;  6 Y                        132            25759</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt;  7 Y                        140           312421</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt;  8 Y                        148           650581</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co">#&gt;  9 Y                        174            34282</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co">#&gt; 10 Y                        178           173462</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co">#&gt; # ... with 3,284 more rows, and 2 more variables:</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co">#&gt; #   age_range &lt;chr&gt;, mid_year &lt;dbl&gt;</span></span></code></pre></div>
 <p>Now supply these two tibbles of data and the large array of posterior samples to the function <code>aggregate_fp</code>. This function returns a named list of aggregated samples.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>posterior_samples_aggregated &lt;-<span class="st"> </span><span class="kw">aggregate_fp</span>(division_level_data,</span>
 <span id="cb7-2"><a href="#cb7-2"></a>                                         population_data,</span>

@@ -36,9 +36,9 @@ plot_fp_c <- function(
   runlist,
   results,
   indicators,
-  ...
+  compare_to_global = FALSE
 ) {
-  purrr::pmap(list(runlist, results, list(indicators), list(...)), plot_fp_csub)
+  purrr::pmap(list(runlist, results, list(indicators), compare_to_global), plot_fp_csub)
 }
 
 
