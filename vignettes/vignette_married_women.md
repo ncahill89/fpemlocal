@@ -10,25 +10,24 @@ Estimating family planning indicators for married women
 
 ## 1\. Fit a one country model
 
-The primary input to `fit_fp_c` is country-level survey data of
-contraceptive use aggregates. When a survey file is not provided, the
-function uses UNPD package data and filters the data based on union
-status and country code (See `??contraceptive_use` for UNPD
-contracetpive use aggregate data). UNPD country codes, known as division
-numeric codes, are found in the package dataset called `divisions`.
-
 `fit_fp_c` is a wrapper function to run the one-country implementation
-of the family planning estimation model. There are two versions of this
-model, one for in-union and another for not-in-union women which are
-specified with the argument `is_in_union` denoted `"Y"` and `"N"`
-respectively. Lastly, specify the years of estimates to be returned.
-Note: These arguments will not filter the supplied survey data. All
-years of available survey data will be used.
+of the family planning estimation model. The primary input to `fit_fp_c`
+is country-level survey data of contraceptive use aggregates. When a
+survey file is not provided, the function uses UNPD package data and
+filters the data based on country code and union status (See
+`??contraceptive_use` for UNPD contracetpive use aggregate data). UNPD
+country codes, known as division numeric codes, are found in the package
+dataset called `divisions`. There are two versions of this model, one
+for in-union and another for not-in-union women which are specified with
+the argument `is_in_union` denoted `"Y"` and `"N"` respectively. Lastly,
+specify the years of estimates to be returned. Note: These arguments
+will not filter the supplied survey data. All years of available survey
+data will be used.
 
 ``` r
 fit <- fit_fp_c(
-  is_in_union = "Y",
   division_numeric_code = 4,
+  is_in_union = "Y",
   first_year = 1970,
   last_year = 2030
 )
@@ -114,19 +113,19 @@ plot_fp_c(
     ## $Y
     ## $Y$unmet_need_any
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_modern
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-2.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_traditional
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-3.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_any
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-40-4.png)<!-- -->
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
