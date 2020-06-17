@@ -71,7 +71,7 @@ weight_input_checker <-
     if (!(all(div_pop %in% div_samples) &
           all(div_samples %in% div_pop))) {
       stop(
-        "the divisions in your posterior_samples do not match the divisions in population_data, cannot obtain weights"
+        "the division codes in your posterior_samples do not match the division codes supplied"
       )
     }
   }
@@ -93,6 +93,8 @@ weight_division_match <-
     posterior_samples <- posterior_samples[order_index, , , ]
   }
 
+
+
 #' weight_samples
 #'
 #' @param division_level_data data frame with country codes and corresponding aggregate level
@@ -111,19 +113,90 @@ weight_division_match <-
 #'   select(division_numeric_code, division_level)
 #' posterior_samples_list <- weight_samples(division_level_data, population_data, posterior_samples)
 aggregate_fp <-
-  function(division_level_data,
-           population_data,
-           posterior_samples) {
-    weight_input_checker(division_level_data, population_data, posterior_samples)
+  function(
+    posterior_samples,
+    division_level_data,
+    population_data
+           ) {
+    weight_input_checker(division_level_data, 
+                         population_data, 
+                         posterior_samples)
     posterior_samples <-
-      weight_division_match(division_level_data, population_data, posterior_samples)
+      weight_division_match(division_level_data, 
+                            population_data, 
+                            posterior_samples)
     weight_data <-
       weight_generator(division_level_data, population_data)
-    levels <- division_level_data$division_level %>% unique() %>% list()
+    levels <- division_level_data %>% dplyr::pull(division_level) %>% unique %>% as.list
+    names(levels) <- division_level_data %>% dplyr::pull(division_level_name) %>% unique
     posterior_samples_list <- purrr::pmap(list(levels,
-              list(weight_data),
-              list(posterior_samples)),
+              weight_data %>% list,
+              posterior_samples %>% list),
          aggregate_set_per_level
          )
     return(posterior_samples_list)
   }
+
+
+division_level_data_maker <- function(
+  level,
+  division_numeric_code_vector
+) {
+  division_level_data <- divisions %>%
+    dplyr::mutate(division_level = {{level}}) %>%
+    dplyr::select(division_numeric_code, division_level) %>%
+    dplyr::filter(division_numeric_code %in% {{division_numeric_code_vector}})
+  return(division_level_data)
+}
+
+
+
+pluck_abind_fp_c <- function(fits, 
+                             division_numeric_code_vector) {
+  
+  fits_v2 <- purrr::pmap(list(fits, #this is a list of country lists, thus supplying one country at a time
+                              1,
+                              "posterior_samples"),
+                         purrr::chuck #throws an error if an element is null vs pull which returns null
+  )
+  posterior_samples <- purrr::invoke(abind::abind, fits_v2, along = 1)
+  dimnames(posterior_samples) <- list(divs, NULL, NULL, NULL) # we may not need this is dimension before abind were named
+  return(posterior_samples)
+}
+
+calc_fp_aggregate <- function(
+  fits,
+  division_numeric_code_vector,
+  level,
+  population_counts_custom = NULL,
+  first_year,
+  is_in_union) {
+  # reduce the fits down to just the posterior samples and then bind them into a single array dim = [Country x Nsamples x Years x 3(from p,r,z)]
+  posterior_samples <- pluck_abind_fp_c(fits = fits, 
+                                              division_numeric_code_vector = divs)
+  # division level data has the codes for the level and the country codes, the level column is variable and given a generic name to be accessed in deeper functions
+  division_level_data <- divisions %>%
+    dplyr::rename(division_level = {{level}}) %>%
+    dplyr::select(division_numeric_code, division_level) %>%
+    dplyr::filter(division_numeric_code %in% {{division_numeric_code_vector}})
+  # filtering of population data, users may supply their own
+  if (is.null(population_counts_custom)) {
+    population_data = population_counts
+  }
+  last_year <- first_year + dim(posterior_samples)[3] - 1
+  population_data <- population_data %>%
+    dplyr::filter(division_numeric_code %in% {{division_numeric_code_vector}}) %>%
+    dplyr::filter(is_in_union == {{is_in_union}}) %>%
+    dplyr::filter(mid_year >= {{first_year}}) %>%
+    dplyr::filter(mid_year <= last_year)
+  # aggregate the samples using samples, population counts, and division data
+  posterior_samples_aggregated <- aggregate_fp(posterior_samples = posterior_samples,
+                                               division_level_data = division_level_data,
+                                               population_data = population_data)
+  # calculate based on the aggregated samples
+  results_list <- purrr::pmap(list(posterior_samples = posterior_samples_aggregated,
+                                   country_population_counts = list(population_data), #need to wrap any complex inputs in another list()
+                                   first_year = first_year),
+                              calc_fp)
+  return(results_list)
+}

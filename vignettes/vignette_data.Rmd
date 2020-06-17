@@ -1,0 +1,39 @@
+---
+title: "Package data"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+```
+This vignette covers package data. Central to all vignettes are data inputs in the form, division codes, of contraceptive use survey data, and population count data. These three types of data are included as package data.
+
+1. [division code data](#div) `divisions`
+2. [contraceptive use survey data](#cu) `contraceptive_use` and `contraceptive_use_track20`
+3. [population count data](#pc) `population_counts`
+
+
+## <a name="div"></a>
+## 1. Division codes
+Division data is used as the a link between low-level divisions (country) and higher-level divisions (sub-regions, regions). All data inputs include a column of country division codes known as division numeric codes. After loading the package, enter `divisions` into the console to access this data.
+```{r}
+library(FPEMcountry)
+divisions
+```
+
+Our package data sets are tibbles. This is particularly useful for large datasets because it only prints the first few rows. The country codes used by our package, known as `division_numeric_code`, are found in this data. In our example we will execute a one-country run for Afghanistan, code `4`. 
+
+## <a name="cu"></a>
+## 2. Contraceptive use survey data
+Two versions of survey data are available in the package. They are identical in format but compiled by two different organizations. `contraceptive_use` is compiled by the UNPD. `contraceptive_use_track20` is compiled by Track20. Enter `??contraceptive_use` and `??contraceptive_use_track20` for metadata.
+```{r}
+contraceptive_use
+```
+
+## <a name="cu"></a>
+## 3. Population count data
+Access population count data by entering `population_counts` into the console. This data is compiled by the UNPD. Enter `??populatoin_counts` for the metadata.
+```{r}
+population_counts
+```
