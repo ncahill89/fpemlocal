@@ -34,22 +34,22 @@ calc_fp_c_autosave <-
 calc_fp_c <-
   function(fit,
            country_population_counts = NULL) {
-    purrr::pmap(list(fit, list(country_population_counts)), calc_fp_csub)
+    purrr::pmap(list(fit, list(population_data)), calc_fp_csub)
   }
 
 
 calc_fp_csub <- function(fit,
-                         country_population_counts = NULL) {
+                         population_data = NULL) {
   if(is.null(country_population_counts)) {
-    country_population_counts <- population_counts %>%
+    population_data <- population_counts %>%
       dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code) %>%
       dplyr::filter(is_in_union == fit$core_data$is_in_union)
   }
   posterior_samples <- fit$posterior_samples
   first_year <- fit$core_data$year_sequence_list$result_seq_years %>% min()
   results <- calc_fp(posterior_samples,
-                                    country_population_counts,
-                                    first_year
+                     population_data,
+                     first_year
                          )
   return(results)
 }

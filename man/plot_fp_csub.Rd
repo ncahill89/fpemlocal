@@ -4,7 +4,7 @@
 \alias{plot_fp_csub}
 \title{plot country results}
 \usage{
-plot_fp_csub(runlist, results, indicators, compare_to_global = FALSE)
+plot_fp_csub(fit, results, indicators, compare_to_global = FALSE)
 }
 \arguments{
 \item{results}{\emph{'Data.frame'} Results data from \code{\link{fpem_calculate_results}}}

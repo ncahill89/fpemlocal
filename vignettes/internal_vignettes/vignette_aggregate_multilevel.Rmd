@@ -87,7 +87,7 @@ population_data
 Now supply these two tibbles of data and the large array of posterior samples to the function `aggregate_fp`. This function returns a named list of aggregated samples.
 ```{r}
 devtools::load_all()
-posterior_samples_aggregated <- aggregate_fp(division_level_data,
+posterior_samples_aggregated <- aggregate_fp_multilevel(division_level_data,
                                          population_data,
                                          posterior_samples =  posterior_samples)
 names(posterior_samples_aggregated)

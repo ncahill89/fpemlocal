@@ -16,6 +16,8 @@ get_posterior_probability_from_cutoff_target(
 )
 }
 \arguments{
+\item{posterior_samples}{}
+
 \item{indicator}{`integer` Indicator index (1 = modern, 2 = traditional, 3 = unmet)}
 
 \item{year}{`integer` Year index}

@@ -1,6 +1,11 @@
 FPEMcountry
 ================
 
+<!-- badges: start -->
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3899454.svg)](https://doi.org/10.5281/zenodo.3899454)
+<!-- badges: end -->
+
 ## Installation
 
 The package can be installed by cloning and using `devtools::install()`.
@@ -37,21 +42,23 @@ divisions
 ```
 
     ## # A tibble: 232 x 13
-    ##    division_numeri~ name_country name_region name_sub_region region_numeric_~ sub_region_nume~
-    ##               <dbl> <chr>        <chr>       <chr>                      <dbl>            <dbl>
-    ##  1                4 Afghanistan  Asia        South-Central ~              935              921
-    ##  2                8 Albania      Europe      Southern Europe              908              925
-    ##  3               12 Algeria      Africa      Northern Africa              903              912
-    ##  4               16 American Sa~ Oceania     Polynesia                    909              957
-    ##  5               20 Andorra      Europe      Southern Europe              908              925
-    ##  6               24 Angola       Africa      Middle Africa                903              911
-    ##  7              660 Anguilla     Latin Amer~ Caribbean                    904              915
-    ##  8               28 Antigua and~ Latin Amer~ Caribbean                    904              915
-    ##  9               32 Argentina    Latin Amer~ South America                904              931
-    ## 10               51 Armenia      Asia        Western Asia                 935              922
-    ## # ... with 222 more rows, and 7 more variables: is_developed_region <chr>,
-    ## #   is_less_developed_region <chr>, is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>,
-    ## #   is_unmarried_sexual_activity <chr>, is_low_population <chr>, is_fp2020 <chr>
+    ##    division_numeri~ name_country name_region name_sub_region region_numeric_~
+    ##               <dbl> <chr>        <chr>       <chr>                      <dbl>
+    ##  1                4 Afghanistan  Asia        South-Central ~              935
+    ##  2                8 Albania      Europe      Southern Europe              908
+    ##  3               12 Algeria      Africa      Northern Africa              903
+    ##  4               16 American Sa~ Oceania     Polynesia                    909
+    ##  5               20 Andorra      Europe      Southern Europe              908
+    ##  6               24 Angola       Africa      Middle Africa                903
+    ##  7              660 Anguilla     Latin Amer~ Caribbean                    904
+    ##  8               28 Antigua and~ Latin Amer~ Caribbean                    904
+    ##  9               32 Argentina    Latin Amer~ South America                904
+    ## 10               51 Armenia      Asia        Western Asia                 935
+    ## # ... with 222 more rows, and 8 more variables: sub_region_numeric_code <dbl>,
+    ## #   is_developed_region <chr>, is_less_developed_region <chr>,
+    ## #   is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>,
+    ## #   is_unmarried_sexual_activity <chr>, is_low_population <chr>,
+    ## #   is_fp2020 <chr>
 
 Our package data sets are tibbles. This is particularly useful for large
 datasets because it only prints the first few rows. The country codes
@@ -80,7 +87,8 @@ fit <- fit_fp_c(
   is_in_union = "Y",
   division_numeric_code = 4,
   first_year = 1970,
-  last_year = 2030
+  last_year = 2030,
+  diagnostic = TRUE
 )
 ```
 
@@ -130,22 +138,22 @@ plot_fp_c(
     ## Joining, by = "year"
     ## Joining, by = "year"
 
-    ## $fit
-    ## $fit[[1]]
+    ## $Y
+    ## $Y$unmet_need_any
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
     ## 
-    ## $fit[[2]]
+    ## $Y$contraceptive_use_modern
 
 ![](README_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
 
     ## 
-    ## $fit[[3]]
+    ## $Y$contraceptive_use_traditional
 
 ![](README_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->
 
     ## 
-    ## $fit[[4]]
+    ## $Y$contraceptive_use_any
 
 ![](README_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->

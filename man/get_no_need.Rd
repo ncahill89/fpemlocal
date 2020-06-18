@@ -7,6 +7,8 @@
 get_no_need(posterior_samples, first_year)
 }
 \arguments{
+\item{posterior_samples}{}
+
 \item{first_year}{`integer` Earliest year represented in the data}
 }
 \value{

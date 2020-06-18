@@ -7,6 +7,8 @@
 get_proportions(posterior_samples, first_year, transformer)
 }
 \arguments{
+\item{posterior_samples}{}
+
 \item{first_year}{`integer` Earliest year represented in the data}
 
 \item{transformer}{`function` Computes the desired result}

@@ -16,7 +16,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(FPEMcountry)
 devtools::load_all()
 ```
-
+<!-- badges: start -->
+<!-- add new release the one below is old -->
+<!--  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3899454.svg)](https://doi.org/10.5281/zenodo.3899454) -->
+<!-- badges: end -->
 
 ## Installation
 The package can be installed by cloning and using `devtools::install()`. The source code for vignettes can be found in [/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes). Below is a brief introduction.
@@ -47,7 +50,8 @@ fit <- fit_fp_c(
   is_in_union = "Y",
   division_numeric_code = 4,
   first_year = 1970,
-  last_year = 2030
+  last_year = 2030,
+  diagnostic = TRUE
 )
 ```
 

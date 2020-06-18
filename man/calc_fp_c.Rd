@@ -4,10 +4,7 @@
 \alias{calc_fp_c}
 \title{Calculate fp indicators from samples}
 \usage{
-calc_fp_c(fitlist, country_population_counts = NULL)
-}
-\arguments{
-\item{country_population_counts}{\emph{'Numeric Vector'} A vector of population counts selected from \code{\link[population_counts]{population_counts}}}
+calc_fp_c(fit, country_population_counts = NULL)
 }
 \value{
 \emph{'Data.frame'} A data.frame of point estimates in long format.

@@ -2,18 +2,20 @@
 % Please edit documentation in R/export_calc_fp.R
 \name{calc_fp}
 \alias{calc_fp}
-\title{Calculate fp indicators from samples}
+\title{calc_fp}
 \usage{
-calc_fp(posterior_samples, country_population_counts, first_year)
+calc_fp(posterior_samples, population_data, first_year)
 }
 \arguments{
-\item{country_population_counts}{\emph{'Numeric Vector'} A vector of population counts selected from \code{\link[population_counts]{population_counts}}}
+\item{posterior_samples}{}
 
-\item{runlist}{\emph{'list'} a list with core_data and posterior samples}
+\item{population_data}{}
+
+\item{first_year}{}
 }
 \value{
 \emph{'Data.frame'} A data.frame of point estimates in long format.
 }
 \description{
-Returns point estimates from posterior samples in long format.
+calc_fp
 }

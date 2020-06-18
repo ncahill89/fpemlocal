@@ -20,6 +20,7 @@ Division data is used as the a link between low-level divisions (country) and hi
 ```{r}
 library(FPEMcountry)
 divisions
+??divisions
 ```
 
 Our package data sets are tibbles. This is particularly useful for large datasets because it only prints the first few rows. The country codes used by our package, known as `division_numeric_code`, are found in this data. In our example we will execute a one-country run for Afghanistan, code `4`. 

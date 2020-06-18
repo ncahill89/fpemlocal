@@ -1,17 +1,16 @@
-
-#' Calculate fp indicators from samples
+#' calc_fp
 #'
-#' Returns point estimates from posterior samples in long format.
-#'
-#' @param runlist \emph{'list'} a list with core_data and posterior samples
-#' @param country_population_counts \emph{'Numeric Vector'} A vector of population counts selected from \code{\link[population_counts]{population_counts}}
+#' @param posterior_samples 
+#' @param population_data 
+#' @param first_year 
 #'
 #' @return \emph{'Data.frame'} A data.frame of point estimates in long format.
-#'
 #' @export
+#'
+#' @examples
 calc_fp <-
   function(posterior_samples,
-           country_population_counts,
+           population_data,
            first_year) {
 
     contraceptive_use_any <-
@@ -39,37 +38,37 @@ calc_fp <-
 
     contraceptive_use_any_population_counts <-
       get_estimated_counts(proportions = contraceptive_use_any,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     contraceptive_use_modern_population_counts <-
       get_estimated_counts(proportions = contraceptive_use_modern,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     traditional_cpr_population_counts <-
       get_estimated_counts(proportions = contraceptive_use_traditional,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     non_use_population_counts <-
       get_estimated_counts(proportions = non_use,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     unmet_need_population_counts <-
       get_estimated_counts(proportions = unmet_need_any,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     unmet_need_modern_population_counts <-
       get_estimated_counts(proportions = unmet_need_modern,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     demand_population_counts <-
       get_estimated_counts(proportions = demand,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     demand_modern_population_counts <-
       get_estimated_counts(proportions = demand_modern,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     demand_satisfied_population_counts <-
       get_estimated_counts(proportions = demand_satisfied,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     demand_satisfied_modern_population_counts <-
       get_estimated_counts(proportions = demand_satisfied_modern,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
     no_need_population_counts <-
       get_estimated_counts(proportions = no_need,
-                           annual_country_population_counts = country_population_counts)
+                           annual_country_population_counts = population_data)
 
     results <- list(
       contraceptive_use_any = contraceptive_use_any,

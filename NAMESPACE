@@ -2,7 +2,8 @@
 
 export("%>%")
 export(aggregate_fp)
-export(aggregate_with_weights)
+export(aggregate_fp_multilevel)
+export(aggregate_fp_sub)
 export(calc_fp)
 export(calc_fp_c)
 export(calc_fp_c_autosave)
