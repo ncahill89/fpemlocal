@@ -44,7 +44,7 @@ Our package data sets are tibbles. This is particularly useful for large dataset
 
 ## <a name="fit"></a>
 ## 1. Fit a one country model
-`fit_fp_c` is a wrapper function to run the one-country implementation of the family planning estimation model. There are two versions of this model, one for in-union and another for not-in-union women which can be specified with the argument `is_in_union`. These are denoted `"Y"` and `"N"` respectively. The first_year and last_year arguments determine the years of estimates exported from the run. Regardless of these arguments, the function will use all years in which data is available for estimation. When a survey file is not provided, as in this example, the function uses default package contraceptive_use. The user may also supply optional services statistics.
+`fit_fp_c` is a wrapper function to fit the one-country implementation of the family planning estimation model. There are two versions of this model, one for in-union and another for not-in-union women which can be specified with the argument `is_in_union`. These are denoted `"Y"` and `"N"` respectively. The first_year and last_year arguments determine the years of estimates exported from the run. Regardless of these arguments, the function will use all years in which data is available for estimation. When a survey file is not provided, as in this example, the function uses default package contraceptive_use. The user may also supply optional services statistics.
 ```{r}
 fit <- fit_fp_c(
   is_in_union = "Y",

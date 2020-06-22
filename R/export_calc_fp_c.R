@@ -11,11 +11,11 @@
 #' @examples
 calc_fp_c_autosave <-
   function(runname = NULL,
-           country_population_counts = NULL) {
+           population_data = NULL) {
 
     runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
-    results <- fpet_calculate_indicators(runlist = runlist,
-                     country_population_counts = country_population_counts)
+    results <- calc_fp_c(runlist = runlist,
+                                         population_data = population_data)
     if (!dir.exists("output")) dir.create("output")
     if (!dir.exists("output/results")) dir.create("output/results")
     pathout <- file.path("output/results", paste0(runname, ".rds"))
@@ -33,14 +33,14 @@ calc_fp_c_autosave <-
 #' @export
 calc_fp_c <-
   function(fit,
-           country_population_counts = NULL) {
+           population_data = NULL) {
     purrr::pmap(list(fit, list(population_data)), calc_fp_csub)
   }
 
 
 calc_fp_csub <- function(fit,
                          population_data = NULL) {
-  if(is.null(country_population_counts)) {
+  if(is.null(population_data)) {
     population_data <- population_counts %>%
       dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code) %>%
       dplyr::filter(is_in_union == fit$core_data$is_in_union)

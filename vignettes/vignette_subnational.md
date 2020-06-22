@@ -1,10 +1,10 @@
-Estimating family planning indicators for married women
+Estimating subnational family planning indicators for married women with
+custom user data
 ================
 
 ## Introduction
 
-In this vignette we obtain estimates for married women with package
-datasets. By default, functions utilize UNPD datasets.
+In this vignette we obtain sub-national estimates for married women.
 
 1.  [Fit a one country model](#fit) `fit_fp_c`
 2.  [Calculate point estimates for indicators](#results) `calc_fp_c`
@@ -15,26 +15,41 @@ datasets. By default, functions utilize UNPD datasets.
 
 ## 1\. Fit a one country model
 
-Fit the one-country family planning estimation model with the function
-`fit_fp_c`. First, supply the UNPD country code known as the
-`division_numeric_code`. See `??divisions` for UNPD country codes and
-other divisions. There are two versions of this model, one for in-union
-women and another for not-in-union women denoted `"Y"` and `"N"`
-respectively. Specify the model of your choice with the argument
-`is_in_union`. By default, the function `fit_fp_c` utilizes the UNPD
-contraceptive use survey dataset, `contraceptive_use` and filters the
-dataset based on the aforementioned function arguments. Lastly, specify
-the years of estimates to be returned. Note: year arguments will not
-filter the supplied survey data. All years of available survey data will
-be used.
+Fit the sub-national family planning estimation model with the function
+`fit_fp_c`. Set the argument `subnational` to `TRUE`. All other
+arguments follows from one-country examples.
 
 ``` r
 fit <- fit_fp_c(
+  surveydata_filepath = "data-raw/afghanistan_4_married_example.csv",
   division_numeric_code = 4,
   is_in_union = "Y",
   first_year = 1970,
-  last_year = 2030
+  last_year = 2030,
+  subnational = TRUE
 )
+#> Parsed with column specification:
+#> cols(
+#>   .default = col_double(),
+#>   is_in_union = col_character(),
+#>   age_range = col_character(),
+#>   data_series_type = col_character(),
+#>   group_type_relative_to_baseline = col_character(),
+#>   unmet_need_modern = col_logical(),
+#>   is_pertaining_to_methods_used_since_last_pregnancy = col_character(),
+#>   pertaining_to_methods_used_since_last_pregnancy_reason = col_logical(),
+#>   has_geographical_region_bias = col_character(),
+#>   geographical_region_bias_reason = col_character(),
+#>   has_non_pregnant_and_other_positive_biases = col_character(),
+#>   non_pregnant_and_other_positive_biases_reason = col_logical(),
+#>   age_group_bias = col_character(),
+#>   modern_method_bias = col_character(),
+#>   has_traditional_method_bias = col_character(),
+#>   traditional_method_bias_reason = col_logical(),
+#>   has_absence_of_probing_questions_bias = col_character(),
+#>   record_id = col_character()
+#> )
+#> See spec(...) for full column specifications.
 ```
 
 ## <a name="results"></a>
@@ -42,13 +57,14 @@ fit <- fit_fp_c(
 ## 2\. Calculate point estimates for indicators
 
 Calculate point estimates for family planning indicators with the
-function `calc_fp_c`. Supply the fit object from `fit_fp_c`. By default,
-the function `calc_fp_C` utilizes the UNPD population dataset,
-`population_counts` to calculate count variables such as the number of
-women using modern contraceptives.
+function `calc_fp_c`. Supply the fit object from `fit_fp_c` to the
+argument `fit`. Read in your population count dataset. Then supply the
+dataset to the argument `population_data`.
 
 ``` r
-results <- calc_fp_c(fit)
+population_data <- read.csv("data-raw/afghanistan_4_married_popdata_example.csv")
+results <- calc_fp_c(fit = fit,
+                     population_data = population_data)
 ```
 
 A set of results here consist of the following family planning
@@ -81,12 +97,12 @@ results$Y$contraceptive_use_modern
 #>  2  1971 mean       0.0123
 #>  3  1972 mean       0.0131
 #>  4  1973 mean       0.0141
-#>  5  1974 mean       0.0152
-#>  6  1975 mean       0.0164
-#>  7  1976 mean       0.0178
-#>  8  1977 mean       0.0192
-#>  9  1978 mean       0.0208
-#> 10  1979 mean       0.0225
+#>  5  1974 mean       0.0150
+#>  6  1975 mean       0.0161
+#>  7  1976 mean       0.0172
+#>  8  1977 mean       0.0183
+#>  9  1978 mean       0.0195
+#> 10  1979 mean       0.0207
 #> # ... with 478 more rows
 ```
 
@@ -115,19 +131,19 @@ plot_fp_c(
 #> $Y$unmet_need_any
 ```
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](vignette_subnational_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
     #> 
     #> $Y$contraceptive_use_modern
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](vignette_subnational_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
     #> 
     #> $Y$contraceptive_use_traditional
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
+![](vignette_subnational_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
 
     #> 
     #> $Y$contraceptive_use_any
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
+![](vignette_subnational_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->

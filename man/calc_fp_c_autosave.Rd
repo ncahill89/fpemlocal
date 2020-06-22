@@ -4,7 +4,7 @@
 \alias{calc_fp_c_autosave}
 \title{Calculate fp indicators from samples, autosave}
 \usage{
-calc_fp_c_autosave(runname = NULL, country_population_counts = NULL)
+calc_fp_c_autosave(runname = NULL, population_data = NULL)
 }
 \arguments{
 \item{country_population_counts}{}

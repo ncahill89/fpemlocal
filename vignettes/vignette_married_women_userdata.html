@@ -600,9 +600,9 @@ body {
 
 <body>
 
-<h1 id="estimating-family-planning-indicators-for-married-women">Estimating family planning indicators for married women</h1>
+<h1 id="estimating-family-planning-indicators-for-married-women-with-custom-user-data">Estimating family planning indicators for married women with custom user data</h1>
 <h2 id="introduction">Introduction</h2>
-<p>In this vignette we obtain estimates for married women with package datasets. By default, functions utilize UNPD datasets.</p>
+<p>In this vignette we obtain estimates for married women with custom user data.</p>
 <ol>
 <li><a href="#fit">Fit a one country model</a> <code>fit_fp_c</code></li>
 <li><a href="#results">Calculate point estimates for indicators</a> <code>calc_fp_c</code></li>
@@ -610,17 +610,42 @@ body {
 </ol>
 <h2 id="section"><a name="fit"></a></h2>
 <h2 id="1-fit-a-one-country-model">1. Fit a one country model</h2>
-<p>Fit the one-country family planning estimation model with the function <code>fit_fp_c</code>. First, supply the UNPD country code known as the <code>division_numeric_code</code>. See <code>??divisions</code> for UNPD country codes and other divisions. There are two versions of this model, one for in-union women and another for not-in-union women denoted <code>&quot;Y&quot;</code> and <code>&quot;N&quot;</code> respectively. Specify the model of your choice with the argument <code>is_in_union</code>. By default, the function <code>fit_fp_c</code> utilizes the UNPD contraceptive use survey dataset, <code>contraceptive_use</code> and filters the dataset based on the aforementioned function arguments. Lastly, specify the years of estimates to be returned. Note: year arguments will not filter the supplied survey data. All years of available survey data will be used.</p>
+<p>Fit the one-country family planning estimation model with the function <code>fit_fp_c</code>. Supply the file path of the .csv file containing your country survey data to the argument <code>surveydata_filepath</code>. Next supply the UNPD country code known as the <code>division_numeric_code</code>. See <code>??divisions</code> for UNPD country codes and other divisions. Specify the model of your choice with the argument <code>is_in_union</code>. There are two versions of this model, one for in-union women and another for not-in-union women denoted <code>&quot;Y&quot;</code> and <code>&quot;N&quot;</code> respectively. Lastly, specify the years of estimates to be returned. Note: The function will not filter the survey data based on these years. All years of available survey data will be used.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>fit &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">4</span>,</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
-<span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/afghanistan_4_married_example.csv&quot;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">4</span>,</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; Parsed with column specification:</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; cols(</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt;   .default = col_double(),</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt;   is_in_union = col_character(),</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt;   age_range = col_character(),</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt;   data_series_type = col_character(),</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#&gt;   group_type_relative_to_baseline = col_character(),</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">#&gt;   unmet_need_modern = col_logical(),</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#&gt;   is_pertaining_to_methods_used_since_last_pregnancy = col_character(),</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#&gt;   pertaining_to_methods_used_since_last_pregnancy_reason = col_logical(),</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co">#&gt;   has_geographical_region_bias = col_character(),</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt;   geographical_region_bias_reason = col_character(),</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co">#&gt;   has_non_pregnant_and_other_positive_biases = col_character(),</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co">#&gt;   non_pregnant_and_other_positive_biases_reason = col_logical(),</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="co">#&gt;   age_group_bias = col_character(),</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co">#&gt;   modern_method_bias = col_character(),</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co">#&gt;   has_traditional_method_bias = col_character(),</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="co">#&gt;   traditional_method_bias_reason = col_logical(),</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co">#&gt;   has_absence_of_probing_questions_bias = col_character(),</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co">#&gt;   record_id = col_character()</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co">#&gt; )</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="co">#&gt; See spec(...) for full column specifications.</span></span></code></pre></div>
 <h2 id="section-1"><a name="results"></a></h2>
 <h2 id="2-calculate-point-estimates-for-indicators">2. Calculate point estimates for indicators</h2>
-<p>Calculate point estimates for family planning indicators with the function <code>calc_fp_c</code>. Supply the fit object from <code>fit_fp_c</code>. By default, the function <code>calc_fp_C</code> utilizes the UNPD population dataset, <code>population_counts</code> to calculate count variables such as the number of women using modern contraceptives.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp_c</span>(fit)</span></code></pre></div>
+<p>Calculate point estimates for family planning indicators with the function <code>calc_fp_c</code>. Supply the fit object from <code>fit_fp_c</code> to the argument <code>fit</code>. Read in your population count dataset. Then supply the dataset to the argument <code>population_data</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>population_data &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/afghanistan_4_married_popdata_example.csv&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp_c</span>(<span class="dt">fit =</span> fit,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>                     <span class="dt">population_data =</span> population_data)</span></code></pre></div>
 <p>A set of results here consist of the following family planning indicators</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>results<span class="op">$</span>Y <span class="op">%&gt;%</span><span class="st"> </span>names</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt;  [1] &quot;contraceptive_use_any&quot;                      &quot;contraceptive_use_modern&quot;                  </span></span>

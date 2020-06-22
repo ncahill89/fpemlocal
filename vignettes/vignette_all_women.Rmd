@@ -9,6 +9,8 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 # the default autosave location will depend on this being setup
 options(warn=-1)
 ```
+## Introduction
+In this vignette we obtain estimates for all women with package datasets. By default, functions utilize UNPD datasets. 
 
 
 ```{r, include=FALSE}

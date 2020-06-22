@@ -4,7 +4,10 @@
 \alias{calc_fp_c}
 \title{Calculate fp indicators from samples}
 \usage{
-calc_fp_c(fit, country_population_counts = NULL)
+calc_fp_c(fit, population_data = NULL)
+}
+\arguments{
+\item{population_data}{}
 }
 \value{
 \emph{'Data.frame'} A data.frame of point estimates in long format.

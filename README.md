@@ -3,7 +3,10 @@ FPEMcountry
 
 <!-- badges: start -->
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3899454.svg)](https://doi.org/10.5281/zenodo.3899454)
+<!-- add new release the one below is old -->
+
+<!--  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3899454.svg)](https://doi.org/10.5281/zenodo.3899454) -->
+
 <!-- badges: end -->
 
 ## Installation
@@ -39,26 +42,23 @@ the dataset `divisions`.
 
 ``` r
 divisions
+#> # A tibble: 232 x 13
+#>    division_numeri~ name_country name_region name_sub_region region_numeric_~ sub_region_nume~
+#>               <dbl> <chr>        <chr>       <chr>                      <dbl>            <dbl>
+#>  1                4 Afghanistan  Asia        South-Central ~              935              921
+#>  2                8 Albania      Europe      Southern Europe              908              925
+#>  3               12 Algeria      Africa      Northern Africa              903              912
+#>  4               16 American Sa~ Oceania     Polynesia                    909              957
+#>  5               20 Andorra      Europe      Southern Europe              908              925
+#>  6               24 Angola       Africa      Middle Africa                903              911
+#>  7              660 Anguilla     Latin Amer~ Caribbean                    904              915
+#>  8               28 Antigua and~ Latin Amer~ Caribbean                    904              915
+#>  9               32 Argentina    Latin Amer~ South America                904              931
+#> 10               51 Armenia      Asia        Western Asia                 935              922
+#> # ... with 222 more rows, and 7 more variables: is_developed_region <chr>,
+#> #   is_less_developed_region <chr>, is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>,
+#> #   is_unmarried_sexual_activity <chr>, is_low_population <chr>, is_fp2020 <chr>
 ```
-
-    ## # A tibble: 232 x 13
-    ##    division_numeri~ name_country name_region name_sub_region region_numeric_~
-    ##               <dbl> <chr>        <chr>       <chr>                      <dbl>
-    ##  1                4 Afghanistan  Asia        South-Central ~              935
-    ##  2                8 Albania      Europe      Southern Europe              908
-    ##  3               12 Algeria      Africa      Northern Africa              903
-    ##  4               16 American Sa~ Oceania     Polynesia                    909
-    ##  5               20 Andorra      Europe      Southern Europe              908
-    ##  6               24 Angola       Africa      Middle Africa                903
-    ##  7              660 Anguilla     Latin Amer~ Caribbean                    904
-    ##  8               28 Antigua and~ Latin Amer~ Caribbean                    904
-    ##  9               32 Argentina    Latin Amer~ South America                904
-    ## 10               51 Armenia      Asia        Western Asia                 935
-    ## # ... with 222 more rows, and 8 more variables: sub_region_numeric_code <dbl>,
-    ## #   is_developed_region <chr>, is_less_developed_region <chr>,
-    ## #   is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>,
-    ## #   is_unmarried_sexual_activity <chr>, is_low_population <chr>,
-    ## #   is_fp2020 <chr>
 
 Our package data sets are tibbles. This is particularly useful for large
 datasets because it only prints the first few rows. The country codes
@@ -71,7 +71,7 @@ See `??contraceptive_use` for a detailed description of this dataset.
 
 ## 1\. Fit a one country model
 
-`fit_fp_c` is a wrapper function to run the one-country implementation
+`fit_fp_c` is a wrapper function to fit the one-country implementation
 of the family planning estimation model. There are two versions of this
 model, one for in-union and another for not-in-union women which can be
 specified with the argument `is_in_union`. These are denoted `"Y"` and
@@ -132,28 +132,26 @@ plot_fp_c(
     ),
   compare_to_global = TRUE
   )
+#> Joining, by = "year"
+#> Joining, by = "year"
+#> Joining, by = "year"
+#> $Y
+#> $Y$unmet_need_any
 ```
-
-    ## Joining, by = "year"
-    ## Joining, by = "year"
-    ## Joining, by = "year"
-
-    ## $Y
-    ## $Y$unmet_need_any
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-    ## 
-    ## $Y$contraceptive_use_modern
+    #> 
+    #> $Y$contraceptive_use_modern
 
 ![](README_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
 
-    ## 
-    ## $Y$contraceptive_use_traditional
+    #> 
+    #> $Y$contraceptive_use_traditional
 
 ![](README_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->
 
-    ## 
-    ## $Y$contraceptive_use_any
+    #> 
+    #> $Y$contraceptive_use_any
 
 ![](README_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
