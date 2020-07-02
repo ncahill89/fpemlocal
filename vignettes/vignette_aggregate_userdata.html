@@ -606,94 +606,87 @@ body {
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
 <li><a href="#fit">Fit models</a></li>
-<li><a href="#run">Aggregate samples</a></li>
+<li><a href="#pop">Read in population data</a>4</li>
 <li><a href="#results">Calculate results</a></li>
 </ol>
 <h2 id="section"><a name="fit"></a></h2>
 <h2 id="fit-models">Fit models</h2>
 <p>First, fit the models with the function <code>fit_fp_c</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>first_year &lt;-<span class="st"> </span><span class="dv">1970</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>last_year &lt;-<span class="st"> </span><span class="dv">2030</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>union &lt;-<span class="st"> &quot;Y&quot;</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>fit_botswana &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
-<span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;D:/git/FPEMcountry/data-raw/Botswana_72_married_example.csv&quot;</span>,</span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">72</span>,</span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="dt">is_in_union =</span> union,</span>
-<span id="cb1-8"><a href="#cb1-8"></a>  <span class="dt">first_year =</span> first_year,</span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="dt">last_year =</span> last_year</span>
-<span id="cb1-10"><a href="#cb1-10"></a>)</span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; Parsed with column specification:</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt; cols(</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt;   .default = col_character(),</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#&gt;   X1 = col_double(),</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="co">#&gt;   division_numeric_code = col_double(),</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#&gt;   start_date = col_double(),</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#&gt;   end_date = col_double(),</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="co">#&gt;   contraceptive_use_modern = col_double(),</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt;   contraceptive_use_traditional = col_double(),</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="co">#&gt;   contraceptive_use_any = col_double(),</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a><span class="co">#&gt;   unmet_need_modern = col_logical(),</span></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="co">#&gt;   unmet_need_any = col_double(),</span></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="co">#&gt;   pertaining_to_methods_used_since_last_pregnancy_reason = col_logical(),</span></span>
-<span id="cb1-24"><a href="#cb1-24"></a><span class="co">#&gt;   geographical_region_bias_reason = col_logical(),</span></span>
-<span id="cb1-25"><a href="#cb1-25"></a><span class="co">#&gt;   non_pregnant_and_other_positive_biases_reason = col_logical(),</span></span>
-<span id="cb1-26"><a href="#cb1-26"></a><span class="co">#&gt;   traditional_method_bias_reason = col_logical(),</span></span>
-<span id="cb1-27"><a href="#cb1-27"></a><span class="co">#&gt;   se_modern = col_logical(),</span></span>
-<span id="cb1-28"><a href="#cb1-28"></a><span class="co">#&gt;   se_traditional = col_logical(),</span></span>
-<span id="cb1-29"><a href="#cb1-29"></a><span class="co">#&gt;   se_unmet_need = col_logical(),</span></span>
-<span id="cb1-30"><a href="#cb1-30"></a><span class="co">#&gt;   se_log_r_modern_no_use = col_logical(),</span></span>
-<span id="cb1-31"><a href="#cb1-31"></a><span class="co">#&gt;   se_log_r_traditional_no_use = col_logical(),</span></span>
-<span id="cb1-32"><a href="#cb1-32"></a><span class="co">#&gt;   se_log_r_unmet_no_need = col_logical(),</span></span>
-<span id="cb1-33"><a href="#cb1-33"></a><span class="co">#&gt;   source_id = col_double()</span></span>
-<span id="cb1-34"><a href="#cb1-34"></a><span class="co">#&gt; )</span></span>
-<span id="cb1-35"><a href="#cb1-35"></a><span class="co">#&gt; See spec(...) for full column specifications.</span></span>
-<span id="cb1-36"><a href="#cb1-36"></a>fit_lesotho &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
-<span id="cb1-37"><a href="#cb1-37"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;D:/git/FPEMcountry/data-raw/Lesotho_426_married_example.csv&quot;</span>,</span>
-<span id="cb1-38"><a href="#cb1-38"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">426</span>,</span>
-<span id="cb1-39"><a href="#cb1-39"></a>  <span class="dt">is_in_union =</span> union,</span>
-<span id="cb1-40"><a href="#cb1-40"></a>  <span class="dt">first_year =</span> first_year,</span>
-<span id="cb1-41"><a href="#cb1-41"></a>  <span class="dt">last_year =</span> last_year</span>
-<span id="cb1-42"><a href="#cb1-42"></a>)</span>
-<span id="cb1-43"><a href="#cb1-43"></a><span class="co">#&gt; Parsed with column specification:</span></span>
-<span id="cb1-44"><a href="#cb1-44"></a><span class="co">#&gt; cols(</span></span>
-<span id="cb1-45"><a href="#cb1-45"></a><span class="co">#&gt;   .default = col_double(),</span></span>
-<span id="cb1-46"><a href="#cb1-46"></a><span class="co">#&gt;   is_in_union = col_character(),</span></span>
-<span id="cb1-47"><a href="#cb1-47"></a><span class="co">#&gt;   age_range = col_character(),</span></span>
-<span id="cb1-48"><a href="#cb1-48"></a><span class="co">#&gt;   data_series_type = col_character(),</span></span>
-<span id="cb1-49"><a href="#cb1-49"></a><span class="co">#&gt;   group_type_relative_to_baseline = col_character(),</span></span>
-<span id="cb1-50"><a href="#cb1-50"></a><span class="co">#&gt;   unmet_need_modern = col_logical(),</span></span>
-<span id="cb1-51"><a href="#cb1-51"></a><span class="co">#&gt;   is_pertaining_to_methods_used_since_last_pregnancy = col_character(),</span></span>
-<span id="cb1-52"><a href="#cb1-52"></a><span class="co">#&gt;   pertaining_to_methods_used_since_last_pregnancy_reason = col_logical(),</span></span>
-<span id="cb1-53"><a href="#cb1-53"></a><span class="co">#&gt;   has_geographical_region_bias = col_character(),</span></span>
-<span id="cb1-54"><a href="#cb1-54"></a><span class="co">#&gt;   geographical_region_bias_reason = col_logical(),</span></span>
-<span id="cb1-55"><a href="#cb1-55"></a><span class="co">#&gt;   has_non_pregnant_and_other_positive_biases = col_character(),</span></span>
-<span id="cb1-56"><a href="#cb1-56"></a><span class="co">#&gt;   non_pregnant_and_other_positive_biases_reason = col_logical(),</span></span>
-<span id="cb1-57"><a href="#cb1-57"></a><span class="co">#&gt;   age_group_bias = col_character(),</span></span>
-<span id="cb1-58"><a href="#cb1-58"></a><span class="co">#&gt;   modern_method_bias = col_character(),</span></span>
-<span id="cb1-59"><a href="#cb1-59"></a><span class="co">#&gt;   has_traditional_method_bias = col_character(),</span></span>
-<span id="cb1-60"><a href="#cb1-60"></a><span class="co">#&gt;   traditional_method_bias_reason = col_logical(),</span></span>
-<span id="cb1-61"><a href="#cb1-61"></a><span class="co">#&gt;   has_absence_of_probing_questions_bias = col_character(),</span></span>
-<span id="cb1-62"><a href="#cb1-62"></a><span class="co">#&gt;   record_id = col_character()</span></span>
-<span id="cb1-63"><a href="#cb1-63"></a><span class="co">#&gt; )</span></span>
-<span id="cb1-64"><a href="#cb1-64"></a><span class="co">#&gt; See spec(...) for full column specifications.</span></span>
-<span id="cb1-65"><a href="#cb1-65"></a>fit_list &lt;-<span class="st"> </span><span class="kw">list</span>(fit_botswana, fit_lesotho)</span></code></pre></div>
-<h2 id="section-1"><a name="aggregate"></a></h2>
-<h2 id="aggregate-samples">Aggregate samples</h2>
-<p>Within out list of fits we have more complex lists. We only need the samples from these fits. This function plucks the posterior samples and combines each array of samples along index 1 making one large array. The first dimension is for country codes. Use <code>dimnames()</code> on the resulting list to see how to index a country. This is the identical format of a posterior samples array from FPEMglobal.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>posterior_samples &lt;-<span class="st"> </span><span class="kw">pluck_abind_fp_c</span>(fit_list)</span></code></pre></div>
-<p>Next, read in your population data and make a single population data set.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>popdata_botswana &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;D:/git/FPEMcountry/data-raw/Botswana_72_married_popdata_example.csv&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>popdata_lesotho &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;D:/git/FPEMcountry/data-raw/Lesotho_426_married_popdata_example.csv&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>popdata &lt;-<span class="st"> </span><span class="kw">rbind</span>(popdata_botswana, popdata_lesotho)</span></code></pre></div>
-<p>Now supply the posterior samples and population count dataset to the function <code>aggregate_fp</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>posterior_samples_aggregated &lt;-<span class="st"> </span><span class="kw">aggregate_fp</span>(<span class="dt">posterior_samples =</span>  posterior_samples,</span>
-<span id="cb4-2"><a href="#cb4-2"></a>                                             <span class="dt">population_data =</span> popdata)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>fit_botswana &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/Botswana_72_married_example.csv&quot;</span>,</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">72</span>,</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   X1 = col_double(),
+##   division_numeric_code = col_double(),
+##   start_date = col_double(),
+##   end_date = col_double(),
+##   contraceptive_use_modern = col_double(),
+##   contraceptive_use_traditional = col_double(),
+##   contraceptive_use_any = col_double(),
+##   unmet_need_modern = col_logical(),
+##   unmet_need_any = col_double(),
+##   pertaining_to_methods_used_since_last_pregnancy_reason = col_logical(),
+##   geographical_region_bias_reason = col_logical(),
+##   non_pregnant_and_other_positive_biases_reason = col_logical(),
+##   traditional_method_bias_reason = col_logical(),
+##   se_modern = col_logical(),
+##   se_traditional = col_logical(),
+##   se_unmet_need = col_logical(),
+##   se_log_r_modern_no_use = col_logical(),
+##   se_log_r_traditional_no_use = col_logical(),
+##   se_log_r_unmet_no_need = col_logical(),
+##   source_id = col_double()
+## )
+
+## See spec(...) for full column specifications.
+</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>fit_lesotho &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/Lesotho_426_married_example.csv&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">426</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>)</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   is_in_union = col_character(),
+##   age_range = col_character(),
+##   data_series_type = col_character(),
+##   group_type_relative_to_baseline = col_character(),
+##   unmet_need_modern = col_logical(),
+##   is_pertaining_to_methods_used_since_last_pregnancy = col_character(),
+##   pertaining_to_methods_used_since_last_pregnancy_reason = col_logical(),
+##   has_geographical_region_bias = col_character(),
+##   geographical_region_bias_reason = col_logical(),
+##   has_non_pregnant_and_other_positive_biases = col_character(),
+##   non_pregnant_and_other_positive_biases_reason = col_logical(),
+##   age_group_bias = col_character(),
+##   modern_method_bias = col_character(),
+##   has_traditional_method_bias = col_character(),
+##   traditional_method_bias_reason = col_logical(),
+##   has_absence_of_probing_questions_bias = col_character(),
+##   record_id = col_character()
+## )
+## See spec(...) for full column specifications.
+</code></pre>
+<h2 id="section-1"><a name="pop"></a></h2>
+<h2 id="read-in-population-data">Read in population data</h2>
+<p>Read in population data for the populations of interest. Create a single dataset with the function <code>rbind</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>popdata_botswana &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/Botswana_72_married_popdata_example.csv&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>popdata_lesotho &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/Lesotho_426_married_popdata_example.csv&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>popdata &lt;-<span class="st"> </span><span class="kw">rbind</span>(popdata_botswana, popdata_lesotho)</span></code></pre></div>
 <h2 id="section-2"><a name="results"></a></h2>
 <h2 id="calculate-results">Calculate results</h2>
-<p>Finally, supply the aggregated samples, the population data, and the first_year to <code>calc_fp</code> to calculate point estimates for family planning indicators.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp</span>(<span class="dt">posterior_samples =</span> posterior_samples_aggregated,</span>
-<span id="cb5-2"><a href="#cb5-2"></a>                   <span class="dt">population_data =</span> popdata,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>                   <span class="dt">first_year =</span> first_year)</span></code></pre></div>
+<p>Supply the fits in a list and the population data to the function <code>calc_fp_aggregate</code>. The resulting object is a list of long format tibbles with family planning estimates.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp_aggregate</span>(<span class="dt">fits =</span> <span class="kw">list</span>(fit_botswana, fit_lesotho),</span>
+<span id="cb6-2"><a href="#cb6-2"></a>                   <span class="dt">population_data =</span> popdata)</span></code></pre></div>
 
 </body>
 </html>

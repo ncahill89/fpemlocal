@@ -57,13 +57,22 @@ plot_fp_csub <- function(
   compare_to_global = FALSE
 ) {
   indicators <- indicators %>% unlist()
-  observations <- fit$core_data$observations
+  observations <- fit %>% purrr::chuck( "core_data", "observations")
   # This is a hack to fix downstream plotting errors caused my dplyr::filter, if resulting columns from filter have only NA's the column type becomes "unknown"
   # Changes vector value but not column type
   observations <- observations %>%
     dplyr::mutate_at(.vars = indicators, .funs = as.numeric)
-  first_year <- fit$core_data$year_sequence_list$result_seq_years %>% min()
-  last_year <- fit$core_data$year_sequence_list$result_seq_years %>% max()
+  is_in_union <- fit %>% 
+    purrr::chuck("core_data", "is_in_union")
+  division_numeric_code <- fit %>% 
+    purrr::chuck("core_data","units", "division_numeric_code") %>% 
+    min
+  first_year <- fit %>% 
+    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+    min
+  last_year <- fit %>% 
+    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+    max
   y_label = "Proportion"
   breaks = seq(
     first_year,
@@ -120,9 +129,9 @@ plot_fp_csub <- function(
         ggplot2::labs(color = "Data series/type", shape = "Group")
     }
   }
-  if (fit$core_data$units$division_numeric_code %in% global_estimates$division_numeric_code
+  if (division_numeric_code %in% global_estimates$division_numeric_code
       & compare_to_global
-      & fit$core_data$is_in_union != "ALL") {
+      & is_in_union != "ALL") {
     global_estimates <- global_estimates %>%
       dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code,
                     is_in_union == fit$core_data$is_in_union)

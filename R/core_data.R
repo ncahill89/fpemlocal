@@ -38,7 +38,7 @@ core_data <- function(is_in_union,
     contraceptive_use <- contraceptive_use %>%
       ad_hoc_calculate_cp_trad()
     contraceptive_use <- contraceptive_use %>%
-      data_Series_type_relabel %>%
+      data_series_type_relabel %>%
       dplyr::mutate(indicate_rounding_trad = indicate_rounding(contraceptive_use_traditional)) %>%
       dplyr::mutate(indicate_rounding_mod = indicate_rounding(contraceptive_use_modern)) %>%
       dplyr::mutate(contraceptive_use_traditional = round_from_zero(contraceptive_use_traditional)) %>%

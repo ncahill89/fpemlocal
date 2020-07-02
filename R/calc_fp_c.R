@@ -40,16 +40,23 @@ calc_fp_c <-
 
 calc_fp_csub <- function(fit,
                          population_data = NULL) {
-  if(is.null(population_data)) {
-    population_data <- population_counts %>%
-      dplyr::filter(division_numeric_code == fit$core_data$units$division_numeric_code) %>%
-      dplyr::filter(is_in_union == fit$core_data$is_in_union)
-  }
-  posterior_samples <- fit$posterior_samples
-  first_year <- fit$core_data$year_sequence_list$result_seq_years %>% min()
-  results <- calc_fp(posterior_samples,
-                     population_data,
-                     first_year
+  posterior_samples <- fit %>% purrr::chuck("posterior_samples")
+  first_year <- fit %>% 
+    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+    min
+  last_year <- fit %>% 
+    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+    max
+  population_data <- population_data_import(
+    population_data = population_data,
+    is_in_union = fit %>% purrr::chuck("core_data", "is_in_union"),  
+    division_numeric_code = fit %>% purrr::chuck("core_data", "units", "division_numeric_code"),
+    first_year = first_year,
+    last_year = last_year
+  )
+  results <- calc_fp(posterior_samples = posterior_samples,
+                     population_data = population_data,
+                     first_year = first_year
                          )
   return(results)
 }

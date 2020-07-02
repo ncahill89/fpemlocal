@@ -192,3 +192,40 @@ subset_population <- function(population_data, divs_perlevel) {
 #     dplyr::filter(division_numeric_code %in% {{division_numeric_code_vector}})
 #   return(division_level_data)
 # }
+
+
+
+calc_fp_aggregate <- function(
+  fits,
+  population_data = NULL) {
+  #get samples from each fit object and abind them into an array
+  posterior_samples <- pluck_abind_fp_c(fits)
+  #get the first and last year from the first fit, assumes all fits use the same timeframe
+  first_year <- fits %>% 
+    purrr::chuck(1,1,"core_data","year_sequence_list", "result_seq_years") %>% 
+    min
+  last_year <- fits %>% 
+    purrr::chuck(1,1,"core_data","year_sequence_list", "result_seq_years") %>% 
+    max
+  #gets population data if not provided, filters pop data regardless
+  population_data <- population_data_import(
+    population_data = population_data,
+    is_in_union = purrr::pmap(list(fits, 1, "core_data", "is_in_union"),
+                              purrr::chuck
+                              ),  
+    division_numeric_code = purrr::pmap(list(fits, 1, "core_data", "units", "division_numeric_code"),
+                                        purrr::chuck
+                                        ),
+    first_year = first_year,
+    last_year = last_year
+  )
+  #aggregates the samples
+  posterior_samples_aggregated <- aggregate_fp(posterior_samples =  posterior_samples,
+                                               population_data = population_data)
+  #calculates the results
+  results <- calc_fp(posterior_samples = posterior_samples_aggregated,
+                     population_data = population_data,
+                     first_year = first_year)
+  return(results)
+}
+  

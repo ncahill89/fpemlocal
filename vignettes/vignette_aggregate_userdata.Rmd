@@ -5,10 +5,9 @@ output: github_document
 
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+options(warn=-1)
 knitr::opts_chunk$set(echo = TRUE)
 library(FPEMcountry)
 devtools::load_all()
@@ -21,63 +20,45 @@ In this vignette we will fit FPET to multiple countries and aggregate the sample
 
 ## Table of Contents
 1. [Fit models](#fit)
-2. [Aggregate samples](#run)
+2. [Read in population data](#pop)4
 3. [Calculate results](#results)
 
 ## <a name="fit"></a>
 ## Fit models
 
-First, fit the models with the function `fit_fp_c`. 
+First, fit the models with the function `fit_fp_c`.
 ```{r}
-first_year <- 1970
-last_year <- 2030
-union <- "Y"
 fit_botswana <- fit_fp_c(
-  surveydata_filepath = "D:/git/FPEMcountry/data-raw/Botswana_72_married_example.csv",
+  surveydata_filepath = "data-raw/Botswana_72_married_example.csv",
   division_numeric_code = 72,
-  is_in_union = union,
-  first_year = first_year,
-  last_year = last_year
+  is_in_union = "Y",
+  first_year = 1970,
+  last_year = 2030
 )
 fit_lesotho <- fit_fp_c(
-  surveydata_filepath = "D:/git/FPEMcountry/data-raw/Lesotho_426_married_example.csv",
+  surveydata_filepath = "data-raw/Lesotho_426_married_example.csv",
   division_numeric_code = 426,
-  is_in_union = union,
-  first_year = first_year,
-  last_year = last_year
+  is_in_union = "Y",
+  first_year = 1970,
+  last_year = 2030
 )
-fit_list <- list(fit_botswana, fit_lesotho)
 ```
 
-## <a name="aggregate"></a>
-## Aggregate samples
+## <a name="pop"></a>
+## Read in population data
 
-Within out list of fits we have more complex lists. We only need the samples from these fits. This function plucks the posterior samples and combines each array of samples along index 1 making one large array. The first dimension is for country codes. Use `dimnames()` on the resulting list to see how to index a country. This is the identical format of a posterior samples array from FPEMglobal.
+Read in population data for the populations of interest. Create a single dataset with the function `rbind`.
 ```{r}
-posterior_samples <- pluck_abind_fp_c(fit_list)
-```
-
-Next, read in your population data and make a single population data set.
-```{r}
-popdata_botswana <- read.csv("D:/git/FPEMcountry/data-raw/Botswana_72_married_popdata_example.csv")
-popdata_lesotho <- read.csv("D:/git/FPEMcountry/data-raw/Lesotho_426_married_popdata_example.csv")
+popdata_botswana <- read.csv("data-raw/Botswana_72_married_popdata_example.csv")
+popdata_lesotho <- read.csv("data-raw/Lesotho_426_married_popdata_example.csv")
 popdata <- rbind(popdata_botswana, popdata_lesotho)
 ```
 
-Now supply the posterior samples and population count dataset to the function `aggregate_fp`.
-```{r}
-posterior_samples_aggregated <- aggregate_fp(posterior_samples =  posterior_samples,
-                                             population_data = popdata)
-```
-
-
-
-
 ## <a name="results"></a>
 ## Calculate results
-Finally, supply the aggregated samples, the population data, and the first_year to `calc_fp` to calculate point estimates for family planning indicators.
+Supply the fits in a list and the population data to the function `calc_fp_aggregate`. The resulting object is a list of long format tibbles with family planning estimates. 
 ```{r}
-results <- calc_fp(posterior_samples = posterior_samples_aggregated,
-                   population_data = popdata,
-                   first_year = first_year)
+results <- calc_fp_aggregate(fits = list(fit_botswana, fit_lesotho),
+                   population_data = popdata)
 ```
+

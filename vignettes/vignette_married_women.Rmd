@@ -26,8 +26,13 @@ In this vignette we obtain estimates for married women with package datasets. By
 
 ## <a name="fit"></a>
 ## 1. Fit a one country model
+First, find the UNPD country code under the variable `division_numeric_code` in the dataset `divisions`. See `?divisions` for the metadata.
+```{r}
+divisions %>% 
+  dplyr::filter(name_country == "Afghanistan")
+```
 
-Fit the one-country family planning estimation model with the function `fit_fp_c`. First, supply the UNPD country code known as the `division_numeric_code`. See `??divisions` for UNPD country codes and other divisions. There are two versions of this model, one for in-union women and another for not-in-union women denoted `"Y"` and `"N"` respectively. Specify the model of your choice with the argument `is_in_union`. By default, the function `fit_fp_c` utilizes the UNPD contraceptive use survey dataset, `contraceptive_use` and filters the dataset based on the aforementioned function arguments. Lastly, specify the years of estimates to be returned. Note: year arguments will not filter the supplied survey data. All years of available survey data will be used. 
+Fit the one-country family planning estimation model with the function `fit_fp_c`. First, supply the UNPD country code to the argument `division_numeric_code`. There are two versions of this model, one for in-union women and another for not-in-union women denoted `"Y"` and `"N"` respectively. Specify the model of your choice with the argument `is_in_union`. By default, the function `fit_fp_c` utilizes the UNPD contraceptive use survey dataset, `contraceptive_use` and filters the dataset based on the aforementioned function arguments. Lastly, specify the years of estimates to be returned. Note: year arguments will not filter the supplied survey data. All years of available survey data will be used. 
 ```{r}
 fit <- fit_fp_c(
   division_numeric_code = 4,

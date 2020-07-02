@@ -15,12 +15,28 @@ datasets. By default, functions utilize UNPD datasets.
 
 ## 1\. Fit a one country model
 
+First, find the UNPD country code under the variable
+`division_numeric_code` in the dataset `divisions`. See `?divisions` for
+the metadata.
+
+``` r
+divisions %>% 
+  dplyr::filter(name_country == "Afghanistan")
+```
+
+    ## # A tibble: 1 x 13
+    ##   division_numeri~ name_country name_region name_sub_region region_numeric_~ sub_region_nume~
+    ##              <dbl> <chr>        <chr>       <chr>                      <dbl>            <dbl>
+    ## 1                4 Afghanistan  Asia        South-Central ~              935              921
+    ## # ... with 7 more variables: is_developed_region <chr>, is_less_developed_region <chr>,
+    ## #   is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>, is_unmarried_sexual_activity <chr>,
+    ## #   is_low_population <chr>, is_fp2020 <chr>
+
 Fit the one-country family planning estimation model with the function
-`fit_fp_c`. First, supply the UNPD country code known as the
-`division_numeric_code`. See `??divisions` for UNPD country codes and
-other divisions. There are two versions of this model, one for in-union
-women and another for not-in-union women denoted `"Y"` and `"N"`
-respectively. Specify the model of your choice with the argument
+`fit_fp_c`. First, supply the UNPD country code to the argument
+`division_numeric_code`. There are two versions of this model, one for
+in-union women and another for not-in-union women denoted `"Y"` and
+`"N"` respectively. Specify the model of your choice with the argument
 `is_in_union`. By default, the function `fit_fp_c` utilizes the UNPD
 contraceptive use survey dataset, `contraceptive_use` and filters the
 dataset based on the aforementioned function arguments. Lastly, specify
@@ -56,39 +72,41 @@ indicators
 
 ``` r
 results$Y %>% names
-#>  [1] "contraceptive_use_any"                      "contraceptive_use_modern"                  
-#>  [3] "contraceptive_use_traditional"              "non_use"                                   
-#>  [5] "unmet_need_any"                             "unmet_need_modern"                         
-#>  [7] "demand"                                     "demand_modern"                             
-#>  [9] "demand_satisfied"                           "demand_satisfied_modern"                   
-#> [11] "no_need"                                    "contraceptive_use_any_population_counts"   
-#> [13] "contraceptive_use_modern_population_counts" "traditional_cpr_population_counts"         
-#> [15] "non_use_population_counts"                  "unmet_need_population_counts"              
-#> [17] "unmet_need_modern_population_counts"        "demand_modern_population_counts"           
-#> [19] "demand_population_counts"                   "demand_satisfied_population_counts"        
-#> [21] "demand_satisfied_modern_population_counts"  "no_need_population_counts"
 ```
+
+    ##  [1] "contraceptive_use_any"                      "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"              "non_use"                                   
+    ##  [5] "unmet_need_any"                             "unmet_need_modern"                         
+    ##  [7] "demand"                                     "demand_modern"                             
+    ##  [9] "demand_satisfied"                           "demand_satisfied_modern"                   
+    ## [11] "no_need"                                    "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts" "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                  "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"        "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                   "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts"  "no_need_population_counts"
 
 The point estimates for each indicator are long-format tibbles. Let’s
 take a look at the tibble for the indicator `contraceptive_use_modern`
 
 ``` r
 results$Y$contraceptive_use_modern
-#> # A tibble: 488 x 3
-#>     year percentile  value
-#>    <int> <chr>       <dbl>
-#>  1  1970 mean       0.0115
-#>  2  1971 mean       0.0123
-#>  3  1972 mean       0.0131
-#>  4  1973 mean       0.0141
-#>  5  1974 mean       0.0152
-#>  6  1975 mean       0.0164
-#>  7  1976 mean       0.0178
-#>  8  1977 mean       0.0192
-#>  9  1978 mean       0.0208
-#> 10  1979 mean       0.0225
-#> # ... with 478 more rows
 ```
+
+    ## # A tibble: 488 x 3
+    ##     year percentile  value
+    ##    <int> <chr>       <dbl>
+    ##  1  1970 mean       0.0115
+    ##  2  1971 mean       0.0123
+    ##  3  1972 mean       0.0131
+    ##  4  1973 mean       0.0141
+    ##  5  1974 mean       0.0152
+    ##  6  1975 mean       0.0164
+    ##  7  1976 mean       0.0178
+    ##  8  1977 mean       0.0192
+    ##  9  1978 mean       0.0208
+    ## 10  1979 mean       0.0225
+    ## # ... with 478 more rows
 
 ## <a name="plot"></a>
 
@@ -111,23 +129,24 @@ plot_fp_c(
     "contraceptive_use_any"
     )
   )
-#> $Y
-#> $Y$unmet_need_any
 ```
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+    ## $Y
+    ## $Y$unmet_need_any
 
-    #> 
-    #> $Y$contraceptive_use_modern
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+    ## 
+    ## $Y$contraceptive_use_modern
 
-    #> 
-    #> $Y$contraceptive_use_traditional
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
+    ## 
+    ## $Y$contraceptive_use_traditional
 
-    #> 
-    #> $Y$contraceptive_use_any
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-18-3.png)<!-- -->
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
+    ## 
+    ## $Y$contraceptive_use_any
+
+![](vignette_married_women_files/figure-gfm/unnamed-chunk-18-4.png)<!-- -->
