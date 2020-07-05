@@ -103,39 +103,37 @@ transform  = function(x, g, ...) {
 #'        2) traditional CPR use; and 3) unmet need
 #'        for contraceptives
 #' @name proportions_vector
-NULL
-
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents using
 #'         a modern contraceptive method.
-modern_cpr = function(x) x[1]
+contraceptive_use_modern = function(x) x[1]
 
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents using
 #'         a traditional contraceptive method.
-traditional_cpr = function(x) x[2]
+contraceptive_use_traditional = function(x) x[2]
 
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents with
 #'         an unmet need for any contraceptive method
-unmet = function(x) x[3]
+unmet_need_any = function(x) x[3]
 
 #' @rdname proportions_vector
 #' @return proprotion of in-universe respondents using
 #'         either a modern or traditional contraceptive
 #'         method.
-total_cpr = function(x) modern_cpr(x) + traditional_cpr(x)
+contraceptive_use_any = function(x) contraceptive_use_modern(x) + contraceptive_use_traditional(x)
 
 #' @rdname proportions_vector
 #' @return proportion of in-uinverse respondents using
 #'         a modern or traditional contraceptive method
 #'         or in need of either method.
-demand = function(x) total_cpr(x) + unmet(x)
+demand = function(x) contraceptive_use_any(x) + unmet(x)
 
 #' @return proportion of in-uinverse respondents using
 #'         a modern contraceptive method
 #'         or in need of a modern method.
-demand_modern = function(x) modern_cpr(x) + unmet_modern(x)
+demand_modern = function(x) contraceptive_use_modern(x) + unmet_need_modern(x)
 
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents not
@@ -146,25 +144,22 @@ no_need = function(x) 1 - demand(x)
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents with
 #'         an unmet need for a modern contraceptive method
-unmet_modern = function(x) traditional_cpr(x) + unmet(x)
+unmet_need_modern = function(x) contraceptive_use_traditional(x) + unmet_need_any(x)
 
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents not
 #'         using a modern or traditional contraceptive
 #'         method.
-non_use = function(x) 1 - total_cpr(x)
+non_use = function(x) 1 - contraceptive_use_any(x)
 
 #' @rdname proportions_vector
 #' @return proportion of demand for a
 #'         contraceptive method satisifed using either a
 #'         modern or traditional contracepritve method.
-demand_satisfied = function(x) total_cpr(x) / demand(x)
+demand_satisfied = function(x) contraceptive_use_any(x) / demand(x)
 
 #' @rdname proportions_vector
 #' @return proprotion of demand among in-universe respondents for a
 #'         contraceptive method satisifed using a
 #'         modern contracepritve method.
-demand_satisfied_modern = function(x) modern_cpr(x) / demand(x)
-
-
-
+demand_satisfied_modern = function(x) contraceptive_use_modern(x) / demand(x)

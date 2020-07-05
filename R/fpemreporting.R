@@ -99,110 +99,9 @@ expand_contraceptive_use <- function(contraceptive_use, simplify_logicals = TRUE
   contraceptive_use
 }
 
-transform_posterior_samples <- function(posterior_samples, indicator, transformer, years) {
-  dimensions <- dim(posterior_samples)
 
-  iterations <- dimensions[1] * dimensions[2]
-  period_years <- dimensions[3]
 
-  posterior_samples %>%
-    transform_yearly(transformer) %>%
-    drop() %>%
-    tibble::as_tibble() %>%
-    setNames(years) %>%
-    tidyr::gather(key = "year") %>%
-    dplyr::mutate(year = as.integer(year)) %>%
-    tibble::add_column(indicator, .before = "value") %>%
-    tibble::add_column(iteration = rep(1:iterations, period_years), .before = "year")
-}
-
-#' Get posterior samples for all indicators
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by indicator and year
-#' @export
-get_posterior_samples_for_all_indicators <- function(posterior_samples, years) {
-  mcmc_proportion_dimensions <- dim(posterior_samples)
-
-  if (length(mcmc_proportion_dimensions) != 4) {
-    stop("MCMC proportions matrix must have four dimensions")
-  }
-
-  if (mcmc_proportion_dimensions[4] != 3) {
-    stop("MCMC proportions must be modern, traditional and unmet")
-  }
-
-  dplyr::bind_rows(
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "contraceptive_use_modern",
-      transformer = modern_cpr,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "contraceptive_use_traditional",
-      transformer = traditional_cpr,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "unmet_need_any",
-      transformer = unmet,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "contraceptive_use_all",
-      transformer = total_cpr,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "demand",
-      transformer = demand,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "demand_for_modern_methods",
-      transformer = demand_modern,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "no_need",
-      transformer = no_need,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "unmet_need_modern",
-      transformer = unmet_modern,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "non_use",
-      transformer = non_use,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "demand_satisfied",
-      transformer = demand_satisfied,
-      years = years
-    ),
-    transform_posterior_samples(
-      posterior_samples = posterior_samples,
-      indicator = "demand_satisfied_modern",
-      transformer = demand_satisfied_modern,
-      years = years
-    )
-  )
-}
-
+#returns values in wide format where columns are percentiles and rows are years
 transform_proportions <- function(posterior_samples, transformer) {
   posterior_samples %>%
     transform_yearly(transformer) %>%
@@ -211,196 +110,43 @@ transform_proportions <- function(posterior_samples, transformer) {
     tibble::as_tibble()
 }
 
-#' Get proportions
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @param transformer `function` Computes the desired result
-#' @return `data.frame` Values by year and percentile
-get_proportions <- function(posterior_samples, first_year, transformer) {
-  mcmc_proportion_dimensions <- dim(posterior_samples)
-
-  if (length(mcmc_proportion_dimensions) != 4) {
-    stop("MCMC proportions matrix must have four dimensions")
-  }
-
-  if (mcmc_proportion_dimensions[4] != 3) {
-    stop("MCMC proportions must be modern, traditional and unmet")
-  }
-
-  years <- as.integer(first_year + 0:(mcmc_proportion_dimensions[3] - 1))
-
-  transform_proportions(
-    posterior_samples = posterior_samples,
-    transformer = transformer
-  ) %>%
-    tibble::add_column(year = years, .before = 1) %>%
-    tidyr::gather(key = "percentile", value = "value", -year)
+# returns values in long format without percentile column
+transform_proportion_2 <- function(posterior_samples, transformer) {
+  transform_proportions(posterior_samples, transformer) %>%
+    tidyr::gather(key = "percentile", value = paste(transformer)) %>%
+    dplyr::select(-percentile)
 }
 
 
+#' #' Get proportions
+#' #'
+#' #' @inheritParams calc_fp
+#' #' @param first_year `integer` Earliest year represented in the data
+#' #' @param transformer `function` Computes the desired result
+#' #' @return `data.frame` Values by year and percentile
+#' get_proportions <- function(posterior_samples, first_year, transformer) {
+#'   mcmc_proportion_dimensions <- dim(posterior_samples)
+#' 
+#'   if (length(mcmc_proportion_dimensions) != 4) {
+#'     stop("MCMC proportions matrix must have four dimensions")
+#'   }
+#' 
+#'   if (mcmc_proportion_dimensions[4] != 3) {
+#'     stop("MCMC proportions must be modern, traditional and unmet")
+#'   }
+#' 
+#'   years <- as.integer(first_year + 0:(mcmc_proportion_dimensions[3] - 1))
+#' 
+#'   transform_proportions(
+#'     posterior_samples = posterior_samples,
+#'     transformer = transformer
+#'   ) %>%
+#'     tibble::add_column(year = years, .before = 1) %>%
+#'     tidyr::gather(key = "percentile", value = "value", -year)
+#' }
+#' 
+#' 
 
-
-
-#' get_contraceptive_use_any
-#'
-#' `total_cpr = modern_cpr + traditional_cpr`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-#'
-get_contraceptive_use_any <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = total_cpr
-  )
-}
-
-#' Get modern CPR
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_contraceptive_use_modern <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = modern_cpr
-  )
-}
-
-#' Get traditional CPR
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_contraceptive_use_traditional <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = traditional_cpr
-  )
-}
-
-#' Get non-use
-#'
-#' `non_use = 1 - total_cpr`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_non_use <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = non_use
-  )
-}
-
-#' Get unmet need
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_unmet_need_any <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = unmet
-  )
-}
-
-#' Get unmet need for modern methods
-#'
-#' `unmet_modern = traditional_cpr + unmet`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_unmet_need_modern <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = unmet_modern
-  )
-}
-
-#' Get total demand
-#'
-#' `demand = total_cpr + unmet`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_demand <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = demand
-  )
-}
-
-#' Get demand for modern methods
-#'
-#' `demand = modern_cpr + unmet_modern`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_demand_modern <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = demand_modern
-  )
-}
-
-#' Get demand satisfied
-#'
-#' `demand = total_cpr / demand`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_demand_satisfied <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = demand_satisfied
-  )
-}
-
-#' Get demand satisfied with a modern method
-#'
-#' `demand_satisfied_modern = modern_cpr / demand`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_demand_satisfied_modern <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = demand_satisfied_modern
-  )
-}
-
-#' Get no need
-#'
-#' `no_need = 1 - demand`
-#'
-#' @inheritParams calc_fp
-#' @param first_year `integer` Earliest year represented in the data
-#' @return `data.frame` Values by year and percentile
-get_no_need <- function(posterior_samples, first_year) {
-  get_proportions(
-    posterior_samples = posterior_samples,
-    first_year = first_year,
-    transformer = no_need
-  )
-}
 
 
 #' Get estimated population counts
@@ -414,7 +160,7 @@ get_estimated_counts <- function(proportions, annual_country_population_counts) 
   proportions %>%
     dplyr::inner_join(annual_country_population_counts, by = c("year" = "mid_year")) %>%
     dplyr::mutate(result_population_count = population_count * value) %>%
-    dplyr::select(year, percentile, population_count = result_population_count)
+    dplyr::pull(population_count = result_population_count)
 }
 
 select_posterior_samples <- function(posterior_samples, indicator, year) {

@@ -14,47 +14,47 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(fpemdata)
-library(fpemreporting)
-library(fpemmodeling)
+library(FPEMcountry)
 library(ggplot2)
 library(grid)
 library(gridExtra)
 ```
 
-# Set output directory and divs for the set of results
+# Set output directory and aven_data for the set of results
 ```{r}
-outputdir <- "output_upto2013"
-filenamecreated <- "results_upto2013.csv"
-divs <- read.csv("Track20Database121819_Pre2013.csv") 
-divs <- divs %>% dplyr::select(division_numeric_code) %>% unique()
-popcountdiv <- fpemdata::population_counts
-divs <- divs %>% dplyr::filter(division_numeric_code %in% popcountdiv$division_numeric_code)
-divnames <- divs %>% 
-  dplyr::left_join(fpemdata::divisions) %>%
-  dplyr::select(name_country) %>%
-  dplyr::pull()
-divs <- divs %>% dplyr::pull()
-# outputdir <- "output"
-# filenamecreated <- results_unpd2020.csv"
-# # vector of countries where we have data
-# global_divs <- fpemdata:::index_m$index_area_df$division_numeric_code
-# divs <- dplyr::tibble(division_numeric_code = as.numeric(as.character(global_divs[global_divs %in% fpemdata::divisions$division_numeric_code])))
-# divs <- divs %>% dplyr::filter(division_numeric_code %in% fpemdata::population_counts$division_numeric_code)
-#  # dplyr::pull()
-# divnames <- divs %>% 
-#   dplyr::left_join(fpemdata::divisions) %>%
-#   dplyr::select(name_country) %>%
-#   dplyr::pull()
-# divs <- divs %>% dplyr::pull()
+# outputdir <- "output_upto2013"
+# filenamecreated <- "results_upto2013.csv"
+aven_data <- readr::read_csv("C:/Users/desktop-g/Downloads/Track20Database033020.csv") # read in data
+divs <- aven_data %>% dplyr::pull(division_numeric_code) %>% unique() %>% as.list() # make a list of division codes from your data
 ```
 
-```{r}
-results <- c("results_y", "results_n", "results_all")
-unions <- c("Y", "N", "ALL")
 
+## <a name="run"></a>
+## run models
+```{r}
+# map divs to the fit function
+fit_list <- purrr::pmap(
+  list(
+    division_numeric_code = divs,
+    surveydata_filepath = "C:/Users/desktop-g/Downloads/Track20Database033020.csv",
+    is_in_union = "ALL",
+    first_year = 1970,
+    last_year = 2030
+  ),
+  fit_fp_c # the fit function we are mapping too 
+)
+```
+```{r}
+results_list <- purrr::pmap(
+  fit_list,
+  calc_fp_c
+)
+```
+
+
+```{r}
 allreslist <- list()
-for (div in divs) {
+for (div in aven_data) {
   reslist <- readRDS(file.path(outputdir, paste0("reslist", div, ".rds")))
   newreslist <- list()
   for (i in 1:3) {
