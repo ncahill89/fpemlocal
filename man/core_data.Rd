@@ -5,13 +5,27 @@
 \title{core_data}
 \usage{
 core_data(
+  survey_dataset,
+  custom_data_indicator,
   is_in_union,
-  surveydata_filepath,
   division_numeric_code,
   first_year,
   last_year,
   subnational
 )
+}
+\arguments{
+\item{survey_dataset}{\emph{\sQuote{Data frame}} If this argument is not specified the UNPD dataset \code{\link{contraceptive_use}} is used.}
+
+\item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
+
+\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
+
+\item{first_year}{\emph{\sQuote{Numeric}} The first year of model estimates in output. The model will be fit to all data, including dates before this date if available.}
+
+\item{last_year}{\emph{\sQuote{Numeric}} The last year of model estimates in output. The model will be fit to all data, including dates after this date if available.}
+
+\item{subnational}{'\emph{\sQuote{Logical}} If TRUE runs the sub national model.}
 }
 \description{
 Creates core_data that consists of manipulated observations and run settings for \code{\link{do_1country_run}}

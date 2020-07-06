@@ -1,10 +1,10 @@
 #' year_sequence_maker
-#' 
-#' creates a list of years and respective indices based on user specified years to estimate and observed years 
 #'
-#' @inheritParams do_1country_run
+#' creates a list of years and respective indices based on user specified years to estimate and observed years
+#'
+#' @inheritParams fit_fp_c
 #' @param first_year_max model estimation cannot start any later than this year
-#' @param contraceptive_use 
+#' @param contraceptive_use
 #'
 #' @return \emph{\sQuote{List}}
 #' \enumerate{
@@ -13,7 +13,7 @@
 #'   \item \strong{result_seq }  \emph{\sQuote{Numeric vector}} Year index for results based on user request
 #'   \item \strong{result_seq_years}  \emph{\sQuote{Numeric vector}} Years of results based on user request
 #' }
-#' 
+#'
 year_sequence_maker <- function(first_year_max,
                           first_year,
                           last_year,
@@ -42,4 +42,3 @@ year_sequence_maker <- function(first_year_max,
     first_year_observed = first_year_obs
   ))
 }
-

@@ -5,17 +5,20 @@
 \title{list_service_stats}
 \usage{
 list_service_stats(
-  service_stats = FALSE,
-  service_stats_filepath,
-  model_seq_years,
-  division_numeric_code,
+  service_stats_dataset = NULL,
+  model_seq_years = NULL,
+  division_numeric_code = NULL,
   first_year_observed = NULL
 )
 }
 \arguments{
-\item{service_stats_filepath}{File path to service stat csv}
+\item{service_stats_dataset}{\emph{\sQuote{Data frame}}}
 
 \item{model_seq_years}{Years of model estimation from\code{\link{year_sequence_maker}}.}
+
+\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
+
+\item{service_stats_filepath}{File path to service stat csv}
 }
 \description{
 Filter service statistics data

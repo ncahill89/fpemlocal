@@ -13,9 +13,8 @@ calc_fp_c_autosave <-
   function(runname = NULL,
            population_data = NULL) {
 
-    runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
-    results <- calc_fp_c(runlist = runlist,
-                                         population_data = population_data)
+    fit <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
+    results <- calc_fp_c(fit = fit, population_data = population_data)
     if (!dir.exists("output")) dir.create("output")
     if (!dir.exists("output/results")) dir.create("output/results")
     pathout <- file.path("output/results", paste0(runname, ".rds"))
@@ -24,33 +23,40 @@ calc_fp_c_autosave <-
   }
 
 
-#' Calculate fp indicators from samples
+
+#' calculate fp estimates for one country
 #'
-#' Maps multiple sets of runs to \code{\link{calc_fp}}
+#' @param fit \emph{\sQuote{List}} The fit object from \code{\link{fit_fp_c}}
+#' @param population_data \emph{\sQuote{Data frame}} Population count data in the format of \code{\link{population_counts}}
 #'
-#' @inherit calc_fp
-#'
+#' @return
 #' @export
+#'
+#' @examples
 calc_fp_c <-
   function(fit,
-           population_data = NULL) {
+           population_data = population_counts) {
     purrr::pmap(list(fit, list(population_data)), calc_fp_csub)
   }
 
 
 calc_fp_csub <- function(fit,
-                         population_data = NULL) {
+                         population_data) {
   posterior_samples <- fit %>% purrr::chuck("posterior_samples")
-  first_year <- fit %>% 
-    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+  first_year <- fit %>%
+    purrr::chuck("core_data", "year_sequence_list", "result_seq_years") %>%
     min
-  last_year <- fit %>% 
-    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+  last_year <- fit %>%
+    purrr::chuck("core_data", "year_sequence_list", "result_seq_years") %>%
     max
-  population_data <- population_data_import(
+  is_in_union <- fit %>% purrr::chuck("core_data", "is_in_union")
+  division_numeric_code <-
+    fit %>% purrr::chuck("core_data", "units", "division_numeric_code")
+  population_data <- population_data_filter(
+    custom_data_indicator,
     population_data = population_data,
-    is_in_union = fit %>% purrr::chuck("core_data", "is_in_union"),  
-    division_numeric_code = fit %>% purrr::chuck("core_data", "units", "division_numeric_code"),
+    is_in_union = is_in_union,
+    division_numeric_code = division_numeric_code,
     first_year = first_year,
     last_year = last_year
   )

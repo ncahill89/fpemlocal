@@ -3,15 +3,14 @@
 #'
 #' Filter service statistics data
 #'
-#' @inheritParams do_1country_run
+#' @inheritParams fit_fp_c
 #' @param service_stats_filepath File path to service stat csv
 #' @param model_seq_years Years of model estimation from\code{\link{year_sequence_maker}}.
 #'
 list_service_stats <- function(
-  service_stats = FALSE,
-  service_stats_filepath,
-  model_seq_years,
-  division_numeric_code, # we need the unit ID added eventually to use that for filtering
+  service_stats_dataset = NULL,
+  model_seq_years = NULL,
+  division_numeric_code = NULL, # we need the unit ID added eventually to use that for filtering
   first_year_observed = NULL # to filter out the data prior to or in year of the most recent survey
 )
 
@@ -20,16 +19,11 @@ list_service_stats <- function(
   se_clients = 0.0331
   se_facilities = 0.0389
   se_users = 0.1199
-  if (service_stats) {
+  if (!is.null(service_stats_dataset)) {
       if (is.na(first_year_observed)) {
         stop("No available contraceptive use data for this run. Service statistics cannot be used.")
       }
-      if (!is.null(service_stats_filepath)) {
-        ss <- readr::read_csv(service_stats_filepath)
-      }
-      else {
-        ss <- fpemservicestat::service_stats
-      }
+    ss <- service_stats_dataset
     format_check(service_stats_format, ss)
     ss <- ss %>% dplyr::arrange(year)
     ss <- ss %>%

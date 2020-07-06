@@ -7,6 +7,8 @@
 list_global_data(is_in_union, core_data)
 }
 \arguments{
+\item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
+
 \item{core_data}{\emph{\sQuote{Data.frame}} The processed data associated with the model run from \code{\link{core_data}}.}
 }
 \description{

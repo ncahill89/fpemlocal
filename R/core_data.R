@@ -3,20 +3,23 @@
 #'
 #' Creates core_data that consists of manipulated observations and run settings for \code{\link{do_1country_run}}
 #'
-#' @inheritParams do_1country_run
+#' @inheritParams fit_fp_c
 #'
-core_data <- function(is_in_union,
-                      surveydata_filepath,
+core_data <- function(survey_dataset,
+                      custom_data_indicator,
+                      is_in_union,
                       division_numeric_code,
                       first_year,
                       last_year,
                       subnational) {
+  
   # a single row of data which describes the country
   unit_data <- unit_data(division_numeric_code = division_numeric_code)
   # import user data and impute or import package data which is pre imputed
-  contraceptive_use <- contraceptive_use_import(
+  contraceptive_use <- contraceptive_use_filter_impute(
+    survey_dataset,
+    custom_data_indicator,
     is_in_union = is_in_union,
-    surveydata_filepath = surveydata_filepath,
     division_numeric_code = division_numeric_code,
     subnational = subnational
   )
@@ -31,10 +34,6 @@ core_data <- function(is_in_union,
 
   # additional processing required to align with the global run (to be minimized next round)
   if (nrow(contraceptive_use) > 0) {
-    
-    
-    
-    
     contraceptive_use <- contraceptive_use %>%
       ad_hoc_calculate_cp_trad()
     contraceptive_use <- contraceptive_use %>%

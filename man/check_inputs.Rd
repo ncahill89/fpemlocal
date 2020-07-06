@@ -4,7 +4,12 @@
 \alias{check_inputs}
 \title{check_inputs}
 \usage{
-check_inputs(surveydata_filepath, subnational, division_numeric_code)
+check_inputs(custom_data_indicator, subnational, division_numeric_code)
+}
+\arguments{
+\item{subnational}{'\emph{\sQuote{Logical}} If TRUE runs the sub national model.}
+
+\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
 }
 \description{
 check_inputs

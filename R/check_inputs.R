@@ -1,9 +1,10 @@
 #' check_inputs
 #'
-#' @inheritParams do_1country_run
+#' @inheritParams fit_fp_c
 #'
-check_inputs <- function(surveydata_filepath, subnational, division_numeric_code) {
-  if (is.null(surveydata_filepath) & subnational) {
+check_inputs <- function(custom_data_indicator, subnational, division_numeric_code) {
+  # determine if user supplied custom data, if they did not and if they selected subnation stop the run
+  if (!custom_data_indicator & subnational) {
     stop("FUNCTION INPUT ERROR: Default data does not exist for sub-national runs, please supply user data. ")
   }
   if(!division_numeric_code %in% divisions$division_numeric_code) {

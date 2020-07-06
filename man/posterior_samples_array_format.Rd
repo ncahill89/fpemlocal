@@ -9,7 +9,7 @@ posterior_samples_array_format(fit, core_data)
 \arguments{
 \item{fit}{the object returned from jags}
 
-\item{core_data}{consists of manipulated observations and run settings for \code{\link{do_1country_run}}}
+\item{core_data}{consists of manipulated observations and run settings for \code{\link{fit_fp_c}}}
 }
 \value{
 \emph{\sQuote{Numeric array}} An array of samples of dimension chains x samples x years x proportions
