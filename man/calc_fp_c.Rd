@@ -11,6 +11,9 @@ calc_fp_c(fit, population_data = NULL)
 
 \item{population_data}{\emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.}
 }
+\value{
+\emph{List} A list of long format data.frames
+}
 \description{
 Maps multiple sets of runs to \code{\link{calc_fp}}
 }

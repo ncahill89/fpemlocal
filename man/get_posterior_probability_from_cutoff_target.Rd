@@ -16,7 +16,7 @@ get_posterior_probability_from_cutoff_target(
 )
 }
 \arguments{
-\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}}
+\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}.}
 
 \item{indicator}{`integer` Indicator index (1 = modern, 2 = traditional, 3 = unmet)}
 

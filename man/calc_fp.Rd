@@ -7,14 +7,14 @@
 calc_fp(posterior_samples, population_data, first_year)
 }
 \arguments{
-\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}}
+\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}.}
 
 \item{population_data}{\emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.}
 
-\item{first_year}{\emph{\sQuote{Numeric}} First year of estimates. Found in the core_data of \code{\link{fit_fp_csub}}}
+\item{first_year}{\emph{\sQuote{Numeric}} First year of estimates. Found in the core_data of \code{\link{fit_fp_csub}}.}
 }
 \value{
-\emph{'Data.frame'} A data.frame of point estimates in long format.
+\emph{List} A list of long format data.frames
 }
 \description{
 calc_fp

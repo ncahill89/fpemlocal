@@ -4,8 +4,9 @@
 #'
 #' @param runname
 #' @inheritParams calc_fp
-#'
-#' @return
+#' 
+#' @return \emph{NULL} 
+#' 
 #' @export
 #'
 calc_fp_c_autosave <-
@@ -23,6 +24,8 @@ calc_fp_c_autosave <-
   }
 
 
+
+
 #' Calculate fp indicators from samples
 #'
 #' Maps multiple sets of runs to \code{\link{calc_fp}}
@@ -30,7 +33,9 @@ calc_fp_c_autosave <-
 #' @param fit \emph{\sQuote{List}} The list returned from \code{\link{fit_fp_csub}}
 #' @inheritParams calc_fp
 #'
+#' @return \emph{List} A list of long format data.frames
 #' @export
+#'
 calc_fp_c <-
   function(fit,
            population_data = NULL) {
@@ -38,12 +43,13 @@ calc_fp_c <-
   }
 
 
+
 #' calc_fp_csub
 #'
-#' @param fit 
-#' @param population_data 
+#' @param fit \emph{\sQuote{List}} The list returned from \code{\link{fit_fp_csub}}
+#' @inheritParams calc_fp
 #'
-#' @return
+#' @return \emph{List} A list of long format data.frames
 #' @export
 #'
 calc_fp_csub <- function(fit,

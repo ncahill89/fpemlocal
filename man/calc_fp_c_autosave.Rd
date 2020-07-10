@@ -10,7 +10,7 @@ calc_fp_c_autosave(runname = NULL, population_data = NULL)
 \item{population_data}{\emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.}
 }
 \value{
-
+\emph{NULL}
 }
 \description{
 A wrapper for \code{\link{calc_fp_c}} which reads in the model fit from the respective `runname`. The output is saved in the results directory with the same `runname`. The output can be automatically read in by proceeding wrapper functions with the `runname` argument specified.

@@ -7,7 +7,7 @@
 get_contraceptive_use_any(posterior_samples, first_year)
 }
 \arguments{
-\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}}
+\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}.}
 
 \item{first_year}{`integer` Earliest year represented in the data}
 }

@@ -1,10 +1,10 @@
 #' calc_fp
 #'
-#' @param posterior_samples \emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}
+#' @param posterior_samples \emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}.
 #' @param population_data \emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.
-#' @param first_year \emph{\sQuote{Numeric}} First year of estimates. Found in the core_data of \code{\link{fit_fp_csub}}
+#' @param first_year \emph{\sQuote{Numeric}} First year of estimates. Found in the core_data of \code{\link{fit_fp_csub}}.
 #'
-#' @return \emph{'Data.frame'} A data.frame of point estimates in long format.
+#' @return \emph{List} A list of long format data.frames
 #' @export
 #'
 calc_fp <-

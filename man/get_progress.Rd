@@ -15,7 +15,7 @@ get_progress(
 )
 }
 \arguments{
-\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}}
+\item{posterior_samples}{\emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}.}
 
 \item{from_year_population_count}{`integer`
 Number of individuals in the sample population for "from" year (1 to calculate proportion)}
