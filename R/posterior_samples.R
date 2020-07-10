@@ -1,10 +1,10 @@
 
 #' Posterior samples reformat
 #'
-#' Reformat posterior samples into dimension chains x samples x years x proportions
+#' Manipulate posterior samples into dimension chains x samples x years x proportions
 #'
 #' @param fit the object returned from jags
-#' @param core_data consists of manipulated observations and run settings for \code{\link{do_1country_run}}
+#' @param core_data consists of manipulated observations and run settings for \code{\link{fit_fp_c}}
 #'
 #' @return \emph{\sQuote{Numeric array}} An array of samples of dimension chains x samples x years x proportions
 posterior_samples_array_format <- function(fit, core_data) {
@@ -47,7 +47,7 @@ posterior_samples_all_women <-
            not_in_union_posterior_samples,
            core_data
   ) {
-      
+
     division_numeric_code <- core_data$units$division_numeric_code
     first_year <- min(core_data$year_sequence_list$result_seq_years)
     last_year <- max(core_data$year_sequence_list$result_seq_years)

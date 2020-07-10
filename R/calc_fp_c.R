@@ -3,12 +3,11 @@
 #' A wrapper for \code{\link{calc_fp_c}} which reads in the model fit from the respective `runname`. The output is saved in the results directory with the same `runname`. The output can be automatically read in by proceeding wrapper functions with the `runname` argument specified.
 #'
 #' @param runname
-#' @param country_population_counts
+#' @inheritParams calc_fp
 #'
 #' @return
 #' @export
 #'
-#' @examples
 calc_fp_c_autosave <-
   function(runname = NULL,
            population_data = NULL) {
@@ -28,7 +27,8 @@ calc_fp_c_autosave <-
 #'
 #' Maps multiple sets of runs to \code{\link{calc_fp}}
 #'
-#' @inherit calc_fp
+#' @param fit \emph{\sQuote{List}} The list returned from \code{\link{fit_fp_csub}}
+#' @inheritParams calc_fp
 #'
 #' @export
 calc_fp_c <-
@@ -38,6 +38,14 @@ calc_fp_c <-
   }
 
 
+#' calc_fp_csub
+#'
+#' @param fit 
+#' @param population_data 
+#'
+#' @return
+#' @export
+#'
 calc_fp_csub <- function(fit,
                          population_data = NULL) {
   posterior_samples <- fit %>% purrr::chuck("posterior_samples")

@@ -1,9 +1,9 @@
 
 #' core_data
 #'
-#' Creates core_data that consists of manipulated observations and run settings for \code{\link{do_1country_run}}
+#' Creates core_data that consists of manipulated observations and run settings for \code{\link{fit_fp_c}}
 #'
-#' @inheritParams do_1country_run
+#' @inheritParams fit_fp_c
 #'
 core_data <- function(is_in_union,
                       surveydata_filepath,
@@ -31,10 +31,10 @@ core_data <- function(is_in_union,
 
   # additional processing required to align with the global run (to be minimized next round)
   if (nrow(contraceptive_use) > 0) {
-    
-    
-    
-    
+
+
+
+
     contraceptive_use <- contraceptive_use %>%
       ad_hoc_calculate_cp_trad()
     contraceptive_use <- contraceptive_use %>%

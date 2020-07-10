@@ -132,6 +132,7 @@ total_cpr = function(x) modern_cpr(x) + traditional_cpr(x)
 #'         or in need of either method.
 demand = function(x) total_cpr(x) + unmet(x)
 
+#' @rdname demand_modern
 #' @return proportion of in-uinverse respondents using
 #'         a modern contraceptive method
 #'         or in need of a modern method.

@@ -157,22 +157,6 @@
 "population_counts"
 
 
-#' Service statistics
-#'
-#' Service stat data must contain the following variables. Names must be as documented (eg. all lowercase). `fpemdata::service_stats` returns a vector of column names. Data not publicly available. 
-#'
-#' @format A data frame with 6 variables:
-#' \describe{
-#'   \item{"division_numeric_code"}{country code}
-#'   \item{"name"}{country name}
-#'   \item{"year"}{mid year of observation period}
-#'   \item{"emu"}
-#'   \item{"ss_type"}
-#'   ...
-#' }
-#' @source 
-"service_stats"
-
 
 #' Contraceptive use track 20
 #'

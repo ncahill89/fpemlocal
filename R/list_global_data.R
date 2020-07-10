@@ -1,10 +1,10 @@
 
 
 #' list_global_data
-#'
+#'fit_fp_c
 #' jags data obtained from the UNPD global model
 #'
-#' @inheritParams do_1country_run
+#' @inheritParams fit_fp_c
 #' @param core_data \emph{\sQuote{Data.frame}} The processed data associated with the model run from \code{\link{core_data}}.
 #'
 list_global_data = function(is_in_union, core_data) {
@@ -196,4 +196,3 @@ extract_se <- function(names, data.global, numeric_source) {
 get_logtr_omegas <- function(omega, mino, maxo) {
   log((omega - mino)/(maxo - omega))
 }
-

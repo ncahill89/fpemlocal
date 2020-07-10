@@ -8,7 +8,6 @@
 #' @return
 #' @export
 #'
-#' @examples
 aggregate_fp <- function(posterior_samples,
                          population_data) 
 {
@@ -29,7 +28,6 @@ calculate_weight_df <- function(population_data){
 
 #' aggregate_fp_sub
 #'
-#' @inheritParams weight_samples
 #' @param weights \emph{'Vector'} A vector of weights selected from \code{\link[weight_generator]{weight_generator}}
 #' @export
 #'
@@ -106,7 +104,6 @@ aggregate_fp_multilevel <-
 
 #' weight_input_checker
 #'
-#' @inheritParams weight_samples
 #'
 #' @return informative error messages when inputs are incorrect
 weight_input_checker <-
@@ -143,7 +140,6 @@ weight_input_checker <-
 #'
 #' @return
 #'
-#' @examples
 pull_divs <- function(division_level_data, level) {
 divs <- division_level_data %>% 
   dplyr::filter({{level}}) %>% 
@@ -158,7 +154,6 @@ return(divs)
 #'
 #' @return
 #'
-#' @examples
 subset_samples <- function(posterior_samples, divs_perlevel) {
   return(posterior_samples[paste(divs_perlevel), , , , drop = FALSE])
 }
@@ -170,7 +165,6 @@ subset_samples <- function(posterior_samples, divs_perlevel) {
 #'
 #' @return
 #'
-#' @examples
 subset_population <- function(population_data, divs_perlevel) {
   population_perlevel <- population_data %>%
     dplyr::filter(division_numeric_code %in% divs_perlevel)
@@ -195,6 +189,14 @@ subset_population <- function(population_data, divs_perlevel) {
 
 
 
+#' calc_fp_aggregate
+#'
+#' @param fits \emph{\sQuote{List}} The list returned from \code{\link{fit_fp_csub}}
+#' @param population_data \emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.
+#'
+#' @return
+#' @export
+#'
 calc_fp_aggregate <- function(
   fits,
   population_data = NULL) {

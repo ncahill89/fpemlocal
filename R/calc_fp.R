@@ -1,13 +1,12 @@
 #' calc_fp
 #'
-#' @param posterior_samples 
-#' @param population_data 
-#' @param first_year 
+#' @param posterior_samples \emph{\sQuote{Array}} The samples array from \code{\link{fit_fp_csub}}
+#' @param population_data \emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.
+#' @param first_year \emph{\sQuote{Numeric}} First year of estimates. Found in the core_data of \code{\link{fit_fp_csub}}
 #'
 #' @return \emph{'Data.frame'} A data.frame of point estimates in long format.
 #' @export
 #'
-#' @examples
 calc_fp <-
   function(posterior_samples,
            population_data,
