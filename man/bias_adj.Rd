@@ -7,12 +7,6 @@
 bias_adj(core_data, list_auxiliary, list_global, mod)
 }
 \arguments{
-\item{core_data}{}
-
-\item{list_auxiliary}{}
-
-\item{list_global}{}
-
 \item{mod}{}
 }
 \description{

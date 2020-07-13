@@ -51,6 +51,9 @@
 #'     contraceptive_use_traditional / (1 - contraceptive_use_any_method)}}
 #'   \item{se_log_r_unmet_no_need}{\emph{\sQuote{Numeric}} Estimated design-based standard error of the quantity \preformatted{
 #'     unmet_need_for_any_method / (1 - contraceptive_use_any_method)}}
+#'   \item{se_log_r_modern_no_use_imputed}{\emph{\sQuote{Numeric}} Imputed version of se_log_r_modern_no_use. See \code{\link{impute_se}}. }
+#'   \item{se_log_r_traditional_no_use_imputed}{\emph{\sQuote{Numeric}} Imputed version of se_log_r_traditional_no_use.See \code{\link{impute_se}}. }
+#'   \item{se_log_r_unmet_no_need_imputed}{\emph{\sQuote{Numeric}} Imputed version of se_log_r_unmet_no_need.See \code{\link{impute_se}}. }
 #'   \item{source_id}{\emph{\sQuote{Numeric}} Unique source (i.e., survey) identifer.}
 #'   \item{record_id}{\emph{\sQuote{Numeric}} Unique record identifier.}
 #' }

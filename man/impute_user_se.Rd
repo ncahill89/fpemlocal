@@ -24,7 +24,7 @@ the details section.
 }
 \details{
 Imputation of (SE) variables is carried out annually with UNPD survey data \code{\link{fit_fp_csub}} 
-as [@Cahill et al 2017 appendix page 16]. The summary of this procedure is described 
+as [@Cahill et al 2017 (appendix page 16)]. The summary of this procedure is described 
 below. 
 
 There are two scenarios. Each scenario has a corresponding procedure.

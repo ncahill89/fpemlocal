@@ -31,27 +31,24 @@ method_divs <- function(wide_data, var) {
 
 # return data frame with inputed values for var specified, implements method 1
 impute_1 <- function(wide_data, var, method_divs) {
-  #var <- rlang::ensym(var)
   med <- wide_data %>% get_max_1(var) %>%
     dplyr::select("max") %>%
     unlist() %>%
     as.numeric() %>%
     median()
-  core_var <- wide_data %>%
+  imp_i <- wide_data %>%
     dplyr::select(!! var) %>% # a vector of the SE of interest
     dplyr::ungroup() %>%
     unlist()
-  core_var[wide_data$division_numeric_code %in% method_divs$div_impute_1] <- med
-  wide_data[paste(var)] <- core_var
+  imp_i[wide_data$division_numeric_code %in% method_divs$div_impute_1] <- med
+  wide_data[paste0(rlang::quo_name(var),"_imputed")] <- imp_i
   return(wide_data)
 }
 
 
 # return data frame with imputed values for var specified, implements method 2
 impute_2 <- function(wide_data, var, method_divs) {
-  #var <- rlang::ensym(var)
-  char <- rlang::quo_text(var)
-  #var <- rlang::enquo(var)
+  #char <- rlang::quo_text(var)
   div <- method_divs$div_impute_2
   var_vec <- wide_data %>% dplyr::select(!! var)
   imp_i <- wide_data %>%
@@ -67,7 +64,7 @@ impute_2 <- function(wide_data, var, method_divs) {
         dplyr::ungroup() %>%
         dplyr::select(med) %>%
         unlist()
-      wide_data[char][i,] <- imp
+      wide_data[paste0(rlang::quo_name(var),"_imputed")][i,] <- imp
     }
   }
   return(wide_data)
@@ -105,19 +102,38 @@ impute_global_se <- function(wide_data) {
 
 #' Impute se
 #'
-#' Imputes missing se based on Cahill et al 2017
+#' Imputation of (SE) variables is carried out annually with UNPD survey data \code{\link{fit_fp_csub}} 
+#' as [@Cahill et al 2017 (appendix page 16)]. The summary of this procedure is described 
+#' below. 
+#' 
+#' There are two scenarios. Each scenario has a corresponding procedure.
+#' \describe{
+#'     \item{1. (Completely missing) all entries missing for a coutnry's SE variable}
+#'     \item{2. (Partially missing) some entries missing for a country's SE variable }
+#' }
+#' 
+#' For scenario 1, the imputation is carried out by calculating the maximum of known 
+#' sampling errors across all other countries and setting the unknown sampling errors 
+#' equal to the median of these maximums.
+#' 
+#' For scenario 2 we impute the sampling errors by setting them equal to the maximum 
+#' of the known sampling errors in that country.
 #'
-#' @param wide_data \emph{'Data.frame'} A data.frame from \code{\link[contraceptive_use]{contraceptive_use}}
+#' @param contraceptive_use \emph{'Data.frame'} A data.frame from \code{\link[contraceptive_use]{contraceptive_use}}
 #'
 #' @return \emph{'Data.frame'} The input data with se imputed
 #
-impute_se <- function(wide_data) {
+impute_se <- function(contraceptive_use) {
+  wide_data <- contraceptive_use
   vars <- list(
     rlang::quo(se_log_r_unmet_no_need),
     rlang::quo(se_log_r_traditional_no_use),
     rlang::quo(se_log_r_modern_no_use)
   )
   for(i in 1:length(vars)) {
+    imputedvar <- paste0(rlang::quo_name(vars[[i]]),"_imputed")
+    wide_data <- wide_data %>% 
+      dplyr::mutate(!!imputedvar := !!vars[[i]])
     temp <- method_divs(wide_data, var = vars[[i]])
     wide_data <- impute_1(wide_data, var =  vars[[i]], method_divs = temp)
     wide_data <- impute_2(wide_data, var = vars[[i]], method_divs = temp)
@@ -130,11 +146,12 @@ impute_se <- function(wide_data) {
 # The input data augmented with imputed max se
 gen_max_se_data <- function(wide_data) {
   vars <- list(
-    rlang::quo(se_log_r_unmet_no_need),
-    rlang::quo(se_log_r_traditional_no_use),
-    rlang::quo(se_log_r_modern_no_use)
+    rlang::quo(se_log_r_unmet_no_need_imputed),
+    rlang::quo(se_log_r_traditional_no_use_imputed),
+    rlang::quo(se_log_r_modern_no_use_imputed)
   )
-  ints <- rep(as.integer(NA),nrow(unique(wide_data["division_numeric_code"])))
+  div_length <- wide_data %>% dplyr::pull("division_numeric_code") %>% unique %>% length()
+  ints <- rep(as.integer(NA), div_length)
   df <- data.frame(division_numeric_code = ints,
                    se_log_r_unmet_no_need = ints,
                    se_log_r_traditional_no_use = ints,
@@ -166,7 +183,7 @@ gen_max_se_data <- function(wide_data) {
 #' the details section.
 #' 
 #' Imputation of (SE) variables is carried out annually with UNPD survey data \code{\link{fit_fp_csub}} 
-#' as [@Cahill et al 2017 appendix page 16]. The summary of this procedure is described 
+#' as [@Cahill et al 2017 (appendix page 16)]. The summary of this procedure is described 
 #' below. 
 #' 
 #' There are two scenarios. Each scenario has a corresponding procedure.
@@ -203,10 +220,6 @@ impute_user_se <- function(user_data, subnational, is_in_union) {
       dplyr::filter(is_in_union == !!is_in_union)
     vars <- colnames(imputed_max_se)[2:4]
   }
-  user_data %>%
-    dplyr::mutate(se_log_r_modern_no_use_impute_ind := is.na(!!rlang::sym(vars[1]))) %>%
-    dplyr::mutate(se_log_r_traditional_no_use_impute_ind := is.na(!!rlang::sym(vars[2]))) %>%
-    dplyr::mutate(se_log_r_unmet_no_need_impute_ind := is.na(!!rlang::sym(vars[3])))
   if (all(!(vars %in% colnames(user_data)))) {
     warning("user_data does not have sampling error columns")
     for(i in 1:length(vars)) {
@@ -214,7 +227,11 @@ impute_user_se <- function(user_data, subnational, is_in_union) {
     }
   } else {
     for(i in 1:length(vars)) {
-      user_data[vars[i]][is.na(user_data[vars[i]])] <- unlist(imputed_max_se[vars[i]])
+      imputedvar <- paste0(rlang::quo_name(vars[[i]]),"_imputed")
+      user_data <- user_data %>%
+        dplyr::mutate(!!imputedvar := !!vars[[i]])
+      user_data[imputedvar][is.na(user_data[imputedvar])] <- unlist(imputed_max_se[vars[i]]) 
+        
     }
   }
   return(user_data)
@@ -230,9 +247,9 @@ impute_user_se <- function(user_data, subnational, is_in_union) {
 #' @return \emph{'Data.frame'} A data.frame with logical indicator TRUE indicating it is imputed FALSE being a core value
 impute_indicator <- function(data) {
   var_names <- c(
-    "se_log_r_modern_no_use",
+    "se_log_r_unmet_no_need",
     "se_log_r_traditional_no_use",
-    "se_log_r_unmet_no_need"
+    "se_log_r_modern_no_use",
   )
   data %>%
     dplyr::mutate(se_log_r_modern_no_use_impute_ind := is.na(!!rlang::sym(var_names[1]))) %>%
@@ -241,11 +258,22 @@ impute_indicator <- function(data) {
 }
 
 
-impute_package_data <- function(is_in_union) {
+
+
+#' impute_packagedata_se
+#' 
+#' Impute package data per union. This can be used on user data but takes a while to run. Instead impute_user_se uses pre-computed imputations for faster results.
+#'
+#' @param contraceptive_use 
+#' @param is_in_union 
+#'
+#' @return
+#' @export
+impute_packagedata_se_one_union <- function(contraceptive_use, is_in_union) {
   wide_data_imputed <- contraceptive_use %>%
     dplyr::filter(is_in_union == !!is_in_union) %>%
     dplyr::filter(age_range == "15-49") %>%
-    impute_indicator() %>%
+    # impute_indicator() %>%
     impute_se()
   imputed_max_se <-
     gen_max_se_data(wide_data = wide_data_imputed)
@@ -259,4 +287,25 @@ impute_package_data <- function(is_in_union) {
       contraceptive_use_imputed = wide_data_imputed
     )
   )
+}
+
+#' impute_packagedata_se
+#'
+#' Impute package data. This can be used on user data but takes a while to run. Instead impute_user_se uses pre-computed imputations for faster results.
+#'
+#' @param contraceptive_use 
+#'
+#' @return
+#' @export
+impute_packagedata_se <- function(contraceptive_use) {
+  imputed_data_y <- impute_packagedata_se_one_union(contraceptive_use,
+                                        is_in_union = "Y")
+  imputed_data_n <- impute_packagedata_se_one_union(contraceptive_use,
+                                        is_in_union = "N")
+  imputed_data <- list(
+    contraceptive_use_imputed = rbind(imputed_data_y[["contraceptive_use_imputed"]], imputed_data_n[["contraceptive_use_imputed"]]),
+    medians = rbind(data.frame(imputed_data_y[["medians"]], is_in_union = "Y"), data.frame(imputed_data_n[["medians"]], is_in_union = "N")),
+    imputed_max_se = rbind(data.frame(imputed_data_y[["imputed_max_se"]], is_in_union = "Y"), data.frame(imputed_data_y[["imputed_max_se"]], is_in_union = "N"))
+  )  
+  return(imputed_data)
 }

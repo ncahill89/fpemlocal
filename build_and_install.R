@@ -5,3 +5,6 @@ devtools::build(vignettes = FALSE)
 devtools::install()
 .rs.restartR()
 
+
+devtools::load_all()
+?FPEMcountry::contraceptive_use

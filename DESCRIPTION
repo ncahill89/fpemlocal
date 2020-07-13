@@ -10,7 +10,8 @@ Authors@R: c(person("Gregory", "Guranich", email = "gguranic@umass.edu", role = 
 Description: This package is the one country implementation of FPEM. It uses higher level parameters estimated in FPEMglobal.
 License: MIT
 Depends:
-    R2jags
+    R2jags,
+    R (>= 2.10)
 Imports:
     magrittr,
     dplyr,

@@ -4,14 +4,30 @@
 \alias{impute_se}
 \title{Impute se}
 \usage{
-impute_se(wide_data)
+impute_se(contraceptive_use)
 }
 \arguments{
-\item{wide_data}{\emph{'Data.frame'} A data.frame from \code{\link[contraceptive_use]{contraceptive_use}}}
+\item{contraceptive_use}{\emph{'Data.frame'} A data.frame from \code{\link[contraceptive_use]{contraceptive_use}}}
 }
 \value{
 \emph{'Data.frame'} The input data with se imputed
 }
 \description{
-Imputes missing se based on Cahill et al 2017
+Imputation of (SE) variables is carried out annually with UNPD survey data \code{\link{fit_fp_csub}} 
+as [@Cahill et al 2017 (appendix page 16)]. The summary of this procedure is described 
+below.
+}
+\details{
+There are two scenarios. Each scenario has a corresponding procedure.
+\describe{
+    \item{1. (Completely missing) all entries missing for a coutnry's SE variable}
+    \item{2. (Partially missing) some entries missing for a country's SE variable }
+}
+
+For scenario 1, the imputation is carried out by calculating the maximum of known 
+sampling errors across all other countries and setting the unknown sampling errors 
+equal to the median of these maximums.
+
+For scenario 2 we impute the sampling errors by setting them equal to the maximum 
+of the known sampling errors in that country.
 }
