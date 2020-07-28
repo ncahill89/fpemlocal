@@ -38,7 +38,7 @@ bias_adj <- function(core_data, list_auxiliary, list_global, mod) {
   var_unmet_i <- rep(NA, N)
   for(i in 1:N){
     if(is.na(core_data$observations$unmet_need_any[i])) next
-    var_unmet_i[i] <- core_data$observations$se_log_r_unmet_no_need[i]^2 + list_global$nonsample.se.unmet.i[i]^2
+    var_unmet_i[i] <- core_data$observations$se_log_r_unmet_no_need_imputed[i]^2 + list_global$nonsample.se.unmet.i[i]^2
   }
   true_mod_ct <- mod$BUGSoutput$sims.list$mod.ct
   true_trad_ct <- mod$BUGSoutput$sims.list$trad.ct

@@ -55,6 +55,10 @@ A set of results here consist of the following family planning indicators
 results$Y %>% names
 ```
 
+```{r}
+results$Y
+```
+
 The point estimates for each indicator are long-format tibbles. Let's take a look at the tibble for the indicator `contraceptive_use_modern`
 ```{r}
 results$Y$contraceptive_use_modern

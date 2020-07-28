@@ -29,14 +29,14 @@ In this vignette we will fit FPET to multiple countries and aggregate the sample
 First, fit the models with the function `fit_fp_c`.
 ```{r}
 fit_botswana <- fit_fp_c(
-  surveydata_filepath = "data-raw/Botswana_72_married_example.csv",
+  surveydata_filepath = "data-raw/manuscript_example_data/Botswana_72_married_example.csv",
   division_numeric_code = 72,
   is_in_union = "Y",
   first_year = 1970,
   last_year = 2030
 )
 fit_lesotho <- fit_fp_c(
-  surveydata_filepath = "data-raw/Lesotho_426_married_example.csv",
+  surveydata_filepath = "data-raw/manuscript_example_data/Lesotho_426_married_example.csv",
   division_numeric_code = 426,
   is_in_union = "Y",
   first_year = 1970,

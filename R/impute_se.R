@@ -210,30 +210,29 @@ impute_user_se <- function(user_data, subnational, is_in_union) {
   user_data <- user_data %>% as.data.frame()
   div <- user_data["division_numeric_code"]
   div <- div[1,]
-  if (subnational) {
-    imputed_max_se <- imputed_data$medians %>%
-      dplyr::filter(is_in_union == !!is_in_union)
-    vars <- names(imputed_max_se)[1:3]
-  } else {
-    imputed_max_se <- imputed_data$imputed_max_se %>% #comes from gen_max_se
-      dplyr::filter(division_numeric_code == div) %>%
-      dplyr::filter(is_in_union == !!is_in_union)
-    vars <- colnames(imputed_max_se)[2:4]
-  }
-  if (all(!(vars %in% colnames(user_data)))) {
-    warning("user_data does not have sampling error columns")
-    for(i in 1:length(vars)) {
-      user_data[vars[i]] <- rep(imputed_max_se[vars[i]], nrow(user_data))
-    }
-  } else {
+  vars <- list(
+    rlang::quo(se_log_r_unmet_no_need),
+    rlang::quo(se_log_r_traditional_no_use),
+    rlang::quo(se_log_r_modern_no_use)
+  )
+  # if (subnational) { # is there a difference for subnational runs?
+  imputed_max_se <- imputed_data$medians %>%
+    dplyr::filter(is_in_union == !!is_in_union)
+  # might need a vars_names for this if statement
+  # if (all(!(vars %in% colnames(user_data)))) {
+  #   warning("user_data does not have sampling error columns")
+  #   for(i in 1:length(vars)) {
+  #     user_data[vars[i]] <- NA
+  #   }
+  # } else {
     for(i in 1:length(vars)) {
       imputedvar <- paste0(rlang::quo_name(vars[[i]]),"_imputed")
       user_data <- user_data %>%
         dplyr::mutate(!!imputedvar := !!vars[[i]])
-      user_data[imputedvar][is.na(user_data[imputedvar])] <- unlist(imputed_max_se[vars[i]]) 
+      user_data[imputedvar][is.na(user_data[imputedvar])] <- unlist(imputed_max_se[rlang::quo_name(vars[[i]])]) 
         
     }
-  }
+  # }
   return(user_data)
 }
 

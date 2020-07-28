@@ -29,7 +29,7 @@ In this vignette we obtain estimates for married women with custom user data.
 Fit the one-country family planning estimation model with the function `fit_fp_c`. Supply the file path of the .csv file containing your country survey data to the argument `surveydata_filepath`. Next supply the UNPD country code known as the `division_numeric_code`. See `??divisions` for UNPD country codes and other divisions. Specify the model of your choice with the argument `is_in_union`. There are two versions of this model, one for in-union women and another for not-in-union women denoted `"Y"` and `"N"` respectively. Lastly, specify the years of estimates to be returned. Note: The function will not filter the survey data based on these years. All years of available survey data will be used.
 ```{r}
 fit <- fit_fp_c(
-  surveydata_filepath = "data-raw/afghanistan_4_married_example.csv",
+  surveydata_filepath = "data-raw/manuscript_example_data/afghanistan_4_married_example.csv",
   division_numeric_code = 4,
   is_in_union = "Y",
   first_year = 1970,
