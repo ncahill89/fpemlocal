@@ -63,11 +63,7 @@ fit_fp_c <- function(is_in_union,
         core_data = fits %>% purrr::chuck("Y", "core_data")
       )
     core_data <- fits %>% purrr::chuck("Y", "core_data")
-    core_data$observations <-
-      rbind(
-        fits %>% purrr::chuck("Y", "core_data", "observations"),
-        fits %>% purrr::chuck("N", "core_data", "observations")
-      )
+    core_data$observations <- tibble::tibble()
     core_data$is_in_union <- is_in_union
     ALL <- list(posterior_samples = samples_all,
                    core_data = core_data)

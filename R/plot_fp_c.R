@@ -59,20 +59,20 @@ plot_fp_csub <- function(
   indicators <- indicators %>% unlist()
   observations <- fit %>% purrr::chuck( "core_data", "observations")
   
-  if(!is.null(observations) &
-     nrow(observations) > 0) {
+  if(!is.null(observations)) {
     observations$subpopulation_labels <- fpem_get_subpopulation_labels(observations)
     observations <- observations %>%
       dplyr::mutate(data_series_type = as.factor(data_series_type)) %>%
       dplyr::mutate(group_type_relative_to_baseline = as.factor(group_type_relative_to_baseline)) %>%
       dplyr::mutate(subpopulation_labels = as.factor(subpopulation_labels))
+    # This is a hack to fix downstream plotting errors caused my dplyr::filter, if resulting columns from filter have only NA's the column type becomes "unknown"
+    # Changes vector value but not column type
+    observations <- observations %>%
+      dplyr::mutate_at(.vars = indicators, .funs = as.numeric)
   }
 
 
-  # This is a hack to fix downstream plotting errors caused my dplyr::filter, if resulting columns from filter have only NA's the column type becomes "unknown"
-  # Changes vector value but not column type
-  observations <- observations %>%
-    dplyr::mutate_at(.vars = indicators, .funs = as.numeric)
+
   union <- fit %>% 
     purrr::chuck("core_data", "is_in_union")
   div <- fit %>%
@@ -166,7 +166,6 @@ plot_fp_csub <- function(
     
     # plot observations if they exist
     if(!is.null(observations) &
-       nrow(observations) > 0 &
        indicator %in% names(observations)
        ) {
       # low <- paste0("low_", indicator)
