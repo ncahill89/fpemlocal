@@ -42,7 +42,7 @@ fit <- fit_fp_c(
 ## 2. Calculate point estimates for indicators
 Calculate point estimates for family planning indicators with the function `calc_fp_c`. Supply the fit object from `fit_fp_c` to the argument `fit`. Read in your population count dataset. Then supply the dataset to the argument `population_data`.
 ```{r}
-population_data <- read.csv("data-raw/afghanistan_4_married_popdata_example.csv")
+population_data <- read.csv("data-raw/manuscript_example_data/afghanistan_4_married_popdata_example.csv")
 results <- calc_fp_c(fit = fit,
                      population_data = population_data)
 ```
