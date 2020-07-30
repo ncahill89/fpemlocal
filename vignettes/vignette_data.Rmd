@@ -7,7 +7,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all()
 ```
-This vignette covers package data. Central to all vignettes are data inputs in the form, division codes, of contraceptive use survey data, and population count data. These three types of data are included as package data.
+This vignette covers package data. Central to all vignettes are data inputs in the form of, division codes, contraceptive use survey data, and population count data. These three types of data are included as package data.
 
 1. [division code data](#div) `divisions`
 2. [contraceptive use survey data](#cu) `contraceptive_use` and `contraceptive_use_track20`
@@ -23,7 +23,7 @@ divisions
 ??divisions
 ```
 
-Our package data sets are tibbles. This is particularly useful for large datasets because it only prints the first few rows. The country codes used by our package, known as `division_numeric_code`, are found in this data. In our example we will execute a one-country run for Afghanistan, code `4`. 
+The country codes used by our package, known as `division_numeric_code`, are found in this data. In our example we will execute a one-country run for Afghanistan, code `4`. 
 
 ## <a name="cu"></a>
 ## 2. Contraceptive use survey data
@@ -38,3 +38,5 @@ Access population count data by entering `population_counts` into the console. T
 ```{r}
 population_counts
 ```
+
+Our package data sets are tibbles. This is particularly useful for large datasets because it only prints the first few rows.

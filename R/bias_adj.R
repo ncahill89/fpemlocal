@@ -47,11 +47,11 @@ bias_adj <- function(core_data, list_auxiliary, list_global, mod) {
   sigma_tradmod_i <- get_sigma(list_global, core_data)
   aux_modern <- list_auxiliary$modern
   aux_trad <- list_auxiliary$trad
-
+  
   unmet_i <- dplyr::tibble(low_unmet_need_any = rep(NA,N), est_unmet_need_any =rep(NA,N), up_unmet_need_any = rep(NA,N)) %>% dplyr::mutate_if(is.logical, as.double)
   mod_i <- dplyr::tibble(low_contraceptive_use_modern = rep(NA,N), est_contraceptive_use_modern = rep(NA,N), up_contraceptive_use_modern = rep(NA,N)) %>% dplyr::mutate_if(is.logical, as.double)
   trad_i <- dplyr::tibble(low_contraceptive_use_traditional = rep(NA,N), est_contraceptive_use_traditional = rep(NA,N), up_contraceptive_use_traditional =  rep(NA,N)) %>% dplyr::mutate_if(is.logical, as.double)
-  all_i <- dplyr::tibble(low_contraceptive_use_all = rep(NA,N), est_contraceptive_use_all = rep(NA,N), up_contraceptive_use_all =  rep(NA,N)) %>% dplyr::mutate_if(is.logical, as.double)
+  all_i <- dplyr::tibble(low_contraceptive_use_any = rep(NA,N), est_contraceptive_use_any = rep(NA,N), up_contraceptive_use_any =  rep(NA,N)) %>% dplyr::mutate_if(is.logical, as.double)
   for(i in 1:N) {
     if (!is.na(logratio_mod_i[i])){ # no unmet calculated either if modern is NA
       #muin becomes vector if only one observation and does not have columns to index
