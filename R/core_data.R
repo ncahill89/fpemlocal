@@ -47,31 +47,9 @@ core_data <- function(is_in_union,
       ad_hoc_recalculate_cp_any() %>%
       ad_hoc_blankmodern_ifequals()
     # creating a single column for subpopulation indicators
-    contraceptive_use <- contraceptive_use %>%
-      dplyr::mutate(subpopulation_labels = as.factor(ifelse(
-        age_group_bias == "+",
-        "+",
-        ifelse(
-          age_group_bias == "-",
-          "-",
-          ifelse(
-            age_group_bias == "?",
-            "A",
-            ifelse(
-              has_traditional_method_bias == "Y",
-              "F",
-              ifelse(
-                modern_method_bias == "-",
-                "S-",
-                ifelse(modern_method_bias == "+",
-                       "S+",
-                       "")
-                )
-              )
-            )
-          )
-        ))) # end mutate call
-  levels(contraceptive_use[["subpopulation_labels"]])  <- c("+", "-", "A", "F", "S-", "S+")
+    contraceptive_use <- contraceptive_use %>% 
+      dplyr::mutate(subpopulation_labels = subpopulation_labels(.))
+    levels(contraceptive_use[["subpopulation_labels"]])  <- c("+", "-", "A", "F", "S-", "S+")
   } # end data manipulation which only occurs if data is present
   # the core_data list
   core_data = list(
