@@ -27,7 +27,7 @@ The country codes used by our package, known as `division_numeric_code`, are fou
 
 ## <a name="cu"></a>
 ## 2. Contraceptive use survey data
-Two versions of survey data are available in the package. They are identical in format but compiled by two different organizations. `contraceptive_use` is compiled by the UNPD. `contraceptive_use_track20` is compiled by Track20. Enter `??contraceptive_use` and `??contraceptive_use_track20` for metadata.
+There are two contraceptive use survey datasets within the package. The dataset `contraceptive_use` is compiled by the Unit Nation Population Division (UNPD) and the dataset `contraceptive_use_track20` is compiled by Track20. The datasets are similar. There will be some differences for FP2020 focus countries. Enter `??contraceptive_use` and `??contraceptive_use_track20` for metadata.
 ```{r}
 contraceptive_use
 ```
@@ -39,4 +39,3 @@ Access population count data by entering `population_counts` into the console. T
 population_counts
 ```
 
-Our package data sets are tibbles. This is particularly useful for large datasets because it only prints the first few rows.

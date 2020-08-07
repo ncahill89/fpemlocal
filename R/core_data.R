@@ -31,12 +31,9 @@ core_data <- function(is_in_union,
 
   # additional processing required to align with the global run (to be minimized next round)
   if (nrow(contraceptive_use) > 0) {
-
-
-
-
     contraceptive_use <- contraceptive_use %>%
       ad_hoc_calculate_cp_trad()
+    # rounding up from zero etc
     contraceptive_use <- contraceptive_use %>%
       data_series_type_relabel %>%
       dplyr::mutate(indicate_rounding_trad = indicate_rounding(contraceptive_use_traditional)) %>%
@@ -45,11 +42,37 @@ core_data <- function(is_in_union,
       dplyr::mutate(contraceptive_use_modern = round_from_zero(contraceptive_use_modern)) %>%
       dplyr::mutate(contraceptive_use_any = round_from_zero(contraceptive_use_any)) %>%
       dplyr::mutate(unmet_need_any = round_from_zero(unmet_need_any))
+    # recalculation after rounding
     contraceptive_use <- contraceptive_use %>%
       ad_hoc_recalculate_cp_any() %>%
       ad_hoc_blankmodern_ifequals()
-  }
-
+    # creating a single column for subpopulation indicators
+    contraceptive_use <- contraceptive_use %>%
+      dplyr::mutate(subpopulation_labels = as.factor(ifelse(
+        age_group_bias == "+",
+        "+",
+        ifelse(
+          age_group_bias == "-",
+          "-",
+          ifelse(
+            age_group_bias == "?",
+            "A",
+            ifelse(
+              has_traditional_method_bias == "Y",
+              "F",
+              ifelse(
+                modern_method_bias == "-",
+                "S-",
+                ifelse(modern_method_bias == "+",
+                       "S+",
+                       "")
+                )
+              )
+            )
+          )
+        ))) # end mutate call
+  levels(contraceptive_use[["subpopulation_labels"]])  <- c("+", "-", "A", "F", "S-", "S+")
+  } # end data manipulation which only occurs if data is present
   # the core_data list
   core_data = list(
     is_in_union = is_in_union,

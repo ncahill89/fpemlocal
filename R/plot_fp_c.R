@@ -60,7 +60,6 @@ plot_fp_csub <- function(
   observations <- fit %>% purrr::chuck( "core_data", "observations")
   
   if(!is.null(observations)) {
-    observations$subpopulation_labels <- fpem_get_subpopulation_labels(observations)
     observations <- observations %>%
       dplyr::mutate(data_series_type = as.factor(data_series_type)) %>%
       dplyr::mutate(group_type_relative_to_baseline = as.factor(group_type_relative_to_baseline)) %>%
@@ -183,7 +182,7 @@ plot_fp_csub <- function(
             color = "data_series_type",
             shape = "group_type_relative_to_baseline"
           ),
-          size = 2) #+
+          size = 2) +
         # ggplot2::geom_errorbar(
         #   data = observations,
         #   ggplot2::aes_string(
@@ -198,18 +197,18 @@ plot_fp_csub <- function(
         # ) #+
         # ggplot2::scale_color_manual(values = c(cbp2[2], cbp2[1]))
         # subpopulation labels can go here, removing for now since we used up aes
-        #   ggplot2::geom_text(
-        #     data = observations,
-        #     ggplot2::aes_string(
-        #       x = "ref_date",
-        #       y = indicator,
-        #       label = "subpopulation_labels"
-        #     ),
-        #     size = 3,
-        #     hjust = -0.3,
-        #     vjust = -0.3
-        #   ) #+
-        # # ggplot2::labs(color = "Data series/type", shape = "Group") 
+          ggplot2::geom_text(
+            data = observations,
+            ggplot2::aes_string(
+              x = "ref_date",
+              y = indicator,
+              label = "subpopulation_labels"
+            ),
+            size = 3,
+            hjust = -0.3,
+            vjust = -0.3,
+            show.legend = FALSE
+          )
     } # end observation plotting
     
   } # end looping through indicators
