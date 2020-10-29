@@ -122,7 +122,7 @@ get_posterior_samples_for_all_indicators <- function(posterior_samples, years) {
     transform_posterior_samples(
       posterior_samples = posterior_samples,
       indicator = "unmet_need_any",
-      transformer = unmet,
+      transformer = unmet_p,
       years = years
     ),
     transform_posterior_samples(
@@ -281,7 +281,7 @@ get_unmet_need_any <- function(posterior_samples, first_year) {
   get_proportions(
     posterior_samples = posterior_samples,
     first_year = first_year,
-    transformer = unmet
+    transformer = unmet_p
   )
 }
 

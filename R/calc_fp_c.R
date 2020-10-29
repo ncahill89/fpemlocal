@@ -13,8 +13,8 @@ calc_fp_c_autosave <-
   function(runname = NULL,
            population_data = NULL) {
 
-    runlist <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
-    results <- calc_fp_c(runlist = runlist,
+    fit <- readRDS(file.path("output/runs", paste0(runname, ".rds")))
+    results <- calc_fp_c(fit = fit,
                                          population_data = population_data)
     if (!dir.exists("output")) dir.create("output")
     if (!dir.exists("output/results")) dir.create("output/results")
@@ -55,22 +55,15 @@ calc_fp_c <-
 calc_fp_csub <- function(fit,
                          population_data = NULL) {
   posterior_samples <- fit %>% purrr::chuck("posterior_samples")
-  first_year <- fit %>% 
-    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
-    min
-  last_year <- fit %>% 
-    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
-    max
   population_data <- population_data_import(
     population_data = population_data,
-    is_in_union = fit %>% purrr::chuck("core_data", "is_in_union"),  
-    division_numeric_code = fit %>% purrr::chuck("core_data", "units", "division_numeric_code"),
-    first_year = first_year,
-    last_year = last_year
+    fit = fit
   )
   results <- calc_fp(posterior_samples = posterior_samples,
                      population_data = population_data,
-                     first_year = first_year
+                     first_year = fit %>% 
+                       purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+                       min
                          )
   return(results)
 }

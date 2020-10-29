@@ -39,6 +39,7 @@ plot_fp_c <- function(
   compare_to_global = FALSE
 ) {
   purrr::pmap(list(fit, results, list(indicators), compare_to_global), plot_fp_csub)
+
 }
 
 
@@ -58,12 +59,12 @@ plot_fp_csub <- function(
 ) {
   indicators <- indicators %>% unlist()
   observations <- fit %>% purrr::chuck( "core_data", "observations")
-  
+
   if(!is.null(observations)) {
     observations <- observations %>%
       dplyr::mutate(data_series_type = as.factor(data_series_type)) %>%
-      dplyr::mutate(group_type_relative_to_baseline = as.factor(group_type_relative_to_baseline)) %>%
-      dplyr::mutate(subpopulation_labels = as.factor(subpopulation_labels))
+      dplyr::mutate(group_type_relative_to_baseline = as.factor(group_type_relative_to_baseline))
+      # dplyr::mutate(subpopulation_labels = as.factor(subpopulation_labels))
     # This is a hack to fix downstream plotting errors caused my dplyr::filter, if resulting columns from filter have only NA's the column type becomes "unknown"
     # Changes vector value but not column type
     observations <- observations %>%
@@ -72,17 +73,17 @@ plot_fp_csub <- function(
 
 
 
-  union <- fit %>% 
+  union <- fit %>%
     purrr::chuck("core_data", "is_in_union")
   div <- fit %>%
     purrr::chuck("core_data", "units", "division_numeric_code")
   title <- paste0(fit$core_data$units$name_country, ", is_in_union = ",fit$core_data$is_in_union)
 
-  first_year <- fit %>% 
-    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+  first_year <- fit %>%
+    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>%
     min
-  last_year <- fit %>% 
-    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>% 
+  last_year <- fit %>%
+    purrr::chuck("core_data","year_sequence_list", "result_seq_years") %>%
     max
   breaks = seq(
     first_year,
@@ -99,32 +100,52 @@ plot_fp_csub <- function(
             "#D55E00",#red 7
             "#CC79A7")#pink 8
 
+  # GG: THIS IS A HACK
+  # edits ggplots legend drawing function to draw some empty text in the legend
+  library(ggplot2)
+  oldK <- GeomText$draw_key # this would be saved to later undo this hack, unforuntuately can't undo at the end of function because it needs to remain until things are plotted
+  GeomText$draw_key <- function (data, params, size,
+                                 var=unique(observations$subpopulation_labels),
+                                 cols=scales::hue_pal()(length(var))) {
+    
+    txt <- ""
+    grid::textGrob(txt, 0.5, 0.5,
+                   just="center",
+                   gp = grid::gpar(col = alpha(data$colour, data$alpha),
+                                   fontfamily = data$family,
+                                   fontface = data$fontface,
+                                   fontsize = data$size * .pt))
+  }
+  
+
+
+
   pl <- list()
   for(indicator in indicators) {
-    estimates <- results %>% 
+    estimates <- results %>%
       purrr::pluck(indicator) %>%
-      dplyr::mutate(model = "local") %>% 
+      dplyr::mutate(model = "local") %>%
       tidyr::spread(percentile, value)  %>%
       dplyr::select("year",  "model",   "2.5%", "10%",  "50%",   "90%" ,   "97.5%") %>%
       dplyr::mutate(year = year + .5) %>%
       dplyr::mutate(model = as.factor(model))
-    
+
     if (compare_to_global) {
-      glbl_estimates <- FPEMcountry::global_estimates %>%
+      glbl_estimates <- FPEMlocal::global_estimates %>%
         dplyr::filter(division_numeric_code == div,
-                      is_in_union == union) %>% 
+                      is_in_union == union) %>%
         dplyr::filter(indicator == !!indicator) %>%
         dplyr::select("year",  "model",   "2.5%", "10%",  "50%",   "90%" ,   "97.5%")
       estimates <- rbind(estimates, glbl_estimates) %>%
         dplyr::mutate(model = as.factor(model))
     }
 
-    
+
     # start with local estimates
     pl[[indicator]] <- estimates %>%
       ggplot2::ggplot(ggplot2::aes(x = year)) +
       ggplot2::ggtitle(title) +
-      ggplot2::scale_x_continuous(name = "Year", breaks = breaks) +
+      ggplot2::scale_x_continuous(breaks = breaks) +
       ggplot2::ylab(indicator) +
       ggplot2::theme_bw() +
       ggplot2::theme(
@@ -136,15 +157,15 @@ plot_fp_csub <- function(
       ggplot2::geom_line(ggplot2::aes(y = `50%`, color = model), alpha = .4) +
       ggplot2::scale_fill_manual(values = c(cbp2[3], cbp2[4])) +
       ggplot2::scale_color_manual(values = c(cbp2[3], cbp2[4]))
-    
-    
-    
+
+
+
     #next plot global estimates if they exist for this country
     # if (division_numeric_code %in% global_estimates$division_numeric_code
     #     & compare_to_global
     #     & is_in_union != "ALL"
     #     & indicator != "contraceptive_use_any") {
-    #   
+    #
     #     # To be revised 7/30/2020 change to global estimate format
     #     # check_estimate(x = global_and_onecountry_estimates$`50%`,
     #     #                y = global_and_onecountry_estimates$`0.5`,
@@ -152,7 +173,7 @@ plot_fp_csub <- function(
     #     #                is_in_union = fit$core_data$is_in_union,
     #     #                indicator = indicator)
     #     # end checking
-    #   
+    #
     #     #plotting code starts here
     #     pl[[indicator]] <- pl[[indicator]] +
     #       ggnewscale::new_scale_color() +
@@ -161,8 +182,8 @@ plot_fp_csub <- function(
     #       ggplot2::geom_line(ggplot2::aes(y = `50%`), color = cbp2[3])
     #   } # end global estiamtes
 
-    
-    
+
+
     # plot observations if they exist
     if(!is.null(observations) &
        indicator %in% names(observations)
@@ -170,7 +191,7 @@ plot_fp_csub <- function(
       # low <- paste0("low_", indicator)
       # est <- paste0("est_", indicator)
       # up <- paste0("up_", indicator)
-      
+
       # plotting code starts here
       pl[[indicator]] <- pl[[indicator]] +
         ggnewscale::new_scale_color() +
@@ -182,36 +203,27 @@ plot_fp_csub <- function(
             color = "data_series_type",
             shape = "group_type_relative_to_baseline"
           ),
-          size = 2) +
-        # ggplot2::geom_errorbar(
-        #   data = observations,
-        #   ggplot2::aes_string(
-        #     x = "ref_date",
-        #     y = est,
-        #     ymax = up,
-        #     ymin = low
-        #   ),
-        #   color = "black",
-        #   width = 0,
-        #   alpha = 1
-        # ) #+
-        # ggplot2::scale_color_manual(values = c(cbp2[2], cbp2[1]))
-        # subpopulation labels can go here, removing for now since we used up aes
+          size = 2)
+      if (!all(observations$subpopulation_labels[!is.na(observations[indicator])] %in% "")) { #hack until we add more subpop labels
+        pl[[indicator]] <- pl[[indicator]] +
+          ggnewscale::new_scale_color() +
           ggplot2::geom_text(
             data = observations,
             ggplot2::aes_string(
               x = "ref_date",
               y = indicator,
-              label = "subpopulation_labels"
+              label = "subpopulation_labels",
+              col = "subpopulation_labels"
             ),
             size = 3,
             hjust = -0.3,
-            vjust = -0.3,
-            show.legend = FALSE
-          )
-    } # end observation plotting
-    
-  } # end looping through indicators
+            vjust = -0.3
+          ) + ggplot2::scale_color_manual(values=rep("black",6))
 
+      }
+
+    } # end observation plotting
+
+  } # end looping through indicators
   return(pl)
 } # end function

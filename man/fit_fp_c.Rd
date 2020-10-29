@@ -4,9 +4,11 @@
 \alias{fit_fp_c}
 \title{Fit one country model}
 \usage{
-fit_fp_c(is_in_union, ...)
+fit_fp_c(population_data = NULL, is_in_union, ...)
 }
 \arguments{
+\item{population_data}{\emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.}
+
 \item{is_in_union}{\emph{\sQuote{Character}} "Y" if women are in union.}
 
 \item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}

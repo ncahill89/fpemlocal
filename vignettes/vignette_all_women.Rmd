@@ -10,12 +10,12 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 options(warn=-1)
 ```
 ## Introduction
-In this vignette we obtain estimates for all women with package datasets. By default, functions utilize UNPD datasets. 
+In this vignette we obtain estimates for all women with package datasets. By default, functions utilize UNPD datasets.
 
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(FPEMcountry)
+library(FPEMlocal)
 devtools::load_all()
 ```
 
@@ -44,7 +44,7 @@ fitlist %>% names
 
 ## <a name="results"></a>
 ## 2. Calculate point estimates for indicators
-Calculate point estimates for family planning indicators with the function `calc_fp_c`. 
+Calculate point estimates for family planning indicators with the function `calc_fp_c`.
 
 `calc_fp_c` utilizes `pmap` from the tidyverse package purr allowing it to act on any number of fits. We will supply the entire list of fits from `fit_fp_c`.
 ```{r}
@@ -68,7 +68,7 @@ resultlist$ALL$contraceptive_use_modern
 
 ## <a name="plot"></a>
 ## 3. Plot the  point estimates against the survey data
-FPEMcountry also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2. This function also handles lists.
+FPEMlocal also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2. This function also handles lists.
 
 ```{r}
 plot_fp_c(

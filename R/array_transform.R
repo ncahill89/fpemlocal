@@ -118,7 +118,7 @@ traditional_cpr = function(x) x[2]
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents with
 #'         an unmet need for any contraceptive method
-unmet = function(x) x[3]
+unmet_p = function(x) x[3]
 
 #' @rdname proportions_vector
 #' @return proprotion of in-universe respondents using
@@ -130,9 +130,9 @@ total_cpr = function(x) modern_cpr(x) + traditional_cpr(x)
 #' @return proportion of in-uinverse respondents using
 #'         a modern or traditional contraceptive method
 #'         or in need of either method.
-demand = function(x) total_cpr(x) + unmet(x)
+demand = function(x) total_cpr(x) + unmet_p(x)
 
-#' @rdname demand_modern
+#' @rdname proportions_vector
 #' @return proportion of in-uinverse respondents using
 #'         a modern contraceptive method
 #'         or in need of a modern method.
@@ -147,7 +147,7 @@ no_need = function(x) 1 - demand(x)
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents with
 #'         an unmet need for a modern contraceptive method
-unmet_modern = function(x) traditional_cpr(x) + unmet(x)
+unmet_modern = function(x) traditional_cpr(x) + unmet_p(x)
 
 #' @rdname proportions_vector
 #' @return proportion of in-universe respondents not

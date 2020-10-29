@@ -14,11 +14,11 @@ options(warn=-1)
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(FPEMcountry)
+library(FPEMlocal)
 devtools::load_all()
 ```
 ## Introduction
-In this vignette we obtain estimates for married women with package datasets. By default, functions utilize UNPD datasets. 
+In this vignette we obtain estimates for married women with package datasets. By default, functions utilize UNPD datasets.
 
 1. [Fit a one country model](#fit) `fit_fp_c`
 2. [Calculate point estimates for indicators](#results) `calc_fp_c`
@@ -28,11 +28,11 @@ In this vignette we obtain estimates for married women with package datasets. By
 ## 1. Fit a one country model
 First, find the UNPD country code under the variable `division_numeric_code` in the dataset `divisions`. See `?divisions` for the metadata.
 ```{r}
-divisions %>% 
+divisions %>%
   dplyr::filter(name_country == "Afghanistan")
 ```
 
-Fit the one-country family planning estimation model with the function `fit_fp_c`. First, supply the UNPD country code to the argument `division_numeric_code`. There are two versions of this model, one for in-union women and another for not-in-union women denoted `"Y"` and `"N"` respectively. Specify the model of your choice with the argument `is_in_union`. By default, the function `fit_fp_c` utilizes the UNPD contraceptive use survey dataset, `contraceptive_use` and filters the dataset based on the aforementioned function arguments. Lastly, specify the years of estimates to be returned. Note: year arguments will not filter the supplied survey data. All years of available survey data will be used. 
+Fit the one-country family planning estimation model with the function `fit_fp_c`. First, supply the UNPD country code to the argument `division_numeric_code`. There are two versions of this model, one for in-union women and another for not-in-union women denoted `"Y"` and `"N"` respectively. Specify the model of your choice with the argument `is_in_union`. By default, the function `fit_fp_c` utilizes the UNPD contraceptive use survey dataset, `contraceptive_use` and filters the dataset based on the aforementioned function arguments. Lastly, specify the years of estimates to be returned. Note: year arguments will not filter the supplied survey data. All years of available survey data will be used.
 ```{r}
 fit <- fit_fp_c(
   division_numeric_code = 4,
@@ -45,7 +45,7 @@ fit <- fit_fp_c(
 
 ## <a name="results"></a>
 ## 2. Calculate point estimates for indicators
-Calculate point estimates for family planning indicators with the function `calc_fp_c`. Supply the fit object from `fit_fp_c`. By default, the function `calc_fp_C` utilizes the UNPD population dataset, `population_counts` to calculate count variables such as the number of women using modern contraceptives. 
+Calculate point estimates for family planning indicators with the function `calc_fp_c`. Supply the fit object from `fit_fp_c`. By default, the function `calc_fp_C` utilizes the UNPD population dataset, `population_counts` to calculate count variables such as the number of women using modern contraceptives.
 ```{r}
 results <- calc_fp_c(fit)
 ```
@@ -67,10 +67,8 @@ results$Y$contraceptive_use_modern
 
 ## <a name="plot"></a>
 ## 3. Plot estimates and survey data
-FPEMcountry also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2.
+FPEMlocal also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2.
 ```{r}
-devtools::load_all()
-# debug(plot_fp_csub)
 plot_fp_c(
   fit,
   results,

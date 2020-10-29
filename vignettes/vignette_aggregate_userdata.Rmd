@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 options(warn=-1)
 knitr::opts_chunk$set(echo = TRUE)
-library(FPEMcountry)
+library(FPEMlocal)
 devtools::load_all()
 ```
 
@@ -49,16 +49,15 @@ fit_lesotho <- fit_fp_c(
 
 Read in population data for the populations of interest. Create a single dataset with the function `rbind`.
 ```{r}
-popdata_botswana <- read.csv("data-raw/Botswana_72_married_popdata_example.csv")
-popdata_lesotho <- read.csv("data-raw/Lesotho_426_married_popdata_example.csv")
+popdata_botswana <- read.csv("data-raw/manuscript_example_data/Botswana_72_married_popdata_example.csv")
+popdata_lesotho <- read.csv("data-raw/manuscript_example_data/Lesotho_426_married_popdata_example.csv")
 popdata <- rbind(popdata_botswana, popdata_lesotho)
 ```
 
 ## <a name="results"></a>
 ## Calculate results
-Supply the fits in a list and the population data to the function `calc_fp_aggregate`. The resulting object is a list of long format tibbles with family planning estimates. 
+Supply the fits in a list and the population data to the function `calc_fp_aggregate`. The resulting object is a list of long format tibbles with family planning estimates.
 ```{r}
 results <- calc_fp_aggregate(fits = list(fit_botswana, fit_lesotho),
                    population_data = popdata)
 ```
-

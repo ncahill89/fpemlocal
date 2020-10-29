@@ -7,4 +7,4 @@ devtools::install()
 
 
 devtools::load_all()
-?FPEMcountry::contraceptive_use
+?FPEMlocal::contraceptive_use

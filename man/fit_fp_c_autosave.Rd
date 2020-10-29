@@ -12,5 +12,5 @@ fit_fp_c_autosave(runname = NULL, ...)
 \item{...}{Please see \code{\link{fit_fp_csub}} for additional arguments.}
 }
 \description{
-A wrapper for \code{\link{FPEMcountry::fit_fp_csub}} augmented to save the output
+A wrapper for \code{\link{FPEMlocal::fit_fp_csub}} augmented to save the output
 }

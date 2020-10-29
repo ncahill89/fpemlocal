@@ -1,6 +1,6 @@
-Package: FPEMcountry
+Package: FPEMlocal
 Type: Package
-Title: FPEMcountry
+Title: FPEMlocal
 Version: 1.0.2
 Date: 2019-12-24
 Authors@R: c(person("Gregory", "Guranich", email = "gguranic@umass.edu", role = c("aut", "cre")),

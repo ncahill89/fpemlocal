@@ -1,4 +1,4 @@
-FPEMcountry
+FPEMlocal
 ================
 
 <!-- badges: start -->
@@ -13,18 +13,18 @@ FPEMcountry
 
 The package can be installed by cloning and using `devtools::install()`.
 The source code for vignettes can be found in
-[/vignettes](https://github.com/FPcounts/FPEMcountry/tree/master/vignettes).
+[/vignettes](https://github.com/FPcounts/FPEMlocal/tree/master/vignettes).
 Below is a brief introduction.
 
 ## Introduction
 
-The FPEMcountry package is the one-country implementation of FPEM
-(family planning estimation model) designed with tidyverse philosophy.
-The model in this package uses global model results from the package
-FPEMglobal to aid in the estimation of country level family planning
-indicators. FPEMcountry comes equiped with survey data, country unit
-data, and country population count data, to produce one-country runs.
-Running FPEM is divided into three main functions.
+The FPEMlocal package is the one-country implementation of FPEM (family
+planning estimation model) designed with tidyverse philosophy. The model
+in this package uses global model results from the package FPEMglobal to
+aid in the estimation of country level family planning indicators.
+FPEMlocal comes equiped with survey data, country unit data, and country
+population count data, to produce one-country runs. Running FPEM is
+divided into three main functions.
 
 1.  [Fit a one country model](#fit) `fit_fp_c`
 2.  [Calculate family planning indicators](#results) `clac_fp_c`
@@ -41,34 +41,29 @@ interest. Our package contains country codes and other country units in
 the dataset `divisions`.
 
 ``` r
-divisions
+divisions %>% head
 ```
 
-    ## # A tibble: 232 x 13
-    ##    division_numeri~ name_country name_region name_sub_region region_numeric_~
-    ##               <dbl> <chr>        <chr>       <chr>                      <dbl>
-    ##  1                4 Afghanistan  Asia        South-Central ~              935
-    ##  2                8 Albania      Europe      Southern Europe              908
-    ##  3               12 Algeria      Africa      Northern Africa              903
-    ##  4               16 American Sa~ Oceania     Polynesia                    909
-    ##  5               20 Andorra      Europe      Southern Europe              908
-    ##  6               24 Angola       Africa      Middle Africa                903
-    ##  7              660 Anguilla     Latin Amer~ Caribbean                    904
-    ##  8               28 Antigua and~ Latin Amer~ Caribbean                    904
-    ##  9               32 Argentina    Latin Amer~ South America                904
-    ## 10               51 Armenia      Asia        Western Asia                 935
-    ## # ... with 222 more rows, and 8 more variables: sub_region_numeric_code <dbl>,
+    ## # A tibble: 6 x 13
+    ##   division_numeri~ name_country name_region name_sub_region region_numeric_~
+    ##              <dbl> <chr>        <chr>       <chr>                      <dbl>
+    ## 1                4 Afghanistan  Asia        South-Central ~              935
+    ## 2                8 Albania      Europe      Southern Europe              908
+    ## 3               12 Algeria      Africa      Northern Africa              903
+    ## 4               16 American Sa~ Oceania     Polynesia                    909
+    ## 5               20 Andorra      Europe      Southern Europe              908
+    ## 6               24 Angola       Africa      Middle Africa                903
+    ## # ... with 8 more variables: sub_region_numeric_code <dbl>,
     ## #   is_developed_region <chr>, is_less_developed_region <chr>,
     ## #   is_least_developed_country <chr>, is_in_sub_saharan_africa <chr>,
     ## #   is_unmarried_sexual_activity <chr>, is_low_population <chr>,
     ## #   is_fp2020 <chr>
 
-Our package data sets are tibbles. This is particularly useful for large
-datasets because it only prints the first few rows. The country codes
-used by our package, known as `division_numeric_code`, are found in this
-data. In our example we will execute a one-country run for Afghanistan,
-code `4`. Survey data is available in the dataset `contraceptive_use`.
-See `??contraceptive_use` for a detailed description of this dataset.
+Our package data sets are tibbles. The country codes used by our
+package, known as `division_numeric_code`, are found in this data. In
+our example we will execute a one-country run for Afghanistan, code `4`.
+Survey data is available in the dataset `contraceptive_use`. See
+`??contraceptive_use` for a detailed description of this dataset.
 
 ## <a name="fit"></a>
 
@@ -88,7 +83,7 @@ supply optional services statistics.
 ``` r
 fit <- fit_fp_c(
   is_in_union = "Y",
-  division_numeric_code = 4,
+  division_numeric_code = 231,
   first_year = 1970,
   last_year = 2030,
   diagnostic = TRUE
@@ -133,8 +128,8 @@ plot_fp_c(
     "contraceptive_use_traditional",
     "contraceptive_use_any"
     ),
-  compare_to_global = TRUE
-  )
+  compare_to_global = FALSE
+)
 ```
 
     ## $Y

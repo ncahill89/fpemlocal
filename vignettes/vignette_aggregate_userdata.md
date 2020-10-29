@@ -21,7 +21,7 @@ First, fit the models with the function `fit_fp_c`.
 
 ``` r
 fit_botswana <- fit_fp_c(
-  surveydata_filepath = "data-raw/Botswana_72_married_example.csv",
+  surveydata_filepath = "data-raw/manuscript_example_data/Botswana_72_married_example.csv",
   division_numeric_code = 72,
   is_in_union = "Y",
   first_year = 1970,
@@ -29,10 +29,10 @@ fit_botswana <- fit_fp_c(
 )
 ```
 
-    ## Parsed with column specification:
+    ## 
+    ## -- Column specification --------------------------------------------------------
     ## cols(
     ##   .default = col_character(),
-    ##   X1 = col_double(),
     ##   division_numeric_code = col_double(),
     ##   start_date = col_double(),
     ##   end_date = col_double(),
@@ -51,14 +51,15 @@ fit_botswana <- fit_fp_c(
     ##   se_log_r_modern_no_use = col_logical(),
     ##   se_log_r_traditional_no_use = col_logical(),
     ##   se_log_r_unmet_no_need = col_logical(),
-    ##   source_id = col_double()
+    ##   source_id = col_double(),
+    ##   se_log_r_unmet_no_need_imputed = col_double()
+    ##   # ... with 2 more columns
     ## )
-
-    ## See spec(...) for full column specifications.
+    ## i Use `spec()` for the full column specifications.
 
 ``` r
 fit_lesotho <- fit_fp_c(
-  surveydata_filepath = "data-raw/Lesotho_426_married_example.csv",
+  surveydata_filepath = "data-raw/manuscript_example_data/Lesotho_426_married_example.csv",
   division_numeric_code = 426,
   is_in_union = "Y",
   first_year = 1970,
@@ -66,7 +67,8 @@ fit_lesotho <- fit_fp_c(
 )
 ```
 
-    ## Parsed with column specification:
+    ## 
+    ## -- Column specification --------------------------------------------------------
     ## cols(
     ##   .default = col_double(),
     ##   is_in_union = col_character(),
@@ -87,7 +89,7 @@ fit_lesotho <- fit_fp_c(
     ##   has_absence_of_probing_questions_bias = col_character(),
     ##   record_id = col_character()
     ## )
-    ## See spec(...) for full column specifications.
+    ## i Use `spec()` for the full column specifications.
 
 ## <a name="pop"></a>
 
@@ -97,8 +99,8 @@ Read in population data for the populations of interest. Create a single
 dataset with the function `rbind`.
 
 ``` r
-popdata_botswana <- read.csv("data-raw/Botswana_72_married_popdata_example.csv")
-popdata_lesotho <- read.csv("data-raw/Lesotho_426_married_popdata_example.csv")
+popdata_botswana <- read.csv("data-raw/manuscript_example_data/Botswana_72_married_popdata_example.csv")
+popdata_lesotho <- read.csv("data-raw/manuscript_example_data/Lesotho_426_married_popdata_example.csv")
 popdata <- rbind(popdata_botswana, popdata_lesotho)
 ```
 

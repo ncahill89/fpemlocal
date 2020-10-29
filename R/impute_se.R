@@ -118,11 +118,9 @@ impute_global_se <- function(wide_data) {
 #' 
 #' For scenario 2 we impute the sampling errors by setting them equal to the maximum 
 #' of the known sampling errors in that country.
-#'
 #' @param contraceptive_use \emph{'Data.frame'} A data.frame from \code{\link[contraceptive_use]{contraceptive_use}}
 #'
 #' @return \emph{'Data.frame'} The input data with se imputed
-#
 impute_se <- function(contraceptive_use) {
   wide_data <- contraceptive_use
   vars <- list(
@@ -199,13 +197,11 @@ gen_max_se_data <- function(wide_data) {
 #' For scenario 2 we impute the sampling errors by setting them equal to the maximum 
 #' of the known sampling errors in that country.
 #' 
-#' 
 #' @param user_data \emph{\sQuote{Data.frame}} Survey data such as \code{\link{contraceptive_use}}.
 #' @inheritParams fit_fp_c
 #'
 #' @return \emph{\sQuote{Data.frame}} Imputed survey data
 #' @export
-#'
 impute_user_se <- function(user_data, subnational, is_in_union) {
   user_data <- user_data %>% as.data.frame()
   div <- user_data["division_numeric_code"]

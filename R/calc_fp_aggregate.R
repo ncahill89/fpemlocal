@@ -206,20 +206,10 @@ calc_fp_aggregate <- function(
   first_year <- fits %>% 
     purrr::chuck(1,1,"core_data","year_sequence_list", "result_seq_years") %>% 
     min
-  last_year <- fits %>% 
-    purrr::chuck(1,1,"core_data","year_sequence_list", "result_seq_years") %>% 
-    max
   #gets population data if not provided, filters pop data regardless
   population_data <- population_data_import(
     population_data = population_data,
-    is_in_union = purrr::pmap(list(fits, 1, "core_data", "is_in_union"),
-                              purrr::chuck
-                              ),  
-    division_numeric_code = purrr::pmap(list(fits, 1, "core_data", "units", "division_numeric_code"),
-                                        purrr::chuck
-                                        ),
-    first_year = first_year,
-    last_year = last_year
+    fit = fits[[1]][[1]]
   )
   #aggregates the samples
   posterior_samples_aggregated <- aggregate_fp(posterior_samples =  posterior_samples,

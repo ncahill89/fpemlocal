@@ -14,23 +14,19 @@ options(warn=-1)
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(FPEMcountry)
+library(FPEMlocal)
 devtools::load_all()
+
+div <- 4
+name <- divisions %>%
+  dplyr::filter(division_numeric_code == div) %>%
+  dplyr::pull(name_country)
 ```
-## Introduction
-In this vignette we obtain sub-national estimates for married women.
 
-1. [Fit a one country model](#fit) `fit_fp_c`
-2. [Calculate point estimates for indicators](#results) `calc_fp_c`
-3. [Plot the  point estimates against the survey data](#plot) `plot_fp_c`
-
-## <a name="fit"></a>
-## 1. Fit a one country model
-Fit the sub-national family planning estimation model with the function `fit_fp_c`. Set the argument `subnational` to `TRUE`. All other arguments follows from one-country examples.
 ```{r}
 fit <- fit_fp_c(
   surveydata_filepath = "data-raw/manuscript_example_data/afghanistan_4_married_example.csv",
-  division_numeric_code = 4,
+  division_numeric_code = div,
   is_in_union = "Y",
   first_year = 1970,
   last_year = 2030,
@@ -38,30 +34,10 @@ fit <- fit_fp_c(
 )
 ```
 
-
-## <a name="results"></a>
-## 2. Calculate point estimates for indicators
-Calculate point estimates for family planning indicators with the function `calc_fp_c`. Supply the fit object from `fit_fp_c` to the argument `fit`. Read in your population count dataset. Then supply the dataset to the argument `population_data`.
 ```{r}
-population_data <- read.csv("data-raw/manuscript_example_data/afghanistan_4_married_popdata_example.csv")
-results <- calc_fp_c(fit = fit,
-                     population_data = population_data)
+results <- calc_fp_c(fit = fit)
 ```
 
-A set of results here consist of the following family planning indicators
-```{r}
-results$Y %>% names
-```
-
-The point estimates for each indicator are long-format tibbles. Let's take a look at the tibble for the indicator `contraceptive_use_modern`
-```{r}
-results$Y$contraceptive_use_modern
-```
-
-
-## <a name="plot"></a>
-## 3. Plot estimates and survey data
-FPEMcountry also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2.
 ```{r}
 plot_fp_c(
   fit,

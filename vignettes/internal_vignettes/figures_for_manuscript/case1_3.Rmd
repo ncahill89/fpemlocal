@@ -14,7 +14,7 @@ options(warn=-1)
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(FPEMcountry)
+library(FPEMlocal)
 devtools::load_all()
 ```
 
@@ -87,7 +87,7 @@ plotobj <- tidyr::spread(results_j, key = percentile, value = value) %>%
 plotobj <- plotobj +
   ggplot2::geom_ribbon(ggplot2::aes(ymin = `2.5%`, ymax = `97.5%`), data = data2, fill = "red", alpha = .15) +
   # ggplot2::geom_ribbon(ggplot2::aes(ymin = `10%`, ymax = `90%`), fill = "red", alpha = .05) +
-  ggplot2::geom_line(ggplot2::aes(y = `50%`), color = "red", linetype = 2, alpha = .5, size = 1.3) 
+  ggplot2::geom_line(ggplot2::aes(y = `50%`), color = "red", linetype = 2, alpha = .5, size = 1.3)
 plotobj
 ```
 
@@ -108,12 +108,12 @@ plotobj <- tidyr::spread(results_j, key = percentile, value = value) %>%
 plotobj <- plotobj +
   ggplot2::geom_line(ggplot2::aes(y = `2.5%`), data = data2, fill = "black", linetype = 2, alpha = .5, size = 1) +
   ggplot2::geom_line(ggplot2::aes(y = `97.5%`), data = data2, fill = "black", linetype = 2, alpha = .5, size = 1) +
-  ggplot2::geom_line(ggplot2::aes(y = `50%`), color = "black", linetype = 2, alpha = .5, size = 1.3) 
+  ggplot2::geom_line(ggplot2::aes(y = `50%`), color = "black", linetype = 2, alpha = .5, size = 1.3)
 plotobj
 ```
 
 ```{r}
-# 
+#
 # observations$subpopulation_labels <- fpem_get_subpopulation_labels(observations)
 # plotobj <- plotobj + ggplot2::geom_point(
 #   data = observations,

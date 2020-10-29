@@ -36,8 +36,9 @@ fits.
 
 ``` r
 fitlist %>% names
-#> [1] "Y"   "N"   "ALL"
 ```
+
+    ## [1] "Y"   "N"   "ALL"
 
 ## <a name="results"></a>
 
@@ -60,53 +61,67 @@ planning indicators.
 
 ``` r
 resultlist %>% names
-#> [1] "Y"   "N"   "ALL"
 ```
+
+    ## [1] "Y"   "N"   "ALL"
 
 A set of results here consist of the following family planning
 indicators
 
 ``` r
 resultlist$ALL %>% names
-#>  [1] "contraceptive_use_any"                      "contraceptive_use_modern"                  
-#>  [3] "contraceptive_use_traditional"              "non_use"                                   
-#>  [5] "unmet_need_any"                             "unmet_need_modern"                         
-#>  [7] "demand"                                     "demand_modern"                             
-#>  [9] "demand_satisfied"                           "demand_satisfied_modern"                   
-#> [11] "no_need"                                    "contraceptive_use_any_population_counts"   
-#> [13] "contraceptive_use_modern_population_counts" "traditional_cpr_population_counts"         
-#> [15] "non_use_population_counts"                  "unmet_need_population_counts"              
-#> [17] "unmet_need_modern_population_counts"        "demand_modern_population_counts"           
-#> [19] "demand_population_counts"                   "demand_satisfied_population_counts"        
-#> [21] "demand_satisfied_modern_population_counts"  "no_need_population_counts"
 ```
+
+    ##  [1] "contraceptive_use_any"                     
+    ##  [2] "contraceptive_use_modern"                  
+    ##  [3] "contraceptive_use_traditional"             
+    ##  [4] "non_use"                                   
+    ##  [5] "unmet_need_any"                            
+    ##  [6] "unmet_need_modern"                         
+    ##  [7] "demand"                                    
+    ##  [8] "demand_modern"                             
+    ##  [9] "demand_satisfied"                          
+    ## [10] "demand_satisfied_modern"                   
+    ## [11] "no_need"                                   
+    ## [12] "contraceptive_use_any_population_counts"   
+    ## [13] "contraceptive_use_modern_population_counts"
+    ## [14] "traditional_cpr_population_counts"         
+    ## [15] "non_use_population_counts"                 
+    ## [16] "unmet_need_population_counts"              
+    ## [17] "unmet_need_modern_population_counts"       
+    ## [18] "demand_modern_population_counts"           
+    ## [19] "demand_population_counts"                  
+    ## [20] "demand_satisfied_population_counts"        
+    ## [21] "demand_satisfied_modern_population_counts" 
+    ## [22] "no_need_population_counts"
 
 The point estimates for each indicator are long-format tibbles. Let’s
 take a look at the tibble for the indicator `contraceptive_use_modern`
 
 ``` r
 resultlist$ALL$contraceptive_use_modern
-#> # A tibble: 488 x 3
-#>     year percentile  value
-#>    <int> <chr>       <dbl>
-#>  1  1970 mean       0.0116
-#>  2  1971 mean       0.0123
-#>  3  1972 mean       0.0130
-#>  4  1973 mean       0.0138
-#>  5  1974 mean       0.0147
-#>  6  1975 mean       0.0156
-#>  7  1976 mean       0.0167
-#>  8  1977 mean       0.0179
-#>  9  1978 mean       0.0191
-#> 10  1979 mean       0.0205
-#> # ... with 478 more rows
 ```
+
+    ## # A tibble: 488 x 3
+    ##     year percentile  value
+    ##    <int> <chr>       <dbl>
+    ##  1  1970 mean       0.0116
+    ##  2  1971 mean       0.0123
+    ##  3  1972 mean       0.0130
+    ##  4  1973 mean       0.0138
+    ##  5  1974 mean       0.0147
+    ##  6  1975 mean       0.0156
+    ##  7  1976 mean       0.0167
+    ##  8  1977 mean       0.0179
+    ##  9  1978 mean       0.0191
+    ## 10  1979 mean       0.0205
+    ## # ... with 478 more rows
 
 ## <a name="plot"></a>
 
 ## 3\. Plot the point estimates against the survey data
 
-FPEMcountry also includes a function named `plot_fp_c` to plot the
+FPEMlocal also includes a function named `plot_fp_c` to plot the
 calculated point estimates against the survey data. The arguments to
 this function are, the fit object from step 1, the results from step 2,
 and a vector of indicator names. The vector of indicator names
@@ -124,67 +139,68 @@ plot_fp_c(
     "contraceptive_use_any"
     )
   )
-#> $Y
-#> $Y$unmet_need_any
 ```
+
+    ## $Y
+    ## $Y$unmet_need_any
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-    #> 
-    #> $Y$contraceptive_use_modern
+    ## 
+    ## $Y$contraceptive_use_modern
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
-    #> 
-    #> $Y$contraceptive_use_traditional
+    ## 
+    ## $Y$contraceptive_use_traditional
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
-    #> 
-    #> $Y$contraceptive_use_any
+    ## 
+    ## $Y$contraceptive_use_any
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
 
-    #> 
-    #> 
-    #> $N
-    #> $N$unmet_need_any
+    ## 
+    ## 
+    ## $N
+    ## $N$unmet_need_any
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
 
-    #> 
-    #> $N$contraceptive_use_modern
+    ## 
+    ## $N$contraceptive_use_modern
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
 
-    #> 
-    #> $N$contraceptive_use_traditional
+    ## 
+    ## $N$contraceptive_use_traditional
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
 
-    #> 
-    #> $N$contraceptive_use_any
+    ## 
+    ## $N$contraceptive_use_any
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-8.png)<!-- -->
 
-    #> 
-    #> 
-    #> $ALL
-    #> $ALL$unmet_need_any
+    ## 
+    ## 
+    ## $ALL
+    ## $ALL$unmet_need_any
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-9.png)<!-- -->
 
-    #> 
-    #> $ALL$contraceptive_use_modern
+    ## 
+    ## $ALL$contraceptive_use_modern
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-10.png)<!-- -->
 
-    #> 
-    #> $ALL$contraceptive_use_traditional
+    ## 
+    ## $ALL$contraceptive_use_traditional
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-11.png)<!-- -->
 
-    #> 
-    #> $ALL$contraceptive_use_any
+    ## 
+    ## $ALL$contraceptive_use_any
 
 ![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-12.png)<!-- -->

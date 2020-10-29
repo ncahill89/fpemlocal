@@ -38,21 +38,25 @@ posterior_samples_array_format <- function(fit, core_data) {
 #'
 #' @param in_union_posterior_samples \emph{`array`} An array of n chains x n iterations x n years x n proportions
 #' @param not_in_union_posterior_samples \emph{`array`} An array of n chains x n iterations x n years x n proportions
-#' @param core_data
+#' @param core_data consists of manipulated observations and run settings for \code{\link{fit_fp_c}}
+#' @param population_data \emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.
 #'
 #' @return \emph{`array`} Posterior samples for all women
 #' @export
 posterior_samples_all_women <-
     function(in_union_posterior_samples,
            not_in_union_posterior_samples,
-           core_data
+           core_data,
+           population_data
   ) {
-
+    if (is.null(population_data)) {
+      population_data <- FPEMlocal::population_counts
+    }
     division_numeric_code <- core_data$units$division_numeric_code
     first_year <- min(core_data$year_sequence_list$result_seq_years)
     last_year <- max(core_data$year_sequence_list$result_seq_years)
     nyears <- length(core_data$year_sequence_list$result_seq_years)
-    in_union_population_counts = population_counts %>%
+    in_union_population_counts <- population_data %>%
       dplyr::filter(division_numeric_code == !!division_numeric_code) %>%
       dplyr::filter(is_in_union == "Y") %>%
       dplyr::filter(age_range == "15-49") %>%
@@ -61,7 +65,7 @@ posterior_samples_all_women <-
       dplyr::select(population_count) %>%
       unlist() %>%
       as.vector()
-    not_in_union_population_counts = population_counts %>%
+    not_in_union_population_counts <- population_data %>%
       dplyr::filter(division_numeric_code == !!division_numeric_code) %>%
       dplyr::filter(is_in_union == "N") %>%
       dplyr::filter(age_range == "15-49") %>%

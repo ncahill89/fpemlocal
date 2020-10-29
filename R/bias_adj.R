@@ -17,13 +17,7 @@ recover_prop <- function(ratio){
 
 
 
-#' bias_adj
-#'
-#' @param core_data
-#' @param list_auxiliary
-#' @param list_global
-#' @param mod
-#'
+
 bias_adj <- function(core_data, list_auxiliary, list_global, mod) {
   N = nrow(core_data$observations)
   S = mod$BUGSoutput$n.sims

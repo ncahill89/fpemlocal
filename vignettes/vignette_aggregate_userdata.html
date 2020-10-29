@@ -613,16 +613,16 @@ body {
 <h2 id="fit-models">Fit models</h2>
 <p>First, fit the models with the function <code>fit_fp_c</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>fit_botswana &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/Botswana_72_married_example.csv&quot;</span>,</span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/manuscript_example_data/Botswana_72_married_example.csv&quot;</span>,</span>
 <span id="cb1-3"><a href="#cb1-3"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">72</span>,</span>
 <span id="cb1-4"><a href="#cb1-4"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
 <span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
 <span id="cb1-6"><a href="#cb1-6"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
 <span id="cb1-7"><a href="#cb1-7"></a>)</span></code></pre></div>
-<pre><code>## Parsed with column specification:
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
 ## cols(
 ##   .default = col_character(),
-##   X1 = col_double(),
 ##   division_numeric_code = col_double(),
 ##   start_date = col_double(),
 ##   end_date = col_double(),
@@ -641,19 +641,21 @@ body {
 ##   se_log_r_modern_no_use = col_logical(),
 ##   se_log_r_traditional_no_use = col_logical(),
 ##   se_log_r_unmet_no_need = col_logical(),
-##   source_id = col_double()
+##   source_id = col_double(),
+##   se_log_r_unmet_no_need_imputed = col_double()
+##   # ... with 2 more columns
 ## )
-
-## See spec(...) for full column specifications.
+## i Use `spec()` for the full column specifications.
 </code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>fit_lesotho &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/Lesotho_426_married_example.csv&quot;</span>,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/manuscript_example_data/Lesotho_426_married_example.csv&quot;</span>,</span>
 <span id="cb3-3"><a href="#cb3-3"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">426</span>,</span>
 <span id="cb3-4"><a href="#cb3-4"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
 <span id="cb3-5"><a href="#cb3-5"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
 <span id="cb3-6"><a href="#cb3-6"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
 <span id="cb3-7"><a href="#cb3-7"></a>)</span></code></pre></div>
-<pre><code>## Parsed with column specification:
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
 ## cols(
 ##   .default = col_double(),
 ##   is_in_union = col_character(),
@@ -674,13 +676,13 @@ body {
 ##   has_absence_of_probing_questions_bias = col_character(),
 ##   record_id = col_character()
 ## )
-## See spec(...) for full column specifications.
+## i Use `spec()` for the full column specifications.
 </code></pre>
 <h2 id="section-1"><a name="pop"></a></h2>
 <h2 id="read-in-population-data">Read in population data</h2>
 <p>Read in population data for the populations of interest. Create a single dataset with the function <code>rbind</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>popdata_botswana &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/Botswana_72_married_popdata_example.csv&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>popdata_lesotho &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/Lesotho_426_married_popdata_example.csv&quot;</span>)</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>popdata_botswana &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/manuscript_example_data/Botswana_72_married_popdata_example.csv&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>popdata_lesotho &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/manuscript_example_data/Lesotho_426_married_popdata_example.csv&quot;</span>)</span>
 <span id="cb5-3"><a href="#cb5-3"></a>popdata &lt;-<span class="st"> </span><span class="kw">rbind</span>(popdata_botswana, popdata_lesotho)</span></code></pre></div>
 <h2 id="section-2"><a name="results"></a></h2>
 <h2 id="calculate-results">Calculate results</h2>

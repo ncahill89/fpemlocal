@@ -82,7 +82,6 @@ for (j in 1:length(divs)) {
   newreslist <- list()
   for (i in 1:3) {
     is_in_union <- unions[i]
-    fit <- fitlist[[is_in_union]]
     res <- reslist[[is_in_union]]
     newreslist[[i]] <- data.frame(
               name_country = divname,
@@ -102,7 +101,7 @@ for (j in 1:length(divs)) {
   allreslist[[div]] <- do.call(rbind, newreslist)
 }
 df <- do.call(rbind, allreslist)
-write.csv(df, filenamecreated)
+write.csv(df, "results_track20_08-24-2020.csv")
 ```
 
 
