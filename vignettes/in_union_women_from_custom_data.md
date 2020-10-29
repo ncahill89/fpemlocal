@@ -155,19 +155,19 @@ plot_fp_c(
     ## $Y
     ## $Y$unmet_need_any
 
-![](vignette_married_women_userdata_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](in_union_women_from_custom_data_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_modern
 
-![](vignette_married_women_userdata_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](in_union_women_from_custom_data_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_traditional
 
-![](vignette_married_women_userdata_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
+![](in_union_women_from_custom_data_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_any
 
-![](vignette_married_women_userdata_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
+![](in_union_women_from_custom_data_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->

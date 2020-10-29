@@ -144,63 +144,63 @@ plot_fp_c(
     ## $Y
     ## $Y$unmet_need_any
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_modern
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_traditional
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_any
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
 
     ## 
     ## 
     ## $N
     ## $N$unmet_need_any
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
 
     ## 
     ## $N$contraceptive_use_modern
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
 
     ## 
     ## $N$contraceptive_use_traditional
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
 
     ## 
     ## $N$contraceptive_use_any
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-8.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-8.png)<!-- -->
 
     ## 
     ## 
     ## $ALL
     ## $ALL$unmet_need_any
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-9.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-9.png)<!-- -->
 
     ## 
     ## $ALL$contraceptive_use_modern
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-10.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-10.png)<!-- -->
 
     ## 
     ## $ALL$contraceptive_use_traditional
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-11.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-11.png)<!-- -->
 
     ## 
     ## $ALL$contraceptive_use_any
 
-![](vignette_all_women_files/figure-gfm/unnamed-chunk-8-12.png)<!-- -->
+![](all_women_files/figure-gfm/unnamed-chunk-8-12.png)<!-- -->

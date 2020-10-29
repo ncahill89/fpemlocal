@@ -57,19 +57,19 @@ plot_fp_c(
     ## $Y
     ## $Y$unmet_need_any
 
-![](vignette_subnational_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](subnational_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_modern
 
-![](vignette_subnational_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](subnational_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_traditional
 
-![](vignette_subnational_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
+![](subnational_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_any
 
-![](vignette_subnational_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
+![](subnational_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->

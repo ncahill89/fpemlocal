@@ -1,4 +1,4 @@
-Estimating family planning indicators for married women
+Estimating family planning indicators for in-union women
 ================
 
 ## Introduction
@@ -503,19 +503,19 @@ plot_fp_c(
     ## $Y
     ## $Y$unmet_need_any
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](in_union_women_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_modern
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](in_union_women_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_traditional
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](in_union_women_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
     ## 
     ## $Y$contraceptive_use_any
 
-![](vignette_married_women_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+![](in_union_women_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
