@@ -6,6 +6,13 @@
 \usage{
 check_inputs(surveydata_filepath, subnational, division_numeric_code)
 }
+\arguments{
+\item{surveydata_filepath}{\emph{\sQuote{Character}} Path to survey data. Survey data should be a .csv with the following format \code{\link{contraceptive_use}}.}
+
+\item{subnational}{'\emph{\sQuote{Logical}} If TRUE runs the sub national model.}
+
+\item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
+}
 \description{
 check_inputs
 }

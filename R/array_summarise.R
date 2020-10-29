@@ -2,10 +2,9 @@
 #' Usual quantiles.
 #'
 #' @return Usual quantiles used to summarise credible intervals.
-#' @export
 standard_quantiles = function() c(
   0.025, 0.05, 0.1, 0.5, 0.9, 0.95, 0.975)
-
+# 50th, 65th, 75th, 85th, and 90th
 #' Usual summary of a set of samples.
 #'
 #' @param x set of parameter samples to summarize.

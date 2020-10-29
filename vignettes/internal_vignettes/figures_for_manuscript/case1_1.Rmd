@@ -1,0 +1,35 @@
+---
+title: "FOR PICTURE ONLY: Estimating family planning indicators for married women"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+options(warn=-1)
+library(FPEMlocal)
+devtools::load_all()
+```
+
+
+```{r}
+fit <- fit_fp_c(
+  division_numeric_code = 4,
+  is_in_union = "Y",
+  first_year = 1970,
+  last_year = 2030
+)
+
+results <- calc_fp_c(fit = fit)
+
+plot_fp_c(
+  fit = fit,
+  results = results,
+  indicators = c(
+    "unmet_need_any",
+    "contraceptive_use_modern",
+    "contraceptive_use_traditional",
+    "contraceptive_use_any"
+  )
+)
+```

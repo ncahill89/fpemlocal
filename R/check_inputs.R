@@ -1,6 +1,6 @@
 #' check_inputs
 #'
-#' @inheritParams do_1country_run
+#' @inheritParams fit_fp_c
 #'
 check_inputs <- function(surveydata_filepath, subnational, division_numeric_code) {
   if (is.null(surveydata_filepath) & subnational) {

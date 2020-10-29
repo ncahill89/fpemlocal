@@ -16,7 +16,13 @@ global_estimates <- dplyr::bind_rows(global_estimates_married,
   dplyr::mutate(indicator = dplyr::recode(indicator,
                                           unmet = "unmet_need_any",
                                           modern = "contraceptive_use_modern",
-                                          traditional = "contraceptive_use_traditional"))
+                                          traditional = "contraceptive_use_traditional")) %>%
+  dplyr::rename("2.5%" = "0.025",
+                "10%" = "0.1",
+                "50%" = "0.5",
+                "90%" = "0.9",
+                "97.5%" = "0.975") %>%
+  dplyr::mutate(model = "global")
 
 
 usethis::use_data(global_estimates, overwrite = TRUE)

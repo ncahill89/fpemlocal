@@ -5,7 +5,7 @@
 #' @return data  \emph{\sQuote{Data.frame}} The processed data associated with the model run from \code{\link[core_data]{core_data}}
 #'
 
-data_Series_type_relabel <- function(data) {
+data_series_type_relabel <- function(data) {
   store <- data
   index <- index_m
   store$index_datatype <- 1

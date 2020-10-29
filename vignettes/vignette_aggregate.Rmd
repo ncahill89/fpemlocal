@@ -1,0 +1,92 @@
+---
+title: "Aggregating estimates from multiple fits"
+output: github_document
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+knitr::opts_chunk$set(echo = TRUE)
+library(FPEMlocal)
+devtools::load_all()
+```
+
+
+
+## Introduction
+In this vignette we will fit FPET to multiple countries and aggregate the samples to obtain results for aggregate levels.
+
+## Table of Contents
+1. [Fit models](#fit)
+2. [Aggregate samples](#run)
+3. [Calculate results](#results)
+
+## <a name="fit"></a>
+## Fit models
+Let's task ourselves with obtaining estimates of contraceptive use for the sub-region of Southern Africa.
+```{r}
+divisions %>%
+  dplyr::filter(name_sub_region == "Southern Africa") %>%
+  dplyr::select(name_country) %>%
+  unique()
+```
+
+First, we need fits for all countries in Southern Africa. Start by pulling a vector of country codes.
+```{r}
+divs <- divisions %>%
+  dplyr::filter(name_sub_region == "Southern Africa") %>%
+  dplyr::filter(division_numeric_code %in% contraceptive_use$division_numeric_code) %>% # Filtering on the countries available in `contraceptive_use` because we are using this package data
+  dplyr::pull(division_numeric_code)
+```
+
+Next, map the country codes to the function `fit_fp_c`. Note: Supply country codes as a list to be mapped.
+```{r}
+first_year <- 1970
+last_year <- 2030
+union <- "Y"
+fits <- purrr::pmap(list(division_numeric_code = divs %>% as.list(),
+                         is_in_union = union,
+                         first_year = first_year,
+                         last_year = last_year
+                         ),
+                    fit_fp_c)
+```
+
+## <a name="aggregate"></a>
+## Aggregate samples
+
+Within out list of fits we have more complex lists. We only need the samples from these fits. This function plucks the posterior samples and combines each array of samples along index 1 making one large array. The first dimension is for country codes. Use `dimnames()` on the resulting list to see how to index a country. This is the identical format of a posterior samples array from FPEMglobal.
+```{r}
+posterior_samples <- pluck_abind_fp_c(fits)
+```
+
+Next, we need the population counts for these countries filtered by the time frame and union status.
+```{r}
+## Get population data
+population_data <- population_counts %>%
+  dplyr::filter(division_numeric_code %in% divs) %>%
+  dplyr::filter(is_in_union == union) %>%
+  dplyr::filter(mid_year >= first_year) %>%
+  dplyr::filter(mid_year <= last_year)
+```
+
+Now supply the posterior samples and population counts to the function `aggregate_fp`.
+```{r}
+posterior_samples_aggregated <- aggregate_fp(posterior_samples =  posterior_samples,
+                                             population_data = population_data)
+```
+
+
+
+
+## <a name="results"></a>
+## Calculate results
+Finally, supply the aggregated samples, the population data, and the first_year to `calc_fp` to calculate point estimates for family planning indicators.
+```{r}
+results <- calc_fp(posterior_samples = posterior_samples_aggregated,
+                   population_data = population_data,
+                   first_year = first_year)
+```

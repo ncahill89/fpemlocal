@@ -4,9 +4,10 @@
 \alias{proportions_vector}
 \alias{modern_cpr}
 \alias{traditional_cpr}
-\alias{unmet}
+\alias{unmet_p}
 \alias{total_cpr}
 \alias{demand}
+\alias{demand_modern}
 \alias{no_need}
 \alias{unmet_modern}
 \alias{non_use}
@@ -18,11 +19,13 @@ modern_cpr(x)
 
 traditional_cpr(x)
 
-unmet(x)
+unmet_p(x)
 
 total_cpr(x)
 
 demand(x)
+
+demand_modern(x)
 
 no_need(x)
 
@@ -57,6 +60,10 @@ proprotion of in-universe respondents using
 proportion of in-uinverse respondents using
         a modern or traditional contraceptive method
         or in need of either method.
+
+proportion of in-uinverse respondents using
+        a modern contraceptive method
+        or in need of a modern method.
 
 proportion of in-universe respondents not
         using a contraceptive method and not in need

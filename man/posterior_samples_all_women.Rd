@@ -7,7 +7,8 @@
 posterior_samples_all_women(
   in_union_posterior_samples,
   not_in_union_posterior_samples,
-  core_data
+  core_data,
+  population_data
 )
 }
 \arguments{
@@ -15,7 +16,9 @@ posterior_samples_all_women(
 
 \item{not_in_union_posterior_samples}{\emph{`array`} An array of n chains x n iterations x n years x n proportions}
 
-\item{core_data}{}
+\item{core_data}{consists of manipulated observations and run settings for \code{\link{fit_fp_c}}}
+
+\item{population_data}{\emph{\sQuote{Data.frame}} Population count data such as \code{\link{population_counts}}.}
 }
 \value{
 \emph{`array`} Posterior samples for all women

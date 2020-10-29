@@ -1,0 +1,52 @@
+---
+title: "Estimating subnational family planning indicators for married women with custom user data"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# knitr::opts_knit$get("root.dir")  # alternative to the previous line
+# the default autosave location will depend on this being setup
+options(warn=-1)
+```
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(FPEMlocal)
+devtools::load_all()
+
+div <- 4
+name <- divisions %>%
+  dplyr::filter(division_numeric_code == div) %>%
+  dplyr::pull(name_country)
+```
+
+```{r}
+fit <- fit_fp_c(
+  surveydata_filepath = "data-raw/manuscript_example_data/afghanistan_4_married_example.csv",
+  division_numeric_code = div,
+  is_in_union = "Y",
+  first_year = 1970,
+  last_year = 2030,
+  subnational = TRUE
+)
+```
+
+```{r}
+results <- calc_fp_c(fit = fit)
+```
+
+```{r}
+plot_fp_c(
+  fit,
+  results,
+  indicators = c(
+    "unmet_need_any",
+    "contraceptive_use_modern",
+    "contraceptive_use_traditional",
+    "contraceptive_use_any"
+    )
+  )
+```

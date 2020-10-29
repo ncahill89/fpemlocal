@@ -1,0 +1,63 @@
+---
+title: "Aggregating estimates from multiple fits with custom user data"
+output: github_document
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+options(warn=-1)
+knitr::opts_chunk$set(echo = TRUE)
+library(FPEMlocal)
+devtools::load_all()
+```
+
+
+
+## Introduction
+In this vignette we will fit FPET to multiple countries and aggregate the samples to obtain results for aggregate levels. We will fit models for Botswana and Lesotho, country codes 72 and 426 respectively.
+
+## Table of Contents
+1. [Fit models](#fit)
+2. [Read in population data](#pop)4
+3. [Calculate results](#results)
+
+## <a name="fit"></a>
+## Fit models
+
+First, fit the models with the function `fit_fp_c`.
+```{r}
+fit_botswana <- fit_fp_c(
+  surveydata_filepath = "data-raw/manuscript_example_data/Botswana_72_married_example.csv",
+  division_numeric_code = 72,
+  is_in_union = "Y",
+  first_year = 1970,
+  last_year = 2030
+)
+fit_lesotho <- fit_fp_c(
+  surveydata_filepath = "data-raw/manuscript_example_data/Lesotho_426_married_example.csv",
+  division_numeric_code = 426,
+  is_in_union = "Y",
+  first_year = 1970,
+  last_year = 2030
+)
+```
+
+## <a name="pop"></a>
+## Read in population data
+
+Read in population data for the populations of interest. Create a single dataset with the function `rbind`.
+```{r}
+popdata_botswana <- read.csv("data-raw/manuscript_example_data/Botswana_72_married_popdata_example.csv")
+popdata_lesotho <- read.csv("data-raw/manuscript_example_data/Lesotho_426_married_popdata_example.csv")
+popdata <- rbind(popdata_botswana, popdata_lesotho)
+```
+
+## <a name="results"></a>
+## Calculate results
+Supply the fits in a list and the population data to the function `calc_fp_aggregate`. The resulting object is a list of long format tibbles with family planning estimates.
+```{r}
+results <- calc_fp_aggregate(fits = list(fit_botswana, fit_lesotho),
+                   population_data = popdata)
+```

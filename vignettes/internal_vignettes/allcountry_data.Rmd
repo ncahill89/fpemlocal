@@ -14,9 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(fpemdata)
-library(fpemreporting)
-library(fpemmodeling)
+devtools::load_all()
 library(ggplot2)
 library(grid)
 library(gridExtra)
@@ -24,14 +22,14 @@ library(gridExtra)
 
 # Set output directory and divs for the set of results
 ```{r}
-outputdir <- "output_upto2013"
-filenamecreated <- "results_upto2013.csv"
-divs <- read.csv("Track20Database121819_Pre2013.csv") 
+# outputdir <- "output_upto2013"
+# filenamecreated <- "results_upto2013.csv"
+divs <- read.csv("C:/Users/desktop-g/Downloads/Track20Database033020.csv") 
 divs <- divs %>% dplyr::select(division_numeric_code) %>% unique()
-popcountdiv <- fpemdata::population_counts
+popcountdiv <- population_counts
 divs <- divs %>% dplyr::filter(division_numeric_code %in% popcountdiv$division_numeric_code)
 divnames <- divs %>% 
-  dplyr::left_join(fpemdata::divisions) %>%
+  dplyr::left_join(divisions) %>%
   dplyr::select(name_country) %>%
   dplyr::pull()
 divs <- divs %>% dplyr::pull()
@@ -47,23 +45,48 @@ divs <- divs %>% dplyr::pull()
 #   dplyr::select(name_country) %>%
 #   dplyr::pull()
 # divs <- divs %>% dplyr::pull()
+
 ```
 
+
 ```{r}
-results <- c("results_y", "results_n", "results_all")
+for (div in divs) {
+  runname <- paste0("avenir_", div)
+  fit <- fit_fp_c_autosave(
+    runname = runname,
+    surveydata_filepath = "C:/Users/desktop-g/Downloads/Track20Database033020.csv",
+    is_in_union = "ALL",
+    division_numeric_code = div,
+    first_year = 1970,
+    last_year = 2030,
+    diagnostic = FALSE
+)
+  calc_fp_c_autosave(runname = runname)
+}
+
+```
+
+
+
+
+```{r}
 unions <- c("Y", "N", "ALL")
 
 allreslist <- list()
-for (div in divs) {
-  reslist <- readRDS(file.path(outputdir, paste0("reslist", div, ".rds")))
+for (j in 1:length(divs)) {
+  divname <- divnames[j]
+  div <- divs[j]
+  runname <- paste0("avenir_", div)
+  reslist <- readRDS(file.path("output/results", paste0(runname, ".rds")))
+
   newreslist <- list()
   for (i in 1:3) {
-    result <- results[i]
     is_in_union <- unions[i]
-    res <- reslist[[result]]
+    fit <- fitlist[[is_in_union]]
+    res <- reslist[[is_in_union]]
     newreslist[[i]] <- data.frame(
-              name_country = reslist$core_data$units$name_country,
-              division_numeric_code = reslist$core_data$units$division_numeric_code,
+              name_country = divname,
+              division_numeric_code = div,
               is_in_union = is_in_union,
               year = res$contraceptive_use_any$year ,
               percentile = res$contraceptive_use_any$percentile,

@@ -1,9 +1,9 @@
 
 #' list_service_stats
 #'
-#' Filter service statistics data
+#'fit_fp_cservice statistics data
 #'
-#' @inheritParams do_1country_run
+#' @inheritParams fit_fp_c
 #' @param service_stats_filepath File path to service stat csv
 #' @param model_seq_years Years of model estimation from\code{\link{year_sequence_maker}}.
 #'
@@ -49,7 +49,7 @@ list_service_stats <- function(
     list_ss_data <- list(K = k_index %>% length,
                          get_t_k = match(x = floor(ss$year),model_seq_years), # k+1 years and k differences
                          ss_delta_k = ss$ss_delta[k_index],
-                         ss_se_k = ss$se_emu[k_index]
+                         ss_se_k = ss$se_se[k_index]
                          )
   } else {
     list_ss_data <- NULL

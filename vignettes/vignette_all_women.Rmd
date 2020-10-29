@@ -1,0 +1,84 @@
+---
+title: "Estimating family planning indicators for all women"
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+# knitr::opts_knit$get("root.dir")  # alternative to the previous line
+# the default autosave location will depend on this being setup
+options(warn=-1)
+```
+## Introduction
+In this vignette we obtain estimates for all women with package datasets. By default, functions utilize UNPD datasets.
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(FPEMlocal)
+devtools::load_all()
+```
+
+1. [Fit models and obtain samples for all women](#fit) `fit_fp_c`
+2. [Calculate point estimates for indicators](#results) `fpet_calculate_indicaotrs`
+3. [Plot the  point estimates against the survey data](#plot) `plot_fp_c`
+
+
+## <a name="fit"></a>
+## 1. Fit models and obtain samples for all women
+`fit_fp_c` is a wrapper function to run the one-country implementation of the family planning estimation model. Specify the division numeric code, the union status of women (denote all women with `“ALL”`), and the time frame.
+
+```{r}
+fitlist <- fit_fp_c(
+  is_in_union = "ALL",
+  division_numeric_code = 4,
+  first_year = 1970,
+  last_year = 2030
+)
+```
+
+Obtaining results for all women entails running the in-union and not-in-union model.  In this case, `fit_fp_c` returns a named list of fits.
+```{r}
+fitlist %>% names
+```
+
+## <a name="results"></a>
+## 2. Calculate point estimates for indicators
+Calculate point estimates for family planning indicators with the function `calc_fp_c`.
+
+`calc_fp_c` utilizes `pmap` from the tidyverse package purr allowing it to act on any number of fits. We will supply the entire list of fits from `fit_fp_c`.
+```{r}
+resultlist <- calc_fp_c(fitlist)
+```
+
+Like the previous function, `calc_fp_c` returns a list. Since we supplied three fits the function returns three sets of calculated family planning indicators.
+```{r}
+resultlist %>% names
+```
+
+A set of results here consist of the following family planning indicators
+```{r}
+resultlist$ALL %>% names
+```
+
+The point estimates for each indicator are long-format tibbles. Let's take a look at the tibble for the indicator `contraceptive_use_modern`
+```{r}
+resultlist$ALL$contraceptive_use_modern
+```
+
+## <a name="plot"></a>
+## 3. Plot the  point estimates against the survey data
+FPEMlocal also includes a function named `plot_fp_c` to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2. This function also handles lists.
+
+```{r}
+plot_fp_c(
+  fitlist,
+  resultlist,
+  indicators = c(
+    "unmet_need_any",
+    "contraceptive_use_modern",
+    "contraceptive_use_traditional",
+    "contraceptive_use_any"
+    )
+  )
+```
