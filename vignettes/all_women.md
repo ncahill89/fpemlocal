@@ -6,6 +6,10 @@ Estimating family planning indicators for all women
 In this vignette we obtain estimates for all women with package
 datasets. By default, functions utilize UNPD datasets.
 
+``` r
+library(FPEMlocal)
+```
+
 1.  [Fit models and obtain samples for all women](#fit) `fit_fp_c`
 2.  [Calculate point estimates for indicators](#results)
     `fpet_calculate_indicaotrs`
@@ -119,7 +123,7 @@ resultlist$ALL$contraceptive_use_modern
 
 ## <a name="plot"></a>
 
-## 3\. Plot the point estimates against the survey data
+## 3\. Plot the point estimates and the survey data
 
 FPEMlocal also includes a function named `plot_fp_c` to plot the
 calculated point estimates against the survey data. The arguments to

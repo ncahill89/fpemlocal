@@ -601,6 +601,7 @@ body {
 <body>
 
 <h1 id="estimating-family-planning-indicators-for-in-union-women">Estimating family planning indicators for in-union women</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(FPEMlocal)</span></code></pre></div>
 <h2 id="introduction">Introduction</h2>
 <p>In this vignette we obtain estimates for married women with package datasets. By default, functions utilize UNPD datasets.</p>
 <ol>
@@ -611,8 +612,8 @@ body {
 <h2 id="section"><a name="fit"></a></h2>
 <h2 id="1-fit-a-one-country-model">1. Fit a one country model</h2>
 <p>First, find the UNPD country code under the variable <code>division_numeric_code</code> in the dataset <code>divisions</code>. See <code>?divisions</code> for the metadata.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>divisions <span class="op">%&gt;%</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(name_country <span class="op">==</span><span class="st"> &quot;Afghanistan&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>divisions <span class="op">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(name_country <span class="op">==</span><span class="st"> &quot;Afghanistan&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 13
 ##   division_numeri~ name_country name_region name_sub_region region_numeric_~
 ##              &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;                      &lt;dbl&gt;
@@ -624,18 +625,18 @@ body {
 ## #   is_fp2020 &lt;chr&gt;
 </code></pre>
 <p>Fit the one-country family planning estimation model with the function <code>fit_fp_c</code>. First, supply the UNPD country code to the argument <code>division_numeric_code</code>. There are two versions of this model, one for in-union women and another for not-in-union women denoted <code>&quot;Y&quot;</code> and <code>&quot;N&quot;</code> respectively. Specify the model of your choice with the argument <code>is_in_union</code>. By default, the function <code>fit_fp_c</code> utilizes the UNPD contraceptive use survey dataset, <code>contraceptive_use</code> and filters the dataset based on the aforementioned function arguments. Lastly, specify the years of estimates to be returned. Note: year arguments will not filter the supplied survey data. All years of available survey data will be used.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>fit &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">4</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>fit &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">4</span>,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>)</span></code></pre></div>
 <h2 id="section-1"><a name="results"></a></h2>
 <h2 id="2-calculate-point-estimates-for-indicators">2. Calculate point estimates for indicators</h2>
 <p>Calculate point estimates for family planning indicators with the function <code>calc_fp_c</code>. Supply the fit object from <code>fit_fp_c</code>. By default, the function <code>calc_fp_C</code> utilizes the UNPD population dataset, <code>population_counts</code> to calculate count variables such as the number of women using modern contraceptives.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp_c</span>(fit)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp_c</span>(fit)</span></code></pre></div>
 <p>A set of results here consist of the following family planning indicators</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>results<span class="op">$</span>Y <span class="op">%&gt;%</span><span class="st"> </span>names</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>results<span class="op">$</span>Y <span class="op">%&gt;%</span><span class="st"> </span>names</span></code></pre></div>
 <pre><code>##  [1] &quot;contraceptive_use_any&quot;                     
 ##  [2] &quot;contraceptive_use_modern&quot;                  
 ##  [3] &quot;contraceptive_use_traditional&quot;             
@@ -659,7 +660,7 @@ body {
 ## [21] &quot;demand_satisfied_modern_population_counts&quot; 
 ## [22] &quot;no_need_population_counts&quot;
 </code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>results<span class="op">$</span>Y</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>results<span class="op">$</span>Y</span></code></pre></div>
 <pre><code>## $contraceptive_use_any
 ## # A tibble: 488 x 3
 ##     year percentile  value
@@ -1013,7 +1014,7 @@ body {
 ## # ... with 478 more rows
 </code></pre>
 <p>The point estimates for each indicator are long-format tibbles. Let’s take a look at the tibble for the indicator <code>contraceptive_use_modern</code></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>results<span class="op">$</span>Y<span class="op">$</span>contraceptive_use_modern</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>results<span class="op">$</span>Y<span class="op">$</span>contraceptive_use_modern</span></code></pre></div>
 <pre><code>## # A tibble: 488 x 3
 ##     year percentile  value
 ##    &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;
@@ -1032,16 +1033,16 @@ body {
 <h2 id="section-2"><a name="plot"></a></h2>
 <h2 id="3-plot-estimates-and-survey-data">3. Plot estimates and survey data</h2>
 <p>FPEMlocal also includes a function named <code>plot_fp_c</code> to plot the calculated point estimates against the survey data. The arguments to this function are, the fit object from step 1, the results from step 2, and a vector of indicator names. The vector of indicator names corresponds to the names which appear in the results from step 2.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">plot_fp_c</span>(</span>
-<span id="cb11-2"><a href="#cb11-2"></a>  fit,</span>
-<span id="cb11-3"><a href="#cb11-3"></a>  results,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>  <span class="dt">indicators =</span> <span class="kw">c</span>(</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    <span class="st">&quot;unmet_need_any&quot;</span>,</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    <span class="st">&quot;contraceptive_use_modern&quot;</span>,</span>
-<span id="cb11-7"><a href="#cb11-7"></a>    <span class="st">&quot;contraceptive_use_traditional&quot;</span>,</span>
-<span id="cb11-8"><a href="#cb11-8"></a>    <span class="st">&quot;contraceptive_use_any&quot;</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a>    )</span>
-<span id="cb11-10"><a href="#cb11-10"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">plot_fp_c</span>(</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  fit,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  results,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="dt">indicators =</span> <span class="kw">c</span>(</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    <span class="st">&quot;unmet_need_any&quot;</span>,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    <span class="st">&quot;contraceptive_use_modern&quot;</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>    <span class="st">&quot;contraceptive_use_traditional&quot;</span>,</span>
+<span id="cb12-8"><a href="#cb12-8"></a>    <span class="st">&quot;contraceptive_use_any&quot;</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>    )</span>
+<span id="cb12-10"><a href="#cb12-10"></a>  )</span></code></pre></div>
 <pre><code>## $Y
 ## $Y$unmet_need_any
 </code></pre>

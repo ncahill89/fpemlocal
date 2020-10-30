@@ -601,14 +601,23 @@ body {
 <body>
 
 <h1 id="estimating-subnational-family-planning-indicators-for-married-women-with-custom-user-data">Estimating subnational family planning indicators for married women with custom user data</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>fit &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/manuscript_example_data/afghanistan_4_married_example.csv&quot;</span>,</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="dt">division_numeric_code =</span> div,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
-<span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span>,</span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="dt">subnational =</span> <span class="ot">TRUE</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(FPEMlocal)</span></code></pre></div>
+<h2 id="introduction">Introduction</h2>
+<ol>
+<li><a href="#fit">Fit a one country model</a> <code>fit_fp_c</code></li>
+<li><a href="#results">Calculate point estimates for indicators</a> <code>calc_fp_c</code></li>
+<li><a href="#plot">Plot the point estimates against the survey data</a> <code>plot_fp_c</code></li>
+</ol>
+<h2 id="section"><a name="fit"></a></h2>
+<h2 id="1-fit-a-one-country-model">1. Fit a one country model</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>fit &lt;-<span class="st"> </span><span class="kw">fit_fp_c</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="dt">surveydata_filepath =</span> <span class="st">&quot;data-raw/manuscript_example_data/afghanistan_4_married_example.csv&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="dt">division_numeric_code =</span> <span class="dv">4</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="dt">is_in_union =</span> <span class="st">&quot;Y&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="dt">first_year =</span> <span class="dv">1970</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="dt">last_year =</span> <span class="dv">2030</span>,</span>
+<span id="cb2-7"><a href="#cb2-7"></a>  <span class="dt">subnational =</span> <span class="ot">TRUE</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>)</span></code></pre></div>
 <pre><code>## 
 ## -- Column specification --------------------------------------------------------
 ## cols(
@@ -631,19 +640,25 @@ body {
 ##   has_absence_of_probing_questions_bias = col_character(),
 ##   record_id = col_character()
 ## )
-## i Use `spec()` for the full column specifications.
+## [36mi[39m Use `spec()` for the full column specifications.
 </code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp_c</span>(<span class="dt">fit =</span> fit)</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">plot_fp_c</span>(</span>
-<span id="cb4-2"><a href="#cb4-2"></a>  fit,</span>
-<span id="cb4-3"><a href="#cb4-3"></a>  results,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>  <span class="dt">indicators =</span> <span class="kw">c</span>(</span>
-<span id="cb4-5"><a href="#cb4-5"></a>    <span class="st">&quot;unmet_need_any&quot;</span>,</span>
-<span id="cb4-6"><a href="#cb4-6"></a>    <span class="st">&quot;contraceptive_use_modern&quot;</span>,</span>
-<span id="cb4-7"><a href="#cb4-7"></a>    <span class="st">&quot;contraceptive_use_traditional&quot;</span>,</span>
-<span id="cb4-8"><a href="#cb4-8"></a>    <span class="st">&quot;contraceptive_use_any&quot;</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a>    )</span>
-<span id="cb4-10"><a href="#cb4-10"></a>  )</span></code></pre></div>
+<h2 id="section-1"><a name="results"></a></h2>
+<h2 id="2-calculate-point-estimates-for-indicators">2. Calculate point estimates for indicators</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>population_data &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data-raw/manuscript_example_data/afghanistan_4_married_popdata_example.csv&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>results &lt;-<span class="st"> </span><span class="kw">calc_fp_c</span>(<span class="dt">fit =</span> fit,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>                     <span class="dt">population_data =</span> population_data)</span></code></pre></div>
+<h2 id="section-2"><a name="plot"></a></h2>
+<h2 id="3-plot-estimates-and-survey-data">3. Plot estimates and survey data</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">plot_fp_c</span>(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  fit,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  results,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="dt">indicators =</span> <span class="kw">c</span>(</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="st">&quot;unmet_need_any&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="st">&quot;contraceptive_use_modern&quot;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="st">&quot;contraceptive_use_traditional&quot;</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="st">&quot;contraceptive_use_any&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    )</span>
+<span id="cb5-10"><a href="#cb5-10"></a>  )</span></code></pre></div>
 <pre><code>## $Y
 ## $Y$unmet_need_any
 </code></pre>

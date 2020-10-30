@@ -55,7 +55,7 @@ fit_botswana <- fit_fp_c(
     ##   se_log_r_unmet_no_need_imputed = col_double()
     ##   # ... with 2 more columns
     ## )
-    ## i Use `spec()` for the full column specifications.
+    ## [36mi[39m Use `spec()` for the full column specifications.
 
 ``` r
 fit_lesotho <- fit_fp_c(
@@ -89,7 +89,7 @@ fit_lesotho <- fit_fp_c(
     ##   has_absence_of_probing_questions_bias = col_character(),
     ##   record_id = col_character()
     ## )
-    ## i Use `spec()` for the full column specifications.
+    ## [36mi[39m Use `spec()` for the full column specifications.
 
 ## <a name="pop"></a>
 

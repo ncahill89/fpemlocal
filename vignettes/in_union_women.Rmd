@@ -6,16 +6,12 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
-# knitr::opts_knit$get("root.dir")  # alternative to the previous line
-# the default autosave location will depend on this being setup
 options(warn=-1)
 ```
 
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, message = FALSE}
 library(FPEMlocal)
-devtools::load_all()
 ```
 ## Introduction
 In this vignette we obtain estimates for married women with package datasets. By default, functions utilize UNPD datasets.

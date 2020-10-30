@@ -1,6 +1,10 @@
 Estimating family planning indicators for in-union women
 ================
 
+``` r
+library(FPEMlocal)
+```
+
 ## Introduction
 
 In this vignette we obtain estimates for married women with package

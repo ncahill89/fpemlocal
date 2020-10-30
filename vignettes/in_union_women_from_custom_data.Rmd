@@ -12,10 +12,8 @@ options(warn=-1)
 ```
 
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, message = FALSE}
 library(FPEMlocal)
-devtools::load_all()
 ```
 ## Introduction
 In this vignette we obtain estimates for married women with custom user data.

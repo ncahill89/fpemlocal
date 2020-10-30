@@ -3,9 +3,24 @@ custom user data
 ================
 
 ``` r
+library(FPEMlocal)
+```
+
+## Introduction
+
+1.  [Fit a one country model](#fit) `fit_fp_c`
+2.  [Calculate point estimates for indicators](#results) `calc_fp_c`
+3.  [Plot the point estimates against the survey data](#plot)
+    `plot_fp_c`
+
+## <a name="fit"></a>
+
+## 1\. Fit a one country model
+
+``` r
 fit <- fit_fp_c(
   surveydata_filepath = "data-raw/manuscript_example_data/afghanistan_4_married_example.csv",
-  division_numeric_code = div,
+  division_numeric_code = 4,
   is_in_union = "Y",
   first_year = 1970,
   last_year = 2030,
@@ -35,11 +50,21 @@ fit <- fit_fp_c(
     ##   has_absence_of_probing_questions_bias = col_character(),
     ##   record_id = col_character()
     ## )
-    ## i Use `spec()` for the full column specifications.
+    ## [36mi[39m Use `spec()` for the full column specifications.
+
+## <a name="results"></a>
+
+## 2\. Calculate point estimates for indicators
 
 ``` r
-results <- calc_fp_c(fit = fit)
+population_data <- read.csv("data-raw/manuscript_example_data/afghanistan_4_married_popdata_example.csv")
+results <- calc_fp_c(fit = fit,
+                     population_data = population_data)
 ```
+
+## <a name="plot"></a>
+
+## 3\. Plot estimates and survey data
 
 ``` r
 plot_fp_c(
