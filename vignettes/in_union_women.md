@@ -2,7 +2,7 @@ Estimating family planning indicators for in-union women
 ================
 
 ``` r
-library(FPEMlocal)
+library(fpemlocal)
 ```
 
 ## Introduction
@@ -485,7 +485,7 @@ results$Y$contraceptive_use_modern
 
 ## 3\. Plot estimates and survey data
 
-FPEMlocal also includes a function named `plot_fp_c` to plot the
+fpemlocal also includes a function named `plot_fp_c` to plot the
 calculated point estimates against the survey data. The arguments to
 this function are, the fit object from step 1, the results from step 2,
 and a vector of indicator names. The vector of indicator names

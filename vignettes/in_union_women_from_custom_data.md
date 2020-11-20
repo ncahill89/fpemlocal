@@ -3,7 +3,7 @@ data
 ================
 
 ``` r
-library(FPEMlocal)
+library(fpemlocal)
 ```
 
 ## Introduction
@@ -64,7 +64,7 @@ fit <- fit_fp_c(
     ##   has_absence_of_probing_questions_bias = col_character(),
     ##   record_id = col_character()
     ## )
-    ## [36mi[39m Use `spec()` for the full column specifications.
+    ## i Use `spec()` for the full column specifications.
 
 ## <a name="results"></a>
 
@@ -137,7 +137,7 @@ results$Y$contraceptive_use_modern
 
 ## 3\. Plot estimates and survey data
 
-FPEMlocal also includes a function named `plot_fp_c` to plot the
+fpemlocal also includes a function named `plot_fp_c` to plot the
 calculated point estimates against the survey data. The arguments to
 this function are, the fit object from step 1, the results from step 2,
 and a vector of indicator names. The vector of indicator names

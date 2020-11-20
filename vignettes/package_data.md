@@ -22,7 +22,7 @@ numeric codes. After loading the package, enter `divisions` into the
 console to access this data.
 
 ``` r
-library(FPEMlocal)
+library(fpemlocal)
 divisions
 ```
 
@@ -69,19 +69,19 @@ contraceptive_use
 ```
 
     ## # A tibble: 1,896 x 34
-    ##    division_numeri~ start_date end_date is_in_union age_range
-    ##               <dbl>      <dbl>    <dbl> <chr>       <chr>    
-    ##  1              170      1980     1980  Y           15-49    
-    ##  2              795      2006     2006  Y           15-49    
-    ##  3              218      1999.    2000. Y           15-49    
-    ##  4              360      2005     2005  Y           15-49    
-    ##  5              643      1996.    1996. Y           15-49    
-    ##  6              784      1995     1995  Y           15-49    
-    ##  7              524      1992.    1992. Y           15-49    
-    ##  8              368      1974     1974  Y           15-49    
-    ##  9              458      1974     1974  Y           15-49    
-    ## 10              626      2003.    2004. Y           15-49    
-    ## # ... with 1,886 more rows, and 29 more variables: data_series_type <chr>,
+    ##    division_numeri~ start_date end_date is_in_union age_range data_series_type
+    ##               <dbl>      <dbl>    <dbl> <chr>       <chr>     <chr>           
+    ##  1              170      1980     1980  Y           15-49     National survey 
+    ##  2              795      2006     2006  Y           15-49     MICS            
+    ##  3              218      1999.    2000. Y           15-49     Other           
+    ##  4              360      2005     2005  Y           15-49     National survey 
+    ##  5              643      1996.    1996. Y           15-49     Other           
+    ##  6              784      1995     1995  Y           15-49     Other           
+    ##  7              524      1992.    1992. Y           15-49     National survey 
+    ##  8              368      1974     1974  Y           15-49     National survey 
+    ##  9              458      1974     1974  Y           15-49     Other           
+    ## 10              626      2003.    2004. Y           15-49     National survey 
+    ## # ... with 1,886 more rows, and 28 more variables:
     ## #   group_type_relative_to_baseline <chr>, contraceptive_use_modern <dbl>,
     ## #   contraceptive_use_traditional <dbl>, contraceptive_use_any <dbl>,
     ## #   unmet_need_modern <lgl>, unmet_need_any <dbl>,

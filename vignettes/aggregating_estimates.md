@@ -55,7 +55,7 @@ fit_botswana <- fit_fp_c(
     ##   se_log_r_unmet_no_need_imputed = col_double()
     ##   # ... with 2 more columns
     ## )
-    ## [36mi[39m Use `spec()` for the full column specifications.
+    ## i Use `spec()` for the full column specifications.
 
 ``` r
 fit_lesotho <- fit_fp_c(
@@ -89,7 +89,7 @@ fit_lesotho <- fit_fp_c(
     ##   has_absence_of_probing_questions_bias = col_character(),
     ##   record_id = col_character()
     ## )
-    ## [36mi[39m Use `spec()` for the full column specifications.
+    ## i Use `spec()` for the full column specifications.
 
 ## <a name="pop"></a>
 
@@ -115,4 +115,101 @@ tibbles with family planning estimates.
 ``` r
 results <- calc_fp_aggregate(fits = list(fit_botswana, fit_lesotho),
                    population_data = popdata)
+results %>% head()
 ```
+
+    ## $contraceptive_use_any
+    ## # A tibble: 488 x 3
+    ##     year percentile  value
+    ##    <int> <chr>       <dbl>
+    ##  1  1970 mean       0.0998
+    ##  2  1971 mean       0.106 
+    ##  3  1972 mean       0.113 
+    ##  4  1973 mean       0.121 
+    ##  5  1974 mean       0.128 
+    ##  6  1975 mean       0.136 
+    ##  7  1976 mean       0.145 
+    ##  8  1977 mean       0.154 
+    ##  9  1978 mean       0.164 
+    ## 10  1979 mean       0.174 
+    ## # ... with 478 more rows
+    ## 
+    ## $contraceptive_use_modern
+    ## # A tibble: 488 x 3
+    ##     year percentile  value
+    ##    <int> <chr>       <dbl>
+    ##  1  1970 mean       0.0817
+    ##  2  1971 mean       0.0887
+    ##  3  1972 mean       0.0963
+    ##  4  1973 mean       0.104 
+    ##  5  1974 mean       0.112 
+    ##  6  1975 mean       0.121 
+    ##  7  1976 mean       0.130 
+    ##  8  1977 mean       0.139 
+    ##  9  1978 mean       0.150 
+    ## 10  1979 mean       0.160 
+    ## # ... with 478 more rows
+    ## 
+    ## $contraceptive_use_traditional
+    ## # A tibble: 488 x 3
+    ##     year percentile  value
+    ##    <int> <chr>       <dbl>
+    ##  1  1970 mean       0.0181
+    ##  2  1971 mean       0.0177
+    ##  3  1972 mean       0.0171
+    ##  4  1973 mean       0.0165
+    ##  5  1974 mean       0.0160
+    ##  6  1975 mean       0.0154
+    ##  7  1976 mean       0.0148
+    ##  8  1977 mean       0.0143
+    ##  9  1978 mean       0.0138
+    ## 10  1979 mean       0.0133
+    ## # ... with 478 more rows
+    ## 
+    ## $non_use
+    ## # A tibble: 488 x 3
+    ##     year percentile value
+    ##    <int> <chr>      <dbl>
+    ##  1  1970 mean       0.900
+    ##  2  1971 mean       0.894
+    ##  3  1972 mean       0.887
+    ##  4  1973 mean       0.879
+    ##  5  1974 mean       0.872
+    ##  6  1975 mean       0.864
+    ##  7  1976 mean       0.855
+    ##  8  1977 mean       0.846
+    ##  9  1978 mean       0.836
+    ## 10  1979 mean       0.826
+    ## # ... with 478 more rows
+    ## 
+    ## $unmet_need_any
+    ## # A tibble: 488 x 3
+    ##     year percentile value
+    ##    <int> <chr>      <dbl>
+    ##  1  1970 mean       0.326
+    ##  2  1971 mean       0.326
+    ##  3  1972 mean       0.325
+    ##  4  1973 mean       0.324
+    ##  5  1974 mean       0.323
+    ##  6  1975 mean       0.321
+    ##  7  1976 mean       0.319
+    ##  8  1977 mean       0.317
+    ##  9  1978 mean       0.315
+    ## 10  1979 mean       0.313
+    ## # ... with 478 more rows
+    ## 
+    ## $unmet_need_modern
+    ## # A tibble: 488 x 3
+    ##     year percentile value
+    ##    <int> <chr>      <dbl>
+    ##  1  1970 mean       0.344
+    ##  2  1971 mean       0.343
+    ##  3  1972 mean       0.342
+    ##  4  1973 mean       0.340
+    ##  5  1974 mean       0.339
+    ##  6  1975 mean       0.336
+    ##  7  1976 mean       0.334
+    ##  8  1977 mean       0.332
+    ##  9  1978 mean       0.329
+    ## 10  1979 mean       0.327
+    ## # ... with 478 more rows

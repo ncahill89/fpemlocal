@@ -1,13 +1,8 @@
-Estimating family planning indicators for in-union women
-================
-
-``` r
-library(FPEMlocal)
-```
 
 #### 1\. Fit a one country model
 
 ``` r
+library(fpemlocal)
 fit <- fit_fp_c(
   division_numeric_code = 4,
   is_in_union = "Y",
@@ -37,4 +32,4 @@ plot_fp_c(
     ## $Y
     ## $Y$contraceptive_use_modern
 
-![](in_union_women_paper_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](in_union_women_paper_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->

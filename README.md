@@ -1,4 +1,4 @@
-FPEMlocal
+fpemlocal
 ================
 
 <!-- badges: start -->
@@ -13,16 +13,16 @@ FPEMlocal
 
 The package can be installed by cloning and using `devtools::install()`.
 The source code for vignettes can be found in
-[/vignettes](https://github.com/FPcounts/FPEMlocal/tree/master/vignettes).
+[/vignettes](https://github.com/FPcounts/fpemlocal/tree/master/vignettes).
 Below is a brief introduction.
 
 ## Introduction
 
-The FPEMlocal package is the one-country implementation of FPEM (family
+The fpemlocal package is the one-country implementation of FPEM (family
 planning estimation model) designed with tidyverse philosophy. The model
 in this package uses global model results from the package FPEMglobal to
 aid in the estimation of country level family planning indicators.
-FPEMlocal comes equiped with survey data, country unit data, and country
+fpemlocal comes equiped with survey data, country unit data, and country
 population count data, to produce one-country runs. Running FPEM is
 divided into three main functions.
 
@@ -83,7 +83,7 @@ supply optional services statistics.
 ``` r
 fit <- fit_fp_c(
   is_in_union = "Y",
-  division_numeric_code = 231,
+  division_numeric_code = 4,
   first_year = 1970,
   last_year = 2030,
   diagnostic = TRUE

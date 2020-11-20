@@ -610,7 +610,7 @@ body {
 <h2 id="section"><a name="div"></a></h2>
 <h2 id="1-division-codes">1. Division codes</h2>
 <p>Division data is used as the a link between low-level divisions (country) and higher-level divisions (sub-regions, regions). All data inputs include a column of country division codes known as division numeric codes. After loading the package, enter <code>divisions</code> into the console to access this data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(FPEMlocal)</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(fpemlocal)</span>
 <span id="cb1-2"><a href="#cb1-2"></a>divisions</span></code></pre></div>
 <pre><code>## # A tibble: 232 x 13
 ##    division_numeri~ name_country name_region name_sub_region region_numeric_~
@@ -638,19 +638,19 @@ body {
 <p>There are two contraceptive use survey datasets within the package. The dataset <code>contraceptive_use</code> is compiled by the Unit Nation Population Division (UNPD) and the dataset <code>contraceptive_use_track20</code> is compiled by Track20. The datasets are similar. There will be some differences for FP2020 focus countries. Enter <code>??contraceptive_use</code> and <code>??contraceptive_use_track20</code> for metadata.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>contraceptive_use</span></code></pre></div>
 <pre><code>## # A tibble: 1,896 x 34
-##    division_numeri~ start_date end_date is_in_union age_range
-##               &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;    
-##  1              170      1980     1980  Y           15-49    
-##  2              795      2006     2006  Y           15-49    
-##  3              218      1999.    2000. Y           15-49    
-##  4              360      2005     2005  Y           15-49    
-##  5              643      1996.    1996. Y           15-49    
-##  6              784      1995     1995  Y           15-49    
-##  7              524      1992.    1992. Y           15-49    
-##  8              368      1974     1974  Y           15-49    
-##  9              458      1974     1974  Y           15-49    
-## 10              626      2003.    2004. Y           15-49    
-## # ... with 1,886 more rows, and 29 more variables: data_series_type &lt;chr&gt;,
+##    division_numeri~ start_date end_date is_in_union age_range data_series_type
+##               &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;           
+##  1              170      1980     1980  Y           15-49     National survey 
+##  2              795      2006     2006  Y           15-49     MICS            
+##  3              218      1999.    2000. Y           15-49     Other           
+##  4              360      2005     2005  Y           15-49     National survey 
+##  5              643      1996.    1996. Y           15-49     Other           
+##  6              784      1995     1995  Y           15-49     Other           
+##  7              524      1992.    1992. Y           15-49     National survey 
+##  8              368      1974     1974  Y           15-49     National survey 
+##  9              458      1974     1974  Y           15-49     Other           
+## 10              626      2003.    2004. Y           15-49     National survey 
+## # ... with 1,886 more rows, and 28 more variables:
 ## #   group_type_relative_to_baseline &lt;chr&gt;, contraceptive_use_modern &lt;dbl&gt;,
 ## #   contraceptive_use_traditional &lt;dbl&gt;, contraceptive_use_any &lt;dbl&gt;,
 ## #   unmet_need_modern &lt;lgl&gt;, unmet_need_any &lt;dbl&gt;,

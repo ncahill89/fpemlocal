@@ -50,7 +50,7 @@ posterior_samples_all_women <-
            population_data
   ) {
     if (is.null(population_data)) {
-      population_data <- FPEMlocal::population_counts
+      population_data <- population_counts
     }
     division_numeric_code <- core_data$units$division_numeric_code
     first_year <- min(core_data$year_sequence_list$result_seq_years)

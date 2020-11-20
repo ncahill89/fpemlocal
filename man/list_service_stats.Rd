@@ -5,7 +5,6 @@
 \title{list_service_stats}
 \usage{
 list_service_stats(
-  service_stats = FALSE,
   service_stats_filepath,
   model_seq_years,
   division_numeric_code,
@@ -13,8 +12,6 @@ list_service_stats(
 )
 }
 \arguments{
-\item{service_stats}{\emph{\sQuote{Logical}} If TRUE and if a service stat file path is provided, the model is run using service statistic data. Default Service stats are not public.}
-
 \item{service_stats_filepath}{File path to service stat csv}
 
 \item{model_seq_years}{Years of model estimation from\code{\link{year_sequence_maker}}.}
@@ -22,5 +19,5 @@ list_service_stats(
 \item{division_numeric_code}{\emph{\sQuote{Numeric}} A number associated with the country. See the data from \code{\link{divisions}}.}
 }
 \description{
-fit_fp_cservice statistics data
+list_service_stats
 }

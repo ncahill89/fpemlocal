@@ -10,7 +10,6 @@ fit_fp_csub(
   first_year = NULL,
   last_year,
   surveydata_filepath = NULL,
-  service_stats = FALSE,
   service_stats_filepath = NULL,
   subnational = FALSE,
   diagnostic = FALSE,
@@ -32,8 +31,6 @@ fit_fp_csub(
 \item{last_year}{\emph{\sQuote{Numeric}} The last year of model estimates in output. The model will be fit to all data, including dates after this date if available.}
 
 \item{surveydata_filepath}{\emph{\sQuote{Character}} Path to survey data. Survey data should be a .csv with the following format \code{\link{contraceptive_use}}.}
-
-\item{service_stats}{\emph{\sQuote{Logical}} If TRUE and if a service stat file path is provided, the model is run using service statistic data. Default Service stats are not public.}
 
 \item{service_stats_filepath}{\emph{\sQuote{Character}}}
 

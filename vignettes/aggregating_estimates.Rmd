@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 options(warn=-1)
 knitr::opts_chunk$set(echo = TRUE)
-library(FPEMlocal)
+library(fpemlocal)
 devtools::load_all()
 ```
 
@@ -60,4 +60,5 @@ Supply the fits in a list and the population data to the function `calc_fp_aggre
 ```{r}
 results <- calc_fp_aggregate(fits = list(fit_botswana, fit_lesotho),
                    population_data = popdata)
+results %>% head()
 ```

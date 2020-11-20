@@ -18,7 +18,7 @@ This vignette covers package data. Central to all vignettes are data inputs in t
 ## 1. Division codes
 Division data is used as the a link between low-level divisions (country) and higher-level divisions (sub-regions, regions). All data inputs include a column of country division codes known as division numeric codes. After loading the package, enter `divisions` into the console to access this data.
 ```{r}
-library(FPEMlocal)
+library(fpemlocal)
 divisions
 ??divisions
 ```

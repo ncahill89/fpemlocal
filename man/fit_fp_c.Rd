@@ -19,8 +19,6 @@ fit_fp_c(population_data = NULL, is_in_union, ...)
 
 \item{surveydata_filepath}{\emph{\sQuote{Character}} Path to survey data. Survey data should be a .csv with the following format \code{\link{contraceptive_use}}.}
 
-\item{service_stats}{\emph{\sQuote{Logical}} If TRUE and if a service stat file path is provided, the model is run using service statistic data. Default Service stats are not public.}
-
 \item{service_stats_filepath}{\emph{\sQuote{Character}}}
 
 \item{subnational}{'\emph{\sQuote{Logical}} If TRUE runs the sub national model.}

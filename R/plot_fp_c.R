@@ -107,16 +107,21 @@ plot_fp_csub <- function(
   GeomText$draw_key <- function (data, params, size,
                                  var=unique(observations$subpopulation_labels),
                                  cols=scales::hue_pal()(length(var))) {
-    
+    # attempt 1, using no description at all
     txt <- ""
+    # attempt 2, with colored description
+    # txt <- if(is.factor(var)) levels(var) else sort(var)
+    # txt <- txt[match(data$colour, cols)] #may need a line like this to match things
+
+
     grid::textGrob(txt, 0.5, 0.5,
                    just="center",
-                   gp = grid::gpar(col = alpha(data$colour, data$alpha),
+                   gp = grid::gpar(col = alpha("#000000", data$alpha),
                                    fontfamily = data$family,
                                    fontface = data$fontface,
                                    fontsize = data$size * .pt))
   }
-  
+
 
 
 
@@ -131,7 +136,7 @@ plot_fp_csub <- function(
       dplyr::mutate(model = as.factor(model))
 
     if (compare_to_global) {
-      glbl_estimates <- FPEMlocal::global_estimates %>%
+      glbl_estimates <- global_estimates %>%
         dplyr::filter(division_numeric_code == div,
                       is_in_union == union) %>%
         dplyr::filter(indicator == !!indicator) %>%
@@ -213,7 +218,7 @@ plot_fp_csub <- function(
               x = "ref_date",
               y = indicator,
               label = "subpopulation_labels",
-              col = "subpopulation_labels"
+              col = "subpopulation_descriptions"
             ),
             size = 3,
             hjust = -0.3,

@@ -1,7 +1,7 @@
 ---
-title: "Estimating family planning indicators for all women"
 output: github_document
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
@@ -10,28 +10,24 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 options(warn=-1)
 ```
 
-```{r, message = FALSE}
-library(FPEMlocal)
-```
 
 #### 1. Fit models and obtain samples for all women
-```{r}
+Obtaining results for all women entails running the in-union and not-in-union model.  In this case, `fit_fp_c` returns a named list of fits.
+```{r, message = FALSE}
+library(fpemlocal)
 fitlist <- fit_fp_c(
   is_in_union = "ALL",
   division_numeric_code = 4,
   first_year = 1970,
   last_year = 2030
 )
-```
-
-Obtaining results for all women entails running the in-union and not-in-union model.  In this case, `fit_fp_c` returns a named list of fits.
-```{r}
 fitlist %>% names
 ```
 
 #### 2. Calculate point estimates for indicators
 ```{r}
 resultlist <- calc_fp_c(fitlist)
+resultlist %>% names
 ```
 
 #### 3. Plot the  point estimates and survey data
@@ -43,5 +39,6 @@ plots <- plot_fp_c(
     "contraceptive_use_modern"
     )
   )
+plots %>% names
 plots$ALL
 ```

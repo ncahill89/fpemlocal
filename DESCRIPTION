@@ -1,13 +1,13 @@
-Package: FPEMlocal
+Package: fpemlocal
 Type: Package
-Title: FPEMlocal
+Title: fpemlocal
 Version: 1.0.2
 Date: 2019-12-24
 Authors@R: c(person("Gregory", "Guranich", email = "gguranic@umass.edu", role = c("aut", "cre")),
              person("Mark", "Wheldon", email = "wheldon@un.org", role = c("aut")),
              person("Niamh", "Cahill", email = "Niamh.Cahill@mu.ie", role = c("aut")),
              person("Leontine", "Alkema", email = "lalkema@umass.edu", role = c("aut")))
-Description: This package is the one country implementation of FPEM. It uses higher level parameters estimated in FPEMglobal.
+Description: The local implementation of the Family Planning Estimation Model
 License: MIT
 Depends:
     R2jags,

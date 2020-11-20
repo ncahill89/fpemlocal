@@ -48,7 +48,8 @@ core_data <- function(is_in_union,
       ad_hoc_blankmodern_ifequals()
     # creating a single column for subpopulation indicators
     contraceptive_use <- contraceptive_use %>% 
-      dplyr::mutate(subpopulation_labels = subpopulation_labels(.))
+      dplyr::mutate(subpopulation_labels = subpopulation_labels(.)) %>% 
+      dplyr::mutate(subpopulation_descriptions = subpopulation_descriptions(.))
     levels(contraceptive_use[["subpopulation_labels"]])  <- c("+", "-", "A", "F", "S-", "S+")
   } # end data manipulation which only occurs if data is present
   # the core_data list

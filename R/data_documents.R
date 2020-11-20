@@ -161,7 +161,7 @@
 
 #' Service statistics
 #'
-#' Service stat data must contain the following variables. Names must be as documented (eg. all lowercase). `fpemdata::service_stats` returns a vector of column names. Data not publicly available. 
+#' Service stat data must contain the following variables. Names must be as documented (eg. all lowercase). Data not publicly available.
 #'
 #' @format A data frame with 6 variables:
 #' \describe{
@@ -172,12 +172,12 @@
 #'   \item{"ss_type"}
 #'   ...
 #' }
-#' @source 
-"service_stats"
+#' @source
+"service_stats_format"
 
 #' Contraceptive use track 20
 #'
-#' Track20 customizes the database prepared by the United Nations, editing, adding, and deleting surveys for use in the FP2020 countries. 
+#' Track20 customizes the database prepared by the United Nations, editing, adding, and deleting surveys for use in the FP2020 countries.
 #'
 #' In general, differences stem from:
 #' * Timelines to finalize datasets (UNPD finalizes data in February, while Track20 adds new surveys through April)
@@ -188,7 +188,7 @@
 #' * Changes between versions of reports
 #' * Differences in PMA2020 data
 #' * Exclusions/Inclusion of surveys
-#' 
+#'
 #' @format A data frame with 31 variables:
 #' \describe{
 #'   \item{division_numeric_code}{\emph{\sQuote{Numeric}} 3-digit \emph{M49} country code (\cite{United Nations, 2019}).}
@@ -240,4 +240,3 @@
 #' }
 #'
 "contraceptive_use_track20"
-
