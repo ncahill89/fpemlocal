@@ -244,7 +244,7 @@ impute_indicator <- function(data) {
   var_names <- c(
     "se_log_r_unmet_no_need",
     "se_log_r_traditional_no_use",
-    "se_log_r_modern_no_use",
+    "se_log_r_modern_no_use"
   )
   data %>%
     dplyr::mutate(se_log_r_modern_no_use_impute_ind := is.na(!!rlang::sym(var_names[1]))) %>%

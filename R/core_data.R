@@ -19,7 +19,7 @@ core_data <- function(is_in_union,
     surveydata_filepath = surveydata_filepath,
     division_numeric_code = division_numeric_code,
     subnational = subnational
-  )
+  ) %>% impute_indicator()
   # get sequence of years for model and for filtering of results
   year_sequence_list <- year_sequence_maker(first_year_max = 1989,
                                             first_year = first_year,
